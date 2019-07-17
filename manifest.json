@@ -2,20 +2,20 @@
 
     "manifest_version": 2,
     "name": "hslu awesome results",
-    "version": "1.0",
-  
+    "version": "1.1",
+
     "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
-  
+
     "icons": {
       "48": "icons/icon-48.png",
       "96": "icons/icon-96.png"
     },
-  
+
     "content_scripts": [
       {
-        "matches": ["*://*.mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/*"],
+        "matches": ["*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"],
         "js": ["main.js"]
       }
     ]
-  
+
   }
