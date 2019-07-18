@@ -81,17 +81,12 @@ function createTable(div, json) {
 }
 
 function createOverview(div) {
-    // Adds the credits overview
-    let creditsOverview = document.createElement('h2');
-    creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
-    div.insertBefore(creditsOverview, div.firstChild);
-
     // Creates an overview table for the single grade and adds a procentual value for each
     let gradeOverviewTable = document.createElement('table');
     let gradeOverviewTableBody = document.createElement('tbody');
 
     gradeOverviewTable.setAttribute('border', '1');
-    gradeOverviewTable.setAttribute('style', 'margin-bottom: 10px; width: 100%;');
+    gradeOverviewTable.setAttribute('style', 'margin-bottom: 1.6rem; width: 100%; border: 1px solid #415e6c;');
 
     let trGrade = document.createElement('tr');
     let trTotalByGrade = document.createElement('tr');
@@ -119,7 +114,11 @@ function createOverview(div) {
     gradeOverviewTableBody.appendChild(trGradePercentage);
 
     gradeOverviewTable.appendChild(gradeOverviewTableBody);
-    creditsOverview.appendChild(gradeOverviewTable);
+    div.insertBefore(gradeOverviewTable, div.firstChild);
+
+    let creditsOverview = document.createElement('h2');
+    creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
+    div.insertBefore(creditsOverview, div.firstChild);
 }
 
 fetch(Url).then(function(response) {
