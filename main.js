@@ -1,13 +1,14 @@
 const Url = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
-const KeyGrad = 'Grad'
+const KeyGrad = 'Grad';
 
-const countGrads = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
+const counterByGrads = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const goodGrades = ['A','B', 'C','D','E'];
 
 
-let totalCredits = 0
-let keysOfDesire = ['Nummer', KeyECTS, 'Bewertung', KeyGrad]
+let totalCredits = 0;
+let keysOfDesire = ['Nummer', KeyECTS, 'Bewertung', KeyGrad];
+let totalGrads = 0;
 
 function getValForKey(details, key) {
 
@@ -34,16 +35,17 @@ function createTableRow(item) {
         }
         if (key == KeyGrad) {
             grad = val;
-            if(grad != "") {
-                countGrads[grad]++;  
+            if (grad != "") {
+                counterByGrads[grad]++;  
+                totalGrads++;
             }
         }
         if (key == 'Bewertung') {
             rating = val;
         }
 
-        td.appendChild(document.createTextNode(val))
-        tr.appendChild(td)
+        td.appendChild(document.createTextNode(val));
+        tr.appendChild(td);
     });
 
     if (goodGrades.includes(grad) || rating == 'bestanden') {
@@ -63,10 +65,10 @@ function createTable(div, json) {
     for (let i = 0; i < keysOfDesire.length; i++) {
         let cell = row.insertCell(i);
         cell.innerHTML = keysOfDesire[i];
-        cell.setAttribute('style', 'font-weight: bold;')
+        cell.setAttribute('style', 'font-weight: bold;');
     }
 
-    var tbody = document.createElement('tbody');
+    let tbody = document.createElement('tbody');
 
     json.items.forEach(item => {
         let tr = createTableRow(item);
@@ -74,18 +76,18 @@ function createTable(div, json) {
     });
 
     table.appendChild(tbody);
-    div.insertBefore(table, div.firstChild)
+    div.insertBefore(table, div.firstChild);
 }
 
 function createOverview(div) {
     // Adds the Creditoverview 
     let creditsOverview = document.createElement('h2');
     creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
-    div.insertBefore(creditsOverview, div.firstChild)
+    div.insertBefore(creditsOverview, div.firstChild);
 
     // Creates an Overviewtable for the single Grad and adds a procentual value for each
-    // TODO: Works, but needs some polish
     let gradOverviewTable = document.createElement('table');
+    let tbody = document.createElement('tbody');
 
     gradOverviewTable.setAttribute('border', '1');
     gradOverviewTable.setAttribute('style', 'margin-bottom: 10px; width: 100%;');
@@ -93,31 +95,29 @@ function createOverview(div) {
     let header = gradOverviewTable.createTHead();
     let row = header.insertRow(0);
 
-    let gradKeys = Object.keys(countGrads);
-    for (let i = 0; i < gradKeys.length; i++) {
-        let cell = row.insertCell(i);
-        cell.innerHTML = gradKeys[i];
-        cell.setAttribute('style', 'font-weight: bold;')
-    }
-    let tbody = document.createElement('tbody');
     let trGrad = document.createElement('tr');
-    let count = 0;
-
-    for (var Grad in countGrads) {
-        count += countGrads[Grad];
-        let td = document.createElement('td');
-        td.appendChild(document.createTextNode(countGrads[Grad]));
-        trGrad.appendChild(td);
-        tbody.appendChild(trGrad);
-    } 
-
+    let trTotalByGrad = document.createElement('tr');
     let trGradInProcent = document.createElement('tr');
-    for (var Grad in countGrads) {
-        let td = document.createElement('td');
-        td.appendChild(document.createTextNode(100 * countGrads[Grad] / count + "%"));
-        trGradInProcent.appendChild(td);
+
+    for (let Grad in counterByGrads) {
+
+        let tdGrad = document.createElement('td');
+        tdGrad.appendChild(document.createTextNode(Grad));
+
+        let tdCounterByGrads = document.createElement('td');
+        tdCounterByGrads.appendChild(document.createTextNode(counterByGrads[Grad]));
+
+        let tdGradInProcent = document.createElement('td');
+        tdGradInProcent.appendChild(document.createTextNode(100 * counterByGrads[Grad] / totalGrads + "%"));
+
+        trGrad.appendChild(tdGrad);
+        trTotalByGrad.appendChild(tdCounterByGrads);
+        trGradInProcent.appendChild(tdGradInProcent);
+
+        tbody.appendChild(trGrad);
+        tbody.appendChild(trTotalByGrad);
         tbody.appendChild(trGradInProcent);
-    } 
+    }
 
     gradOverviewTable.appendChild(tbody);
     creditsOverview.appendChild(gradOverviewTable);
@@ -127,9 +127,9 @@ fetch(Url).then(function(response) {
     return response.json();
 }).then(function(data) {
     let div = document.getElementsByClassName('row teaser-section None')[0];
-    createTable(div, data)
-    createOverview(div)
+    createTable(div, data);
+    createOverview(div);
 }).catch(function(e) {
     console.log("Booo");
-    console.log(e)
+    console.log(e);
 });
