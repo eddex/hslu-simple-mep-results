@@ -4,7 +4,7 @@ const KeyGrade = 'Grad';
 const KeyRating = 'Bewertung'
 
 const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
-const GoodGrades = ['A','B', 'C','D','E'];
+const GoodGrades = ['A','B','C','D','E'];
 
 let keysOfDesire = ['Nummer', KeyECTS, KeyRating, KeyGrade];
 let totalCredits = 0;
@@ -55,7 +55,7 @@ function createTableRow(item) {
     return tr;
 }
 
-function createTable(div, json) {
+function createModulesTable(div, json) {
     let table = document.createElement('table');
 
     table.setAttribute('border', '1');
@@ -80,7 +80,7 @@ function createTable(div, json) {
     div.insertBefore(table, div.firstChild);
 }
 
-function createOverview(div) {
+function createGradesOverviewTable(div) {
     // Creates an overview table for the single grade and adds a procentual value for each
     let gradeOverviewTable = document.createElement('table');
     let gradeOverviewTableBody = document.createElement('tbody');
@@ -115,7 +115,9 @@ function createOverview(div) {
 
     gradeOverviewTable.appendChild(gradeOverviewTableBody);
     div.insertBefore(gradeOverviewTable, div.firstChild);
+}
 
+function createTotalCreditsTitle(div) {
     let creditsOverview = document.createElement('h2');
     creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
     div.insertBefore(creditsOverview, div.firstChild);
@@ -125,8 +127,9 @@ fetch(Url).then(function(response) {
     return response.json();
 }).then(function(data) {
     let div = document.getElementsByClassName('row teaser-section None')[0];
-    createTable(div, data);
-    createOverview(div);
+    createModulesTable(div, data);
+    createGradesOverviewTable(div);
+    createTotalCreditsTitle(div);
 }).catch(function(e) {
     console.log("Booo");
     console.log(e);
