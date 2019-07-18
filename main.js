@@ -32,7 +32,7 @@ function createTableRow(item) {
         if (key == KeyGrad) {
             grad = val;
         }
-        if (key == 'Bewertung'){
+        if (key == 'Bewertung') {
             rating = val;
         }
 
