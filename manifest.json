@@ -1,7 +1,7 @@
 {
 
     "manifest_version": 2,
-    "name": "hslu awesome results",
+    "name": "HSLU simple MEP results",
     "version": "1.1",
 
     "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
