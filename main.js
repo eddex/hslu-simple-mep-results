@@ -87,13 +87,10 @@ function createOverview(div) {
 
     // Creates an Overviewtable for the single Grad and adds a procentual value for each
     let gradOverviewTable = document.createElement('table');
-    let tbody = document.createElement('tbody');
+    let gradOverviewTableBody = document.createElement('tbody');
 
     gradOverviewTable.setAttribute('border', '1');
     gradOverviewTable.setAttribute('style', 'margin-bottom: 10px; width: 100%;');
-
-    let header = gradOverviewTable.createTHead();
-    let row = header.insertRow(0);
 
     let trGrad = document.createElement('tr');
     let trTotalByGrad = document.createElement('tr');
@@ -113,13 +110,13 @@ function createOverview(div) {
         trGrad.appendChild(tdGrad);
         trTotalByGrad.appendChild(tdCounterByGrads);
         trGradInProcent.appendChild(tdGradInProcent);
-
-        tbody.appendChild(trGrad);
-        tbody.appendChild(trTotalByGrad);
-        tbody.appendChild(trGradInProcent);
     }
 
-    gradOverviewTable.appendChild(tbody);
+    gradOverviewTableBody.appendChild(trGrad);
+    gradOverviewTableBody.appendChild(trTotalByGrad);
+    gradOverviewTableBody.appendChild(trGradInProcent);
+
+    gradOverviewTable.appendChild(gradOverviewTableBody);
     creditsOverview.appendChild(gradOverviewTable);
 }
 
