@@ -1,6 +1,7 @@
 const Url = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
 const KeyGrad = 'Grad'
+const GoodGrades = ['A','B','C','D','E'];
 
 let totalCredits = 0
 let keysOfDesire = ['Nummer', KeyECTS, 'Bewertung', KeyGrad]
@@ -20,6 +21,7 @@ function createTableRow(item) {
 
     let credits = 0;
     let grad = '';
+    let rating = '';
 
     keysOfDesire.forEach(key => {
         let td = document.createElement('td');
@@ -30,14 +32,17 @@ function createTableRow(item) {
         if (key == KeyGrad) {
             grad = val;
         }
+        if (key == 'Bewertung') {
+            rating = val;
+        }
+
         td.appendChild(document.createTextNode(val))
         tr.appendChild(td)
     });
 
-    if (grad != 'F') {
+    if (GoodGrades.includes(grad) || rating == 'bestanden') {
         totalCredits += credits;
     }
-
     return tr;
 }
 
