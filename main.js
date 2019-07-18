@@ -2,8 +2,6 @@ const Url = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page
 const KeyECTS = 'ECTS-Punkte';
 const KeyGrad = 'Grad'
 const GoodGrades = ['A','B','C','D','E'];
-// TODO: check if Fx is really displayed likes this :)
-const BadGrades = ['F', 'Fx']
 
 let totalCredits = 0
 let keysOfDesire = ['Nummer', KeyECTS, 'Bewertung', KeyGrad]
