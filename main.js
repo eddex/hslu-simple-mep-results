@@ -37,6 +37,7 @@ function createTableRow(item) {
         }
 
         td.appendChild(document.createTextNode(val))
+        td.setAttribute('style', 'padding: 2px;');
         tr.appendChild(td)
     });
 
@@ -50,14 +51,14 @@ function createTable(div, json) {
     let table = document.createElement('table');
 
     table.setAttribute('border', '1');
-    table.setAttribute('style', 'margin-bottom: 10px; width: 100%;');
+    table.setAttribute('style', 'margin-bottom: 1.6rem; width: 100%; border: 1px solid #415e6c;');
 
     let header = table.createTHead();
     let row = header.insertRow(0);
     for (let i = 0; i < keysOfDesire.length; i++) {
         let cell = row.insertCell(i);
         cell.innerHTML = keysOfDesire[i];
-        cell.setAttribute('style', 'font-weight: bold;')
+        cell.setAttribute('style', 'font-weight: bold;padding: 2px;')
     }
 
     var tbody = document.createElement('tbody');
