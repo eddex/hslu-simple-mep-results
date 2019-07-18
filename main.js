@@ -1,14 +1,14 @@
 const Url = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
-const KeyGrad = 'Grad';
+const KeyGrade = 'Grad';
+const KeyRating = 'Bewertung'
 
-const counterByGrads = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
-const goodGrades = ['A','B', 'C','D','E'];
+const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
+const GoodGrades = ['A','B', 'C','D','E'];
 
-
+let keysOfDesire = ['Nummer', KeyECTS, KeyRating, KeyGrade];
 let totalCredits = 0;
-let keysOfDesire = ['Nummer', KeyECTS, 'Bewertung', KeyGrad];
-let totalGrads = 0;
+let totalGrades = 0;
 
 function getValForKey(details, key) {
 
@@ -24,7 +24,7 @@ function createTableRow(item) {
     let tr = document.createElement('tr');
 
     let credits = 0;
-    let grad = '';
+    let grade = '';
     let rating = '';
 
     keysOfDesire.forEach(key => {
@@ -33,14 +33,14 @@ function createTableRow(item) {
         if (key == KeyECTS) {
             credits = Number(val);
         }
-        if (key == KeyGrad) {
-            grad = val;
-            if (grad != "") {
-                counterByGrads[grad]++;  
-                totalGrads++;
+        if (key == KeyGrade) {
+            grade = val;
+            if (grade != '') {
+                CounterByGrades[grade]++;
+                totalGrades++;
             }
         }
-        if (key == 'Bewertung') {
+        if (key == KeyRating) {
             rating = val;
         }
 
@@ -49,7 +49,7 @@ function createTableRow(item) {
         tr.appendChild(td)
     });
 
-    if (goodGrades.includes(grad) || rating == 'bestanden') {
+    if (GoodGrades.includes(grade) || rating == 'bestanden') {
         totalCredits += credits;
     }
     return tr;
@@ -81,44 +81,45 @@ function createTable(div, json) {
 }
 
 function createOverview(div) {
-    // Adds the Creditoverview 
+    // Adds the credits overview
     let creditsOverview = document.createElement('h2');
     creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
     div.insertBefore(creditsOverview, div.firstChild);
 
-    // Creates an Overviewtable for the single Grad and adds a procentual value for each
-    let gradOverviewTable = document.createElement('table');
-    let gradOverviewTableBody = document.createElement('tbody');
+    // Creates an overview table for the single grade and adds a procentual value for each
+    let gradeOverviewTable = document.createElement('table');
+    let gradeOverviewTableBody = document.createElement('tbody');
 
-    gradOverviewTable.setAttribute('border', '1');
-    gradOverviewTable.setAttribute('style', 'margin-bottom: 10px; width: 100%;');
+    gradeOverviewTable.setAttribute('border', '1');
+    gradeOverviewTable.setAttribute('style', 'margin-bottom: 10px; width: 100%;');
 
-    let trGrad = document.createElement('tr');
-    let trTotalByGrad = document.createElement('tr');
-    let trGradInProcent = document.createElement('tr');
+    let trGrade = document.createElement('tr');
+    let trTotalByGrade = document.createElement('tr');
+    let trGradePercentage = document.createElement('tr');
 
-    for (let Grad in counterByGrads) {
+    for (let grade in CounterByGrades) {
 
-        let tdGrad = document.createElement('td');
-        tdGrad.appendChild(document.createTextNode(Grad));
+        let tdGrade = document.createElement('td');
+        tdGrade.appendChild(document.createTextNode(grade));
 
-        let tdCounterByGrads = document.createElement('td');
-        tdCounterByGrads.appendChild(document.createTextNode(counterByGrads[Grad]));
+        let tdCounterByGrades = document.createElement('td');
+        tdCounterByGrades.appendChild(document.createTextNode(CounterByGrades[grade]));
 
-        let tdGradInProcent = document.createElement('td');
-        tdGradInProcent.appendChild(document.createTextNode(100 * counterByGrads[Grad] / totalGrads + "%"));
+        let tdGradePercentage = document.createElement('td');
+        let gradePercentageRounded = Math.round (10000 * CounterByGrades[grade] / totalGrades) / 100;
+        tdGradePercentage.appendChild(document.createTextNode(gradePercentageRounded + "%"));
 
-        trGrad.appendChild(tdGrad);
-        trTotalByGrad.appendChild(tdCounterByGrads);
-        trGradInProcent.appendChild(tdGradInProcent);
+        trGrade.appendChild(tdGrade);
+        trTotalByGrade.appendChild(tdCounterByGrades);
+        trGradePercentage.appendChild(tdGradePercentage);
     }
 
-    gradOverviewTableBody.appendChild(trGrad);
-    gradOverviewTableBody.appendChild(trTotalByGrad);
-    gradOverviewTableBody.appendChild(trGradInProcent);
+    gradeOverviewTableBody.appendChild(trGrade);
+    gradeOverviewTableBody.appendChild(trTotalByGrade);
+    gradeOverviewTableBody.appendChild(trGradePercentage);
 
-    gradOverviewTable.appendChild(gradOverviewTableBody);
-    creditsOverview.appendChild(gradOverviewTable);
+    gradeOverviewTable.appendChild(gradeOverviewTableBody);
+    creditsOverview.appendChild(gradeOverviewTable);
 }
 
 fetch(Url).then(function(response) {
