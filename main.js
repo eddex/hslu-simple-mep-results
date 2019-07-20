@@ -1,12 +1,12 @@
 const Url = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
 const KeyGrade = 'Grad';
-const KeyRating = 'Bewertung'
+const KeyMumericMark = 'Bewertung'
 
 const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const GoodGrades = ['A','B','C','D','E'];
 
-let keysOfDesire = ['Nummer', KeyECTS, KeyRating, KeyGrade];
+let keysOfDesire = ['Nummer', KeyECTS, KeyMumericMark, KeyGrade];
 let totalCredits = 0;
 let totalGrades = 0;
 
@@ -25,7 +25,7 @@ function createTableRow(item) {
 
     let credits = 0;
     let grade = '';
-    let rating = '';
+    let numericMark = '';
 
     keysOfDesire.forEach(key => {
         let td = document.createElement('td');
@@ -40,8 +40,8 @@ function createTableRow(item) {
                 totalGrades++;
             }
         }
-        if (key == KeyRating) {
-            rating = val;
+        if (key == KeyMumericMark) {
+            numericMark = val;
         }
 
         td.appendChild(document.createTextNode(val));
@@ -49,7 +49,7 @@ function createTableRow(item) {
         tr.appendChild(td)
     });
 
-    if (GoodGrades.includes(grade) || rating == 'bestanden') {
+    if (GoodGrades.includes(grade) || numericMark == 'bestanden') {
         totalCredits += credits;
     }
     return tr;
@@ -123,14 +123,15 @@ function createTotalCreditsTitle(div) {
     div.insertBefore(creditsOverview, div.firstChild);
 }
 
-fetch(Url).then(function(response) {
-    return response.json();
-}).then(function(data) {
+fetch(Url)
+.then(response => response.json())
+.then(data => {
     let div = document.getElementsByClassName('row teaser-section None')[0];
     createModulesTable(div, data);
     createGradesOverviewTable(div);
     createTotalCreditsTitle(div);
-}).catch(function(e) {
+})
+.catch(e => {
     console.log("Booo");
     console.log(e);
 });
