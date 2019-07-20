@@ -16,6 +16,10 @@
         "matches": ["*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"],
         "js": ["main.js"]
       }
+    ],
+
+    "web_accessible_resources": [
+      "templates/grades_table.html"
     ]
 
   }

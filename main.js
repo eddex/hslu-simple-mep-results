@@ -1,4 +1,4 @@
-const Url = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
+const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
 const KeyGrade = 'Grad';
 const KeyMumericMark = 'Bewertung'
@@ -82,39 +82,23 @@ function createModulesTable(div, json) {
 
 function createGradesOverviewTable(div) {
     // Creates an overview table for the single grade and adds a procentual value for each
-    let gradeOverviewTable = document.createElement('table');
-    let gradeOverviewTableBody = document.createElement('tbody');
 
-    gradeOverviewTable.setAttribute('border', '1');
-    gradeOverviewTable.setAttribute('style', 'margin-bottom: 1.6rem; width: 100%; border: 1px solid #415e6c;');
+    return fetch(getExtensionInternalFileUrl('templates/grades_table.html'))
+        .then(response => response.text())
+        .then(gradesTableTemplate => {
+            let gradeOverviewTable = document.createElement('div');
 
-    let trGrade = document.createElement('tr');
-    let trTotalByGrade = document.createElement('tr');
-    let trGradePercentage = document.createElement('tr');
+            for (let grade in CounterByGrades) {
 
-    for (let grade in CounterByGrades) {
+                gradesTableTemplate = String(gradesTableTemplate).replace('count-' + grade, CounterByGrades[grade]);
 
-        let tdGrade = document.createElement('td');
-        tdGrade.appendChild(document.createTextNode(grade));
+                let gradePercentageRounded = Math.round (10000 * CounterByGrades[grade] / totalGrades) / 100;
+                gradesTableTemplate = gradesTableTemplate.replace('percentage-' + grade, gradePercentageRounded + "%");
+            }
 
-        let tdCounterByGrades = document.createElement('td');
-        tdCounterByGrades.appendChild(document.createTextNode(CounterByGrades[grade]));
-
-        let tdGradePercentage = document.createElement('td');
-        let gradePercentageRounded = Math.round (10000 * CounterByGrades[grade] / totalGrades) / 100;
-        tdGradePercentage.appendChild(document.createTextNode(gradePercentageRounded + "%"));
-
-        trGrade.appendChild(tdGrade);
-        trTotalByGrade.appendChild(tdCounterByGrades);
-        trGradePercentage.appendChild(tdGradePercentage);
-    }
-
-    gradeOverviewTableBody.appendChild(trGrade);
-    gradeOverviewTableBody.appendChild(trTotalByGrade);
-    gradeOverviewTableBody.appendChild(trGradePercentage);
-
-    gradeOverviewTable.appendChild(gradeOverviewTableBody);
-    div.insertBefore(gradeOverviewTable, div.firstChild);
+            gradeOverviewTable.innerHTML = gradesTableTemplate;
+            div.insertBefore(gradeOverviewTable, div.firstChild);
+    });
 }
 
 function createTotalCreditsTitle(div) {
@@ -123,13 +107,26 @@ function createTotalCreditsTitle(div) {
     div.insertBefore(creditsOverview, div.firstChild);
 }
 
-fetch(Url)
+function getExtensionInternalFileUrl(filePath) {
+    let internal_file;
+    try {
+        // firefox
+        internal_file = browser.runtime.getURL(filePath);
+    }
+    catch(e) {
+        // chrome
+        internal_file = chrome.runtime.getURL(filePath);
+    }
+    return internal_file;
+}
+
+fetch(API_URL)
 .then(response => response.json())
 .then(data => {
     let div = document.getElementsByClassName('row teaser-section None')[0];
     createModulesTable(div, data);
-    createGradesOverviewTable(div);
-    createTotalCreditsTitle(div);
+    createGradesOverviewTable(div)
+    .then(() => createTotalCreditsTitle(div));
 })
 .catch(e => {
     console.log("Booo");
