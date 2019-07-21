@@ -1,11 +1,11 @@
 const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
 const KeyGrade = 'Grad';
-const KeyMumericMark = 'Bewertung'
+const KeyNumericMark = 'Bewertung'
 
 const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const GoodGrades = ['A','B','C','D','E'];
-const KeysOfDesire = ['Nummer', KeyECTS, KeyMumericMark, KeyGrade];
+const KeysOfDesire = ['Nummer', KeyECTS, KeyNumericMark, KeyGrade];
 
 let totalCredits = 0;
 let totalGrades = 0;
@@ -21,7 +21,7 @@ function getValForKey(details, key) {
 }
 
 /*
- * Creates one row of the modules table by parsing one 'item' of the JSON.
+ * Creates one row of the modules table by parsing one 'item' of the JSON data.
  * At the same time collects data about the total numbers of grades, credits and marks.
  */
 function createModulesTableRow(item) {
@@ -39,19 +39,18 @@ function createModulesTableRow(item) {
         }
         if (key == KeyGrade) {
             grade = val;
-            if (grade != '') {
-                CounterByGrades[grade]++;
-                totalGrades++;
-            }
         }
-        if (key == KeyMumericMark) {
+        if (key == KeyNumericMark) {
             numericMark = val;
         }
-
         td.appendChild(document.createTextNode(val));
         tr.appendChild(td)
     });
 
+    if (grade != '') {
+        CounterByGrades[grade]++;
+        totalGrades++;
+    }
     if (GoodGrades.includes(grade) || numericMark == 'bestanden') {
         totalCredits += credits;
     }
