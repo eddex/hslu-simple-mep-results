@@ -5,8 +5,8 @@ const KeyMumericMark = 'Bewertung'
 
 const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const GoodGrades = ['A','B','C','D','E'];
+const KeysOfDesire = ['Nummer', KeyECTS, KeyMumericMark, KeyGrade];
 
-let keysOfDesire = ['Nummer', KeyECTS, KeyMumericMark, KeyGrade];
 let totalCredits = 0;
 let totalGrades = 0;
 
@@ -20,14 +20,18 @@ function getValForKey(details, key) {
     return '';
 }
 
-function createTableRow(item) {
+/*
+ * Creates one row of the modules table by parsing one 'item' of the JSON.
+ * At the same time collects data about the total numbers of grades, credits and marks.
+ */
+function createModulesTableRow(item) {
     let tr = document.createElement('tr');
 
     let credits = 0;
     let grade = '';
     let numericMark = '';
 
-    keysOfDesire.forEach(key => {
+    KeysOfDesire.forEach(key => {
         let td = document.createElement('td');
         let val = getValForKey(item.details, key)
         if (key == KeyECTS) {
@@ -45,7 +49,6 @@ function createTableRow(item) {
         }
 
         td.appendChild(document.createTextNode(val));
-        td.setAttribute('style', 'padding: 2px;');
         tr.appendChild(td)
     });
 
@@ -55,24 +58,25 @@ function createTableRow(item) {
     return tr;
 }
 
+/*
+ * Dynamically creates a table that contains all modules the student has visited.
+ * Shows Module Identifier (Nummer), Credits (ECTS), Numeric Mark (1-6) and Grade (A-F).
+ */
 function createModulesTable(div, json) {
     let table = document.createElement('table');
 
-    table.setAttribute('border', '1');
-    table.setAttribute('style', 'margin-bottom: 1.6rem; width: 100%; border: 1px solid #415e6c;');
-
     let header = table.createTHead();
     let row = header.insertRow(0);
-    for (let i = 0; i < keysOfDesire.length; i++) {
+    for (let i = 0; i < KeysOfDesire.length; i++) {
         let cell = row.insertCell(i);
-        cell.innerHTML = keysOfDesire[i];
-        cell.setAttribute('style', 'font-weight: bold;padding: 2px;');
+        cell.innerHTML = KeysOfDesire[i];
+        cell.setAttribute('style', 'font-weight: bold');
     }
 
     let tbody = document.createElement('tbody');
 
     json.items.forEach(item => {
-        let tr = createTableRow(item);
+        let tr = createModulesTableRow(item);
         tbody.appendChild(tr);
     });
 
@@ -80,20 +84,24 @@ function createModulesTable(div, json) {
     div.insertBefore(table, div.firstChild);
 }
 
+/*
+ * Creates a table that puts each possible grade (A-F) in comparison.
+ * Shown is, how many timea a grade has been achieved and the percentage,
+ * in comparison with the other grades.
+ */
 function createGradesOverviewTable(div) {
-    // Creates an overview table for the single grade and adds a procentual value for each
 
     return fetch(getExtensionInternalFileUrl('templates/grades_table.html'))
         .then(response => response.text())
         .then(gradesTableTemplate => {
             let gradeOverviewTable = document.createElement('div');
 
-            for (let grade in CounterByGrades) {
+            for (let grade_id in CounterByGrades) {
 
-                gradesTableTemplate = String(gradesTableTemplate).replace('count-' + grade, CounterByGrades[grade]);
+                gradesTableTemplate = String(gradesTableTemplate).replace('count-' + grade_id, CounterByGrades[grade_id]);
 
-                let gradePercentageRounded = Math.round (10000 * CounterByGrades[grade] / totalGrades) / 100;
-                gradesTableTemplate = gradesTableTemplate.replace('percentage-' + grade, gradePercentageRounded + "%");
+                let gradePercentageRounded = Math.round (10000 * CounterByGrades[grade_id] / totalGrades) / 100;
+                gradesTableTemplate = gradesTableTemplate.replace('percentage-' + grade_id, gradePercentageRounded + "%");
             }
 
             gradeOverviewTable.innerHTML = gradesTableTemplate;
@@ -101,12 +109,20 @@ function createGradesOverviewTable(div) {
     });
 }
 
+/*
+ * Create a header that displays the number of achieved credits.
+ */
 function createTotalCreditsTitle(div) {
     let creditsOverview = document.createElement('h2');
     creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
     div.insertBefore(creditsOverview, div.firstChild);
 }
 
+/*
+ * Helper method to read a file that is included in this browser extension.
+ * The file needs to be registered in manifest.json!
+ * Chome and Firefox have different APIs for this.
+ */
 function getExtensionInternalFileUrl(filePath) {
     let internal_file;
     if (typeof browser !== 'undefined') {
