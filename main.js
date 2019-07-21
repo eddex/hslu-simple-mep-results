@@ -109,11 +109,11 @@ function createTotalCreditsTitle(div) {
 
 function getExtensionInternalFileUrl(filePath) {
     let internal_file;
-    try {
+    if (typeof browser !== 'undefined') {
         // firefox
         internal_file = browser.runtime.getURL(filePath);
     }
-    catch(e) {
+    else {
         // chrome
         internal_file = chrome.runtime.getURL(filePath);
     }
