@@ -9,6 +9,10 @@ const KeysOfDesire = ['Nummer', KeyECTS, KeyNumericMark, KeyGrade];
 
 let totalCredits = 0;
 let totalGrades = 0;
+let totalNumericMark = 0;
+let numberOfNumericMarks = 0;
+let totalNumericMarkWithF = 0;
+let numberOfNumericMarksWithF = 0;
 
 function getValForKey(details, key) {
 
@@ -44,7 +48,7 @@ function createModulesTableRow(item) {
             numericMark = val;
         }
         td.appendChild(document.createTextNode(val));
-        tr.appendChild(td)
+        tr.appendChild(td);
     });
 
     if (grade != '') {
@@ -53,6 +57,16 @@ function createModulesTableRow(item) {
     }
     if (GoodGrades.includes(grade) || numericMark == 'bestanden') {
         totalCredits += credits;
+    }
+    // if cell is empty, Number() returns 0!
+    numericMark = Number(numericMark)
+    if (!isNaN(numericMark) && numericMark != 0) {
+        totalNumericMarkWithF += numericMark;
+        numberOfNumericMarksWithF++;
+        if (GoodGrades.includes(grade)) {
+            totalNumericMark += numericMark;
+            numberOfNumericMarks++;
+        }
     }
     return tr;
 }
@@ -99,7 +113,7 @@ function createGradesOverviewTable(div) {
 
                 gradesTableTemplate = String(gradesTableTemplate).replace('count-' + grade_id, CounterByGrades[grade_id]);
 
-                let gradePercentageRounded = Math.round (10000 * CounterByGrades[grade_id] / totalGrades) / 100;
+                let gradePercentageRounded = Math.round(10000 * CounterByGrades[grade_id] / totalGrades) / 100;
                 gradesTableTemplate = gradesTableTemplate.replace('percentage-' + grade_id, gradePercentageRounded + "%");
             }
 
@@ -112,9 +126,24 @@ function createGradesOverviewTable(div) {
  * Create a header that displays the number of achieved credits.
  */
 function createTotalCreditsTitle(div) {
-    let creditsOverview = document.createElement('h2');
-    creditsOverview.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
-    div.insertBefore(creditsOverview, div.firstChild);
+    let totalCreditsTitle = document.createElement('h2');
+    totalCreditsTitle.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
+    div.insertBefore(totalCreditsTitle, div.firstChild);
+}
+
+/*
+ * Create a header that displays the average mark over all modules.
+ * Modules with grade F are not counted in the average.
+ * A second average is displayed, where the modules with grade F are
+ *  taken into account.
+ */
+function createAverageMarkTitle(div) {
+    let averageMarkTitle = document.createElement('h2');
+    let average = Math.round(totalNumericMark / numberOfNumericMarks * 100) / 100;
+    let averageWithF = Math.round(totalNumericMarkWithF / numberOfNumericMarksWithF * 100) / 100;
+    averageMarkTitle.innerText = 'Noten Ø: ' + average;
+    averageMarkTitle.innerText += ' (Ø mit F: ' + averageWithF + ')';
+    div.insertBefore(averageMarkTitle, div.firstChild);
 }
 
 /*
@@ -140,8 +169,9 @@ fetch(API_URL)
 .then(data => {
     let div = document.getElementsByClassName('row teaser-section None')[0];
     createModulesTable(div, data);
+    createTotalCreditsTitle(div)
     createGradesOverviewTable(div)
-    .then(() => createTotalCreditsTitle(div));
+    .then(() => createAverageMarkTitle(div));
 })
 .catch(e => {
     console.log("Booo");
