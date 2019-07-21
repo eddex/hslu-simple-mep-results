@@ -7,7 +7,7 @@ It is done in a seperate script to increase the performance of the extension.
 
 To get started download the html file from
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/
-and save it as 'modulbeschriebe_i.html'.
+and save it as 'tools/modulbeschriebe_i.html'.
 
 The lxml.html.parse method would also be able to parse a website by url,
 but for this we would need to figure out how to login to mycampus by API call.
@@ -15,6 +15,7 @@ but for this we would need to figure out how to login to mycampus by API call.
 
 from lxml import etree, html
 import json
+from pathlib import Path
 
 def parseWebsite():
 
@@ -73,10 +74,22 @@ def parseWebsite():
         print (m, modules_with_type[m])
 
     j = json.dumps(modules_with_type, sort_keys=True)
-    f = open('modules.json', 'w')
+    f = open('data/modules_i.json', 'w')
     f.write(j)
     f.close()
 
+def prequisitesCheck():
+    f = Path('tools/modulbeschriebe_i.html')
+    if not f.is_file():
+        print('ERROR: file \'tools/modulbeschriebe_i.html\' does not exist')
+        print('To get started download the html file from \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
+and save it as \'tools/modulbeschriebe_i.html\'.')
+        return False
+    return True
+
+
 
 if __name__ == "__main__":
-    parseWebsite()
+    if prequisitesCheck():
+        parseWebsite()
