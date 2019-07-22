@@ -1,11 +1,13 @@
 const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 const KeyECTS = 'ECTS-Punkte';
 const KeyGrade = 'Grad';
-const KeyNumericMark = 'Bewertung'
+const KeyNumericMark = 'Bewertung';
+const KeyModuleIdentifier = 'Nummer';
 
 const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const GoodGrades = ['A','B','C','D','E'];
-const KeysOfDesire = ['Nummer', KeyECTS, KeyNumericMark, KeyGrade];
+const KeysOfDesire = [KeyModuleIdentifier, KeyECTS, KeyNumericMark, KeyGrade];
+const ModuleTableHeaders = [KeyModuleIdentifier, 'Modul-Typ', KeyECTS, KeyNumericMark, KeyGrade]
 
 let totalCredits = 0;
 let totalGrades = 0;
@@ -32,10 +34,48 @@ function getValForKey(details, key) {
 }
 
 /*
+ * The module name includes the module id.
+ * But there are different formats for the module names.
+ *
+ * Modules that are parsed:
+ *   Usually a module name looks like this: I.BA_IPCV.F1901
+ *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
+ *
+ * Modules that are not parsed:
+ *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
+ *   Only the ANRECHINDIVID module is known to have this format.
+ *   Probably counted as 'Erweiterungsmodul'.
+ */
+function getModuleIdFromModuleName(moduleName) {
+    name = String(moduleName)
+
+    if (name.includes('_')) {
+
+        // for module names like I.BA_AISO_E.F1901
+        name = name.split('_')[1];
+
+        // module names like I.BA_IPCV.F1901 need an additional split
+        if (name.includes('.')) {
+            name = name.split('.')[0];
+        }
+        return name;
+    }
+    else if (name.includes('.')) {
+
+        // for module names like I.ANRECHINDIVID.F1901
+        return name.split('.')[1];
+    }
+    else {
+        console.log('module id not parseable: ' + moduleName);
+        return null;
+    }
+}
+
+/*
  * Creates one row of the modules table by parsing one 'item' of the JSON data.
  * At the same time collects data about the total numbers of grades, credits and marks.
  */
-function createModulesTableRow(item) {
+function createModulesTableRow(item, moduleTypeList) {
     let tr = document.createElement('tr');
 
     let credits = 0;
@@ -45,6 +85,23 @@ function createModulesTableRow(item) {
     KeysOfDesire.forEach(key => {
         let td = document.createElement('td');
         let val = getValForKey(item.details, key)
+        td.appendChild(document.createTextNode(val));
+        tr.appendChild(td);
+
+        if (key == KeyModuleIdentifier) {
+            td = document.createElement('td');
+            let moduleId = getModuleIdFromModuleName(val);
+            if (moduleId != null) {
+
+                if (moduleTypeList.hasOwnProperty(moduleId)) {
+                    td.appendChild(document.createTextNode(moduleTypeList[moduleId]))
+                }
+                else {
+                    console.log('no type found for: ' + moduleId)
+                }
+            }
+            tr.appendChild(td);
+        }
         if (key == KeyECTS) {
             credits = Number(val);
         }
@@ -54,8 +111,6 @@ function createModulesTableRow(item) {
         if (key == KeyNumericMark) {
             numericMark = val;
         }
-        td.appendChild(document.createTextNode(val));
-        tr.appendChild(td);
     });
 
     if (grade != '') {
@@ -83,30 +138,35 @@ function createModulesTableRow(item) {
  * Shows Module Identifier (Nummer), Credits (ECTS), Numeric Mark (1-6) and Grade (A-F).
  */
 function createModulesTable(div, json) {
-    let table = document.createElement('table');
 
-    let header = table.createTHead();
-    let row = header.insertRow(0);
-    for (let i = 0; i < KeysOfDesire.length; i++) {
-        let cell = row.insertCell(i);
-        cell.innerHTML = KeysOfDesire[i];
-        cell.setAttribute('style', 'font-weight: bold');
-    }
+    return fetch(getExtensionInternalFileUrl('data/modules_i.json'))
+        .then(response => response.json())
+        .then(moduleTypeList => {
+            let table = document.createElement('table');
 
-    let tbody = document.createElement('tbody');
+            let header = table.createTHead();
+            let row = header.insertRow(0);
+            for (let i = 0; i < ModuleTableHeaders.length; i++) {
+                let cell = row.insertCell(i);
+                cell.innerHTML = ModuleTableHeaders[i];
+                cell.setAttribute('style', 'font-weight: bold');
+            }
 
-    json.items.forEach(item => {
-        let tr = createModulesTableRow(item);
-        tbody.appendChild(tr);
-    });
+            let tbody = document.createElement('tbody');
 
-    table.appendChild(tbody);
-    div.insertBefore(table, div.firstChild);
+            json.items.forEach(item => {
+                let tr = createModulesTableRow(item, moduleTypeList);
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            div.insertBefore(table, div.firstChild);
+        });
 }
 
 /*
  * Creates a table that puts each possible grade (A-F) in comparison.
- * Shown is, how many timea a grade has been achieved and the percentage,
+ * Shown is, how many time a grade has been achieved and the percentage,
  * in comparison with the other grades.
  */
 function createGradesOverviewTable(div) {
@@ -179,18 +239,18 @@ function injectCustomCss(div) {
             let style = document.createElement('style');
             style.innerText = css;
             div.insertBefore(style, div.firstChild);
-        });
+    });
 }
 
 fetch(API_URL)
 .then(response => response.json())
 .then(data => {
     let div = document.getElementsByClassName('row teaser-section None')[0];
-    createModulesTable(div, data);
-    createTotalCreditsTitle(div)
-    createGradesOverviewTable(div)
+    createModulesTable(div, data)
+    .then(() => createTotalCreditsTitle(div))
+    .then(() => createGradesOverviewTable(div))
     .then(() => createAverageMarkTitle(div))
-    .then(injectCustomCss(div));
+    .then(() => injectCustomCss(div));
 })
 .catch(e => {
     console.log("Booo");

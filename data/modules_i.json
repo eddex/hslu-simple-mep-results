@@ -7,12 +7,14 @@
     "AIOT": "Erweiterungsmodul",
     "AISO": "Majormodul",
     "AITEC": "Erweiterungsmodul",
+    "ANRECHINDIVID": "Erweiterungsmodul",
     "APPE": "Kernmodul",
     "BAA": "Projektmodul",
     "BAA+INF": "Projektmodul",
     "BCHAIN": "Majormodul",
     "BDM": "Erweiterungsmodul",
     "BIZCON": "Zusatzmodul",
+    "BPRAXIS": "Erweiterungsmodul",
     "BUSI+ENG": "Zusatzmodul",
     "BW": "Erweiterungsmodul",
     "CAB": "Majormodul",
@@ -87,6 +89,7 @@
     "MOD": "Kernmodul",
     "MOVK": "Majormodul",
     "MTOP": "Erweiterungsmodul",
+    "NA": "Zusatzmodul",
     "OEK": "Zusatzmodul",
     "OEK_PWG": "Zusatzmodul",
     "OOP": "Kernmodul",
@@ -102,6 +105,7 @@
     "PREN1": "Projektmodul",
     "PREN2": "Projektmodul",
     "PTA": "Projektmodul",
+    "RCCR": "Zusatzmodul",
     "ROBLAB": "Majormodul",
     "SELL": "Zusatzmodul",
     "SIM+MOD": "Erweiterungsmodul",
@@ -124,5 +128,6 @@
     "VWL2": "Zusatzmodul",
     "WEBLAB": "Majormodul",
     "WEBTEC": "Erweiterungsmodul",
-    "WIPRO": "Projektmodul"
+    "WIPRO": "Projektmodul",
+    "XML": "Erweiterungsmodul"
 }

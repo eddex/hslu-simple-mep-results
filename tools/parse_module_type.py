@@ -46,6 +46,16 @@ def parseWebsite():
     modules_with_type['ME+TE'] = zusatzmodul
     modules_with_type['WEBLAB'] = majormodul
 
+    # Other modules (that don't appear on the website)
+    modules_with_type['XML'] = erweiterungsmodul
+    modules_with_type['BPRAXIS'] = erweiterungsmodul
+    modules_with_type['ANRECHINDIVID'] = erweiterungsmodul  # most likely..
+
+    # ISA modules
+    modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
+    modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
+
+    # parse module types from HTML
     id_to_type_mapping = {
         'kernmodulestudienganginformatik': kernmodul,
         'projektmodulestudienganginformatik': projektmodul,
