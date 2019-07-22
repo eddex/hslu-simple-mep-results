@@ -11,7 +11,7 @@ Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://gith
 
 **Releases**
 
-- Download the `.xps` file from the latest release
+- Download the `.xps` file from the [latest release](https://github.com/eddex/hslu-simple-mep-results/releases)
 - open Firefox and open the URL `about:addons`
 - press the gear-button and select *Install Add-on from File...*
 - select the downloaded `.xps` file
