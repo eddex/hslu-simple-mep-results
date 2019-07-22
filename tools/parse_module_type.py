@@ -35,8 +35,34 @@ def parseWebsite():
     majormodul = 'Majormodul'
     zusatzmodul = 'Zusatzmodul'
 
-    # block-weeks are of different types. have to be hardcoded.
+    # parse module types from HTML
+    id_to_type_mapping = {
+        'kernmodulestudienganginformatik': kernmodul,
+        'projektmodulestudienganginformatik': projektmodul,
+        'erweiterungsmodulestudienganginformatik': erweiterungsmodul,
+        'majormoduleerweiterungsmodule': majormodul,
+        'zusatzmodulestudienganginformatik': zusatzmodul,
+        'zusatzmodulestudienganginformatikangebotta': zusatzmodul
+    }
+
+    tree = html.parse('tools/modulbeschriebe_i.html')
+    doc = html.fromstring(etree.tostring(tree))
+    sections = doc.find_class('download-content large-20 columns append-bottom')
+
     modules_with_type = {}
+
+    for section in sections:
+        for module_type_html_id in module_type_html_ids:
+            module_type_title = section.get_element_by_id(module_type_html_id, None)
+            if module_type_title is not None:
+                #print(id_to_type_mapping[module_type_html_id])
+                modules = section.find_class('columns col-collapse small-12 print-12 download-text')
+                for module in modules:
+                    module_id = str(etree.tostring(module)).split('(')[1].split(')')[0]
+                    #print(module_id)
+                    modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
+
+    # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
     modules_with_type['IAVR'] = majormodul
     modules_with_type['MTOP'] = erweiterungsmodul
@@ -55,30 +81,9 @@ def parseWebsite():
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
 
-    # parse module types from HTML
-    id_to_type_mapping = {
-        'kernmodulestudienganginformatik': kernmodul,
-        'projektmodulestudienganginformatik': projektmodul,
-        'erweiterungsmodulestudienganginformatik': erweiterungsmodul,
-        'majormoduleerweiterungsmodule': majormodul,
-        'zusatzmodulestudienganginformatik': zusatzmodul,
-        'zusatzmodulestudienganginformatikangebotta': zusatzmodul
-    }
+    # fixes
+    modules_with_type['STAT'] = kernmodul  # the website is not up to date
 
-    tree = html.parse('tools/modulbeschriebe_i.html')
-    doc = html.fromstring(etree.tostring(tree))
-    sections = doc.find_class('download-content large-20 columns append-bottom')
-
-    for section in sections:
-        for module_type_html_id in module_type_html_ids:
-            module_type_title = section.get_element_by_id(module_type_html_id, None)
-            if module_type_title is not None:
-                #print(id_to_type_mapping[module_type_html_id])
-                modules = section.find_class('columns col-collapse small-12 print-12 download-text')
-                for module in modules:
-                    module_id = str(etree.tostring(module)).split('(')[1].split(')')[0]
-                    #print(module_id)
-                    modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     for m in modules_with_type:
         print (m, modules_with_type[m])
