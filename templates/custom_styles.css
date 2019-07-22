@@ -10,3 +10,7 @@ table {
 td {
   padding-left: 2px;
 }
+
+.no-margin {
+  margin-bottom: 0rem;
+}

@@ -8,6 +8,7 @@ const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const GoodGrades = ['A','B','C','D','E'];
 const KeysOfDesire = [KeyModuleIdentifier, KeyECTS, KeyNumericMark, KeyGrade];
 const ModuleTableHeaders = [KeyModuleIdentifier, 'Modul-Typ', KeyECTS, KeyNumericMark, KeyGrade]
+const ECTSByModuleType = {Kernmodul: 0, Projektmodul: 0, Erweiterungsmodul: 0, Majormodul: 0, Zusatzmodul: 0};
 
 let totalCredits = 0;
 let totalGrades = 0;
@@ -81,6 +82,7 @@ function createModulesTableRow(item, moduleTypeList) {
     let credits = 0;
     let grade = '';
     let numericMark = '';
+    let lastModuleType = ''
 
     KeysOfDesire.forEach(key => {
         let td = document.createElement('td');
@@ -95,9 +97,10 @@ function createModulesTableRow(item, moduleTypeList) {
 
                 if (moduleTypeList.hasOwnProperty(moduleId)) {
                     td.appendChild(document.createTextNode(moduleTypeList[moduleId]))
+                    lastModuleType = moduleTypeList[moduleId];
                 }
-                else {
-                    console.log('no type found for: ' + moduleId)
+                else { // no type found for module, usually only I.INT_EINFTA
+                    td.appendChild(document.createTextNode('-'))
                 }
             }
             tr.appendChild(td);
@@ -119,6 +122,9 @@ function createModulesTableRow(item, moduleTypeList) {
     }
     if (GoodGrades.includes(grade) || numericMark == 'bestanden') {
         totalCredits += credits;
+        if (lastModuleType in ECTSByModuleType) {
+            ECTSByModuleType[lastModuleType] += credits;
+        }
     }
     // if cell is empty, Number() returns 0!
     numericMark = Number(numericMark)
@@ -165,6 +171,24 @@ function createModulesTable(div, json) {
 }
 
 /*
+ * Create a table that shows how many ECTS for each type of module have been achieved.
+ */
+function createCreditsByModuleTypeTable(div) {
+
+    return fetch(getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
+        .then(response => response.text())
+        .then(template => {
+
+            let creditsByModuleTypeTable = document.createElement('div');
+            for (let moduleKey in ECTSByModuleType) {
+                template = template.replace('ECTS-' + moduleKey, ECTSByModuleType[moduleKey])
+            }
+            creditsByModuleTypeTable.innerHTML = template;
+            div.insertBefore(creditsByModuleTypeTable, div.firstChild);
+        });
+}
+
+/*
  * Creates a table that puts each possible grade (A-F) in comparison.
  * Shown is, how many time a grade has been achieved and the percentage,
  * in comparison with the other grades.
@@ -186,7 +210,16 @@ function createGradesOverviewTable(div) {
 
             gradeOverviewTable.innerHTML = gradesTableTemplate;
             div.insertBefore(gradeOverviewTable, div.firstChild);
-    });
+        });
+}
+
+/*
+ * Create a simple header for the modules table.
+ */
+function createModulesTableHeader(div) {
+    let modulesTitle = document.createElement('h2');
+    modulesTitle.appendChild(document.createTextNode('Modulübersicht'));
+    div.insertBefore(modulesTitle, div.firstChild);
 }
 
 /*
@@ -194,7 +227,7 @@ function createGradesOverviewTable(div) {
  */
 function createTotalCreditsTitle(div) {
     let totalCreditsTitle = document.createElement('h2');
-    totalCreditsTitle.innerText = 'ECTS-Punkte: ' + totalCredits + '/180';
+    totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180'));
     div.insertBefore(totalCreditsTitle, div.firstChild);
 }
 
@@ -237,7 +270,7 @@ function injectCustomCss(div) {
         .then(response => response.text())
         .then(css => {
             let style = document.createElement('style');
-            style.innerText = css;
+            style.appendChild(document.createTextNode(css));
             div.insertBefore(style, div.firstChild);
     });
 }
@@ -247,6 +280,8 @@ fetch(API_URL)
 .then(data => {
     let div = document.getElementsByClassName('row teaser-section None')[0];
     createModulesTable(div, data)
+    .then(() => createModulesTableHeader(div))
+    .then(() => createCreditsByModuleTypeTable(div))
     .then(() => createTotalCreditsTitle(div))
     .then(() => createGradesOverviewTable(div))
     .then(() => createAverageMarkTitle(div))
