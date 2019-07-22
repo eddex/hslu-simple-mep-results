@@ -14,6 +14,13 @@ let numberOfNumericMarks = 0;
 let totalNumericMarkWithF = 0;
 let numberOfNumericMarksWithF = 0;
 
+/*
+ * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
+ * detail: [
+ *   key: "x",
+ *   val: "y"
+ * ]
+ */
 function getValForKey(details, key) {
 
     for (detail of details) {
