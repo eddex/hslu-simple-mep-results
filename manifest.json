@@ -20,7 +20,9 @@
 
     "web_accessible_resources": [
       "templates/grades_table.html",
-      "templates/custom_styles.css"
+      "templates/credits_by_module_type_table.html",
+      "templates/custom_styles.css",
+      "data/modules_i.json"
     ]
 
   }
