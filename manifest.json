@@ -2,7 +2,7 @@
 
     "manifest_version": 2,
     "name": "HSLU simple MEP results",
-    "version": "1.1",
+    "version": "1.2",
 
     "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
 
@@ -19,7 +19,8 @@
     ],
 
     "web_accessible_resources": [
-      "templates/grades_table.html"
+      "templates/grades_table.html",
+      "templates/custom_styles.css"
     ]
 
   }

@@ -171,6 +171,17 @@ function getExtensionInternalFileUrl(filePath) {
     return internal_file;
 }
 
+function injectCustomCss(div) {
+
+    return fetch(getExtensionInternalFileUrl('templates/custom_styles.css'))
+        .then(response => response.text())
+        .then(css => {
+            let style = document.createElement('style');
+            style.innerText = css;
+            div.insertBefore(style, div.firstChild);
+        });
+}
+
 fetch(API_URL)
 .then(response => response.json())
 .then(data => {
@@ -178,7 +189,8 @@ fetch(API_URL)
     createModulesTable(div, data);
     createTotalCreditsTitle(div)
     createGradesOverviewTable(div)
-    .then(() => createAverageMarkTitle(div));
+    .then(() => createAverageMarkTitle(div))
+    .then(injectCustomCss(div));
 })
 .catch(e => {
     console.log("Booo");
