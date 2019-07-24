@@ -129,5 +129,7 @@
     "WEBLAB": "Majormodul",
     "WEBTEC": "Erweiterungsmodul",
     "WIPRO": "Projektmodul",
-    "XML": "Erweiterungsmodul"
+    "XML": "Erweiterungsmodul",
+    "DB&S": "Kernmodul",
+    "NETW2": "Kernmodul"
 }
