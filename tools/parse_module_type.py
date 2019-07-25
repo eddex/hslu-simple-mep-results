@@ -77,6 +77,10 @@ def parseWebsite():
     modules_with_type['BPRAXIS'] = erweiterungsmodul
     modules_with_type['ANRECHINDIVID'] = erweiterungsmodul  # most likely..
 
+    # ICS modules
+    modules_with_type['DB&S'] = kernmodul
+    modules_with_type['NETW2'] = kernmodul
+
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
