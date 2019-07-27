@@ -1,14 +1,19 @@
-const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
-const KeyECTS = 'ECTS-Punkte';
-const KeyGrade = 'Grad';
-const KeyNumericMark = 'Bewertung';
-const KeyModuleIdentifier = 'Nummer';
+const NameKey = 'Nummer';
+const CreditsKey = 'ECTS-Punkte';
+const MarkKey = 'Bewertung';
+const GradeKey = 'Grad';
+const ItemDetailKeys = [NameKey, CreditsKey, MarkKey, GradeKey];
+const ModuleTypeKey = 'Modul-Typ';
+const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 
-const CounterByGrades = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
-const GoodGrades = ['A','B','C','D','E'];
-const KeysOfDesire = [KeyModuleIdentifier, KeyECTS, KeyNumericMark, KeyGrade];
-const ModuleTableHeaders = [KeyModuleIdentifier, 'Modul-Typ', KeyECTS, KeyNumericMark, KeyGrade]
-const ECTSByModuleType = {Kernmodul: 0, Projektmodul: 0, Erweiterungsmodul: 0, Majormodul: 0, Zusatzmodul: 0};
+const GradesCount = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
+const CreditsByModuleTypeCount = {
+    Kernmodul: 0,
+    Projektmodul: 0,
+    Erweiterungsmodul: 0,
+    Majormodul: 0,
+    Zusatzmodul: 0
+};
 
 let totalCredits = 0;
 let totalGrades = 0;
@@ -24,7 +29,7 @@ let numberOfNumericMarksWithF = 0;
  *   val: "y"
  * ]
  */
-function getValForKey(details, key) {
+function getItemDetailsValueByKey(details, key) {
 
     for (detail of details) {
         if (key == detail.key) {
@@ -48,7 +53,8 @@ function getValForKey(details, key) {
  *   Probably counted as 'Erweiterungsmodul'.
  */
 function getModuleIdFromModuleName(moduleName) {
-    name = String(moduleName)
+
+    let name = String(moduleName);
 
     if (name.includes('_')) {
 
@@ -73,119 +79,62 @@ function getModuleIdFromModuleName(moduleName) {
 }
 
 /*
- * Creates one row of the modules table by parsing one 'item' of the JSON data.
- * At the same time collects data about the total numbers of grades, credits and marks.
+ * Creates one row of the modules table.
  */
-function createModulesTableRow(item, moduleTypeList) {
+function createModulesTableRow(parsedModule) {
+
     let tr = document.createElement('tr');
 
-    let credits = 0;
-    let grade = '';
-    let numericMark = '';
-    let lastModuleType = ''
-
-    KeysOfDesire.forEach(key => {
+    ModuleTableHeaders.forEach(attributeKey => {
         let td = document.createElement('td');
-        let val = getValForKey(item.details, key)
-        td.appendChild(document.createTextNode(val));
+        td.appendChild(document.createTextNode(parsedModule[attributeKey]));
         tr.appendChild(td);
-
-        if (key == KeyModuleIdentifier) {
-            td = document.createElement('td');
-            let moduleId = getModuleIdFromModuleName(val);
-            if (moduleId != null) {
-
-                if (moduleTypeList.hasOwnProperty(moduleId)) {
-                    td.appendChild(document.createTextNode(moduleTypeList[moduleId]))
-                    lastModuleType = moduleTypeList[moduleId];
-                }
-                else { // no type found for module, usually only I.INT_EINFTA
-                    td.appendChild(document.createTextNode('-'))
-                }
-            }
-            tr.appendChild(td);
-        }
-        if (key == KeyECTS) {
-            credits = Number(val);
-        }
-        if (key == KeyGrade) {
-            grade = val;
-        }
-        if (key == KeyNumericMark) {
-            numericMark = val;
-        }
     });
 
-    if (grade != '') {
-        CounterByGrades[grade]++;
-        totalGrades++;
-    }
-    if (GoodGrades.includes(grade) || numericMark == 'bestanden') {
-        totalCredits += credits;
-        if (lastModuleType in ECTSByModuleType) {
-            ECTSByModuleType[lastModuleType] += credits;
-        }
-    }
-    // if cell is empty, Number() returns 0!
-    numericMark = Number(numericMark)
-    if (!isNaN(numericMark) && numericMark != 0) {
-        totalNumericMarkWithF += numericMark;
-        numberOfNumericMarksWithF++;
-        if (GoodGrades.includes(grade)) {
-            totalNumericMark += numericMark;
-            numberOfNumericMarks++;
-        }
-    }
     return tr;
 }
 
 /*
  * Dynamically creates a table that contains all modules the student has visited.
- * Shows Module Identifier (Nummer), Credits (ECTS), Numeric Mark (1-6) and Grade (A-F).
+ * Shows Module Identifier (Nummer), Credits (ECTS), Module-Type, Numeric Mark (1-6) and Grade (A-F).
  */
-function createModulesTable(div, json) {
+function createModulesTable(div, modules) {
 
-    return fetch(getExtensionInternalFileUrl('data/modules_i.json'))
-        .then(response => response.json())
-        .then(moduleTypeList => {
-            let table = document.createElement('table');
+    let table = document.createElement('table');
 
-            let header = table.createTHead();
-            let row = header.insertRow(0);
-            for (let i = 0; i < ModuleTableHeaders.length; i++) {
-                let cell = row.insertCell(i);
-                cell.innerHTML = ModuleTableHeaders[i];
-                cell.setAttribute('style', 'font-weight: bold');
-            }
+    let header = table.createTHead();
+    let row = header.insertRow(0);
+    for (let i = 0; i < ModuleTableHeaders.length; i++) {
+        let cell = row.insertCell(i);
+        cell.appendChild(document.createTextNode(ModuleTableHeaders[i]));
+        cell.setAttribute('style', 'font-weight: bold');
+    }
 
-            let tbody = document.createElement('tbody');
+    let tbody = document.createElement('tbody');
 
-            json.items.forEach(item => {
-                let tr = createModulesTableRow(item, moduleTypeList);
-                tbody.appendChild(tr);
-            });
+    modules.forEach(parsedModule => {
+        let tr = createModulesTableRow(parsedModule);
+        tbody.appendChild(tr);
+    });
 
-            table.appendChild(tbody);
-            div.insertBefore(table, div.firstChild);
-        });
+    table.appendChild(tbody);
+    div.insertBefore(table, div.firstChild);
 }
 
 /*
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
-function createCreditsByModuleTypeTable(div) {
+async function createCreditsByModuleTypeTable(div) {
 
-    return fetch(getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
-        .then(response => response.text())
-        .then(template => {
+    let template = await fetch(getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
+        .then(response => response.text());
 
-            let creditsByModuleTypeTable = document.createElement('div');
-            for (let moduleKey in ECTSByModuleType) {
-                template = template.replace('ECTS-' + moduleKey, ECTSByModuleType[moduleKey])
-            }
-            creditsByModuleTypeTable.innerHTML = template;
-            div.insertBefore(creditsByModuleTypeTable, div.firstChild);
-        });
+    let creditsByModuleTypeTable = document.createElement('div');
+    for (let moduleKey in CreditsByModuleTypeCount) {
+        template = template.replace('ECTS-' + moduleKey, CreditsByModuleTypeCount[moduleKey]);
+    }
+    creditsByModuleTypeTable.innerHTML = template;
+    div.insertBefore(creditsByModuleTypeTable, div.firstChild);
 }
 
 /*
@@ -193,56 +142,53 @@ function createCreditsByModuleTypeTable(div) {
  * Shown is, how many time a grade has been achieved and the percentage,
  * in comparison with the other grades.
  */
-function createGradesOverviewTable(div) {
+async function createGradesOverviewTable(div) {
 
-    return fetch(getExtensionInternalFileUrl('templates/grades_table.html'))
-        .then(response => response.text())
-        .then(gradesTableTemplate => {
-            let gradeOverviewTable = document.createElement('div');
+    let gradesTableTemplate = await fetch(getExtensionInternalFileUrl('templates/grades_table.html'))
+        .then(response => response.text());
 
-            for (let grade_id in CounterByGrades) {
-
-                gradesTableTemplate = String(gradesTableTemplate).replace('count-' + grade_id, CounterByGrades[grade_id]);
-
-                let gradePercentageRounded = Math.round(10000 * CounterByGrades[grade_id] / totalGrades) / 100;
-                gradesTableTemplate = gradesTableTemplate.replace('percentage-' + grade_id, gradePercentageRounded + "%");
-            }
-
-            gradeOverviewTable.innerHTML = gradesTableTemplate;
-            div.insertBefore(gradeOverviewTable, div.firstChild);
-        });
+    let gradeOverviewTable = document.createElement('div');
+    for (let gradeId in GradesCount) {
+        gradesTableTemplate = String(gradesTableTemplate).replace('count-' + gradeId, GradesCount[gradeId]);
+        let gradePercentageRounded = Math.round(10000 * GradesCount[gradeId] / totalGrades) / 100;
+        gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
+    }
+    gradeOverviewTable.innerHTML = gradesTableTemplate;
+    div.insertBefore(gradeOverviewTable, div.firstChild);
 }
 
 /*
  * Create a simple header for the modules table.
  */
-function createModulesTableHeader(div) {
+function createModulesTableTitle(div) {
+
     let modulesTitle = document.createElement('h2');
     modulesTitle.appendChild(document.createTextNode('Modulübersicht'));
     div.insertBefore(modulesTitle, div.firstChild);
 }
 
 /*
- * Create a header that displays the number of achieved credits.
+ * Create a heading that displays the number of achieved credits.
  */
 function createTotalCreditsTitle(div) {
+
     let totalCreditsTitle = document.createElement('h2');
     totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180'));
     div.insertBefore(totalCreditsTitle, div.firstChild);
 }
 
 /*
- * Create a header that displays the average mark over all modules.
+ * Create a heading that displays the average mark over all modules.
  * Modules with grade F are not counted in the average.
  * A second average is displayed, where the modules with grade F are
  *  taken into account.
  */
 function createAverageMarkTitle(div) {
+
     let averageMarkTitle = document.createElement('h2');
     let average = Math.round(totalNumericMark / numberOfNumericMarks * 100) / 100;
     let averageWithF = Math.round(totalNumericMarkWithF / numberOfNumericMarksWithF * 100) / 100;
-    averageMarkTitle.innerText = 'Noten Ø: ' + average;
-    averageMarkTitle.innerText += ' (Ø mit F: ' + averageWithF + ')';
+    averageMarkTitle.appendChild(document.createTextNode('Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')'));
     div.insertBefore(averageMarkTitle, div.firstChild);
 }
 
@@ -252,6 +198,7 @@ function createAverageMarkTitle(div) {
  * Chome and Firefox have different APIs for this.
  */
 function getExtensionInternalFileUrl(filePath) {
+
     let internal_file;
     if (typeof browser !== 'undefined') {
         // firefox
@@ -264,30 +211,103 @@ function getExtensionInternalFileUrl(filePath) {
     return internal_file;
 }
 
-function injectCustomCss(div) {
+/*
+ * Add custom CSS rules to the document.
+ */
+async function injectCustomCss(div) {
 
-    return fetch(getExtensionInternalFileUrl('templates/custom_styles.css'))
-        .then(response => response.text())
-        .then(css => {
-            let style = document.createElement('style');
-            style.appendChild(document.createTextNode(css));
-            div.insertBefore(style, div.firstChild);
+    const css = await fetch(getExtensionInternalFileUrl('templates/custom_styles.css'))
+        .then(response => response.text());
+    let style = document.createElement('style');
+    style.appendChild(document.createTextNode(css));
+    div.insertBefore(style, div.firstChild);
+}
+
+/*
+ * Generates an array of module objects from the API and the module type mapping json file.
+ */
+async function generateModuleObjects() {
+
+    const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
+
+    const modules = []
+
+    let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
+        .then(response => response.json());
+
+    let pageData = await fetch(API_URL)
+        .then(response => response.json());
+
+    pageData.items.forEach(item => {
+
+        let parsedModule = {};
+
+        let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
+        parsedModule.passed = passed;
+
+        let details = item.details;
+        ItemDetailKeys.forEach(key => {
+            let value = getItemDetailsValueByKey(details, key);
+            parsedModule[key] = value;
+        });
+
+        let moduleId = getModuleIdFromModuleName(parsedModule[NameKey]);
+        parsedModule[ModuleTypeKey] = moduleTypeList[moduleId];
+
+        modules.push(parsedModule);
+    })
+
+    return modules;
+}
+
+function calculateStats(modules) {
+
+    modules.forEach(parsedModule => {
+        if (parsedModule[GradeKey] != '') {
+            GradesCount[parsedModule[GradeKey]]++;
+            totalGrades++;
+        }
+        if (parsedModule.passed) {
+            let credits = Number(parsedModule[CreditsKey]);
+            totalCredits += credits;
+            let moduleType = parsedModule[ModuleTypeKey]
+            if (moduleType in CreditsByModuleTypeCount) {
+                CreditsByModuleTypeCount[moduleType] += credits;
+            }
+        }
+        // if cell is empty, Number('') returns 0!
+        numericMark = Number(parsedModule[MarkKey])
+        if (!isNaN(numericMark) && numericMark != 0) {
+            totalNumericMarkWithF += numericMark;
+            numberOfNumericMarksWithF++;
+            if (parsedModule.passed) {
+                totalNumericMark += numericMark;
+                numberOfNumericMarks++;
+            }
+        }
     });
 }
 
-fetch(API_URL)
-.then(response => response.json())
-.then(data => {
+async function generateHtml(modules) {
+
+    calculateStats(modules);
+
     let div = document.getElementsByClassName('row teaser-section None')[0];
-    createModulesTable(div, data)
-    .then(() => createModulesTableHeader(div))
-    .then(() => createCreditsByModuleTypeTable(div))
-    .then(() => createTotalCreditsTitle(div))
-    .then(() => createGradesOverviewTable(div))
-    .then(() => createAverageMarkTitle(div))
-    .then(() => injectCustomCss(div));
-})
-.catch(e => {
-    console.log("Booo");
-    console.log(e);
-});
+    createModulesTable(div, modules);
+    createModulesTableTitle(div);
+
+    await createCreditsByModuleTypeTable(div);
+    createTotalCreditsTitle(div);
+
+    await createGradesOverviewTable(div);
+    createAverageMarkTitle(div);
+
+    await injectCustomCss(div);
+}
+
+generateModuleObjects()
+    .then(modules => generateHtml(modules))
+    .catch(e => {
+        console.log("Booo");
+        console.log(e);
+    });
