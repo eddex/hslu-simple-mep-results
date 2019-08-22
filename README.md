@@ -9,9 +9,9 @@ Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://gith
 
 ### firefox
 
-**Releases**
+**Releases** (recommended)
 
-- Download the `.xps` file from the [latest release](https://github.com/eddex/hslu-simple-mep-results/releases)
+- Download the `.xpi` file from the [latest release](https://github.com/eddex/hslu-simple-mep-results/releases)
 - Firefox should prompt you to install the extension, if not..
   - open Firefox and open the URL `about:addons`
   - press the gear-button and select *Install Add-on from File...*
