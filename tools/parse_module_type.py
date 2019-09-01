@@ -71,6 +71,7 @@ def parseWebsite():
     modules_with_type['OEK_PWG'] = zusatzmodul
     modules_with_type['ME+TE'] = zusatzmodul
     modules_with_type['WEBLAB'] = majormodul
+    modules_with_type['KOHEB'] = zusatzmodul
 
     # Other modules (that don't appear on the website)
     modules_with_type['XML'] = erweiterungsmodul
