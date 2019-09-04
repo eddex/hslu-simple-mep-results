@@ -80,11 +80,28 @@ def parseWebsite():
 
     # ICS modules
     modules_with_type['DB&S'] = kernmodul
+    modules_with_type['NETW1'] = kernmodul
     modules_with_type['NETW2'] = kernmodul
+    modules_with_type['ADS'] = kernmodul
+    modules_with_type['INTROL'] = kernmodul
+    modules_with_type['SPTA'] = kernmodul
+    modules_with_type['SPREN1'] = kernmodul
+    modules_with_type['ISLAB_K'] = kernmodul
+    modules_with_type['ANLS'] = kernmodul
+    modules_with_type['SPTA'] = kernmodul
+    modules_with_type['CRS'] = erweiterungsmodul
+    modules_with_type['DSO'] = kernmodul
+    modules_with_type['PRIVACY1'] = kernmodul
+    modules_with_type['OSA'] = kernmodul
+    modules_with_type['ISM'] = kernmodul
+
+    # only for ics students
+    # modules_with_type['ETHIK'] = kernmodul
 
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
+    modules_with_type['ENICS1'] = zusatzmodul
 
     # fixes
     modules_with_type['STAT'] = kernmodul  # the website is not up to date
