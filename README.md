@@ -38,3 +38,17 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
 - click `<Load unpacked>`
 - select the downloaded folder of this repo
 - open https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/
+
+## create a new release
+
+1. add the following to a `.zip` file:
+  - `data/` directory
+  - `icons/` directory
+  - `templates/` directory
+  - `LICENSE` file
+  - `main.js` file
+  - `manifest.json` file
+2. login to https://addons.mozilla.org/en-US/developers/
+  - HSLU simple MEP results > Edit product page > Upload new version
+  - Download the generated `.xpi` file
+3. Create a new release in this repo and upload the `.xpi` file
