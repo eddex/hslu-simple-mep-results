@@ -9,13 +9,7 @@ Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://gith
 
 ### firefox
 
-**Firefox Add-ons** (recommended)
-
-Easy installation and automatic updates!
-
-Install here: https://addons.mozilla.org/en-US/firefox/addon/hslu-simple-mep-results/
-
-**Releases**
+**Releases** (recommended)
 
 - Download the `.xpi` file from the [latest release](https://github.com/eddex/hslu-simple-mep-results/releases)
 - Firefox should prompt you to install the extension, if not..
