@@ -2,7 +2,7 @@ const NameKey = 'Nummer';
 const CreditsKey = 'ECTS-Punkte';
 const MarkKey = 'Bewertung';
 const GradeKey = 'Grad';
-const ItemDetailKeys = [NameKey, CreditsKey, MarkKey, GradeKey];
+const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 
@@ -245,6 +245,9 @@ async function generateModuleObjects() {
         let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
         parsedModule.passed = passed;
 
+        parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
+        parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
+
         let details = item.details;
         ItemDetailKeys.forEach(key => {
             let value = getItemDetailsValueByKey(details, key);
@@ -263,7 +266,7 @@ async function generateModuleObjects() {
 function calculateStats(modules) {
 
     modules.forEach(parsedModule => {
-        if (parsedModule[GradeKey] != '') {
+        if (parsedModule[GradeKey] != null && parsedModule[GradeKey] != '') {
             GradesCount[parsedModule[GradeKey]]++;
             totalGrades++;
         }
