@@ -232,13 +232,10 @@ async function generateModuleObjects() {
 
     const modules = []
 
-    console.log('here we go')
     let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
         .then(response => response.json());
-
     let pageData = await fetch(API_URL)
         .then(response => response.json());
-    console.log(pageData)
     if (!pageData.items) {
         // Sometimes our requests get blocked. We have to try again later.
         return;
