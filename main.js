@@ -236,7 +236,7 @@ async function generateModuleObjects() {
     let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
         .then(response => response.json());
 
-    let pageData = await fetch(API_URL, )
+    let pageData = await fetch(API_URL)
         .then(response => response.json());
     console.log(pageData)
     if (!pageData.items) {
