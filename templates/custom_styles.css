@@ -23,3 +23,14 @@ td {
   background-color: #92d0ee;
   padding-left: 2px;
 }
+
+.total-progress {
+  height: 100%;
+}
+
+.total-progress-container {
+  height: 10px;
+  width: 100%;
+  border: 1px solid #415e6c;
+  margin-bottom: 0.4rem;
+}

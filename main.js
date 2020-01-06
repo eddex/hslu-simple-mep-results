@@ -122,6 +122,18 @@ function createModulesTable(div, modules) {
 }
 
 /*
+ * Given a current value and a max value, calculate the percentage.
+ * The result can be used for progress bars.
+ */
+const calculateProgress = (current, max) => {
+    let progress = Math.round(current / max * 100);
+    if (progress > 100) {
+        progress = 100;
+    }
+    return progress;
+}
+
+/*
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
 async function createCreditsByModuleTypeTable(div) {
@@ -134,10 +146,9 @@ async function createCreditsByModuleTypeTable(div) {
 
     for (let moduleKey in CreditsByModuleTypeCount) {
         const creditProgressDiv = document.getElementById('ECTS-' + moduleKey);
-        let progress = Math.round(CreditsByModuleTypeCount[moduleKey].current / CreditsByModuleTypeCount[moduleKey].min * 100);
-        if (progress > 100) {
-            progress = 100;
-        }
+        const progress = calculateProgress(
+            CreditsByModuleTypeCount[moduleKey].current,
+            CreditsByModuleTypeCount[moduleKey].min)
         creditProgressDiv.innerText =
             CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
         creditProgressDiv.style.width = progress +'%';
@@ -169,7 +180,7 @@ async function createGradesOverviewTable(div) {
  */
 function createModulesTableTitle(div) {
 
-    let modulesTitle = document.createElement('h2');
+    const modulesTitle = document.createElement('h2');
     modulesTitle.appendChild(document.createTextNode('Modulübersicht'));
     div.insertBefore(modulesTitle, div.firstChild);
 }
@@ -179,9 +190,28 @@ function createModulesTableTitle(div) {
  */
 function createTotalCreditsTitle(div) {
 
-    let totalCreditsTitle = document.createElement('h2');
-    totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180'));
+    const totalCreditsTitle = document.createElement('h2');
+    const progress = calculateProgress(totalCredits, 180);
+    totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)'));
     div.insertBefore(totalCreditsTitle, div.firstChild);
+}
+
+/*
+ * Create a progress bar that visualizes the number of achieved credits.
+ */
+function createTotalCreditsProgressBar(div) {
+
+    const container = document.createElement('div');
+    container.classList = 'total-progress-container';
+
+    const progressBar = document.createElement('div');
+    const progress = calculateProgress(totalCredits, 180);
+    progressBar.classList = 'total-progress progress';
+    progressBar.style.width = progress + '%';
+
+    container.appendChild(progressBar);
+
+    div.insertBefore(container, div.firstChild);
 }
 
 /*
@@ -320,6 +350,7 @@ async function generateHtml(modules) {
     createModulesTableTitle(div);
 
     await createCreditsByModuleTypeTable(div);
+    createTotalCreditsProgressBar(div);
     createTotalCreditsTitle(div);
 
     await createGradesOverviewTable(div);
