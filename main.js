@@ -228,16 +228,21 @@ async function injectCustomCss(div) {
  */
 async function generateModuleObjects() {
 
-    const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=250&total_entries=100&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
+    const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=69&total_entries=69&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 
     const modules = []
 
+    console.log('here we go')
     let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
         .then(response => response.json());
 
-    let pageData = await fetch(API_URL)
+    let pageData = await fetch(API_URL, )
         .then(response => response.json());
-
+    console.log(pageData)
+    if (!pageData.items) {
+        // Sometimes our requests get blocked. We have to try again later.
+        return;
+    }
     pageData.items.forEach(item => {
 
         let parsedModule = {};
@@ -293,9 +298,20 @@ function calculateStats(modules) {
 
 async function generateHtml(modules) {
 
+    let div = document.getElementsByClassName('row teaser-section None')[0];
+    if (!modules) {
+        // API call was blocked.
+        const p = document.createElement('p');
+        p.innerHTML = 'HSLU Simple MEP Results Extension failed to load. The API \
+            has blocked the request. Please try again later. \
+            More infos on GitHub: <a href="https://github.com/eddex/hslu-simple-mep-results/issues/16" \
+            >Issue #16</a>';
+        div.insertBefore(p, div.firstChild);
+        return;
+    }
+
     calculateStats(modules);
 
-    let div = document.getElementsByClassName('row teaser-section None')[0];
     createModulesTable(div, modules);
     createModulesTableTitle(div);
 
