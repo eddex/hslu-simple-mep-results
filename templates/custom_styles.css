@@ -11,6 +11,15 @@ td {
   padding-left: 2px;
 }
 
+.td-progress {
+  padding-left: 0px;
+}
+
 .no-margin {
   margin-bottom: 0rem;
+}
+
+.progress {
+  background-color: #92d0ee;
+  padding-left: 2px;
 }

@@ -8,11 +8,11 @@ const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKe
 
 const GradesCount = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const CreditsByModuleTypeCount = {
-    Kernmodul: 0,
-    Projektmodul: 0,
-    Erweiterungsmodul: 0,
-    Majormodul: 0,
-    Zusatzmodul: 0
+    Kernmodul: {current: 0, min: 60},
+    Projektmodul: {current: 0, min: 42},
+    Erweiterungsmodul: {current: 0, min: 42},
+    Majormodul: {current: 0, min: 24},
+    Zusatzmodul: {current: 0, min: 9}
 };
 
 let totalCredits = 0;
@@ -128,13 +128,20 @@ async function createCreditsByModuleTypeTable(div) {
 
     let template = await fetch(getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
         .then(response => response.text());
-
     let creditsByModuleTypeTable = document.createElement('div');
-    for (let moduleKey in CreditsByModuleTypeCount) {
-        template = template.replace('ECTS-' + moduleKey, CreditsByModuleTypeCount[moduleKey]);
-    }
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
+
+    for (let moduleKey in CreditsByModuleTypeCount) {
+        const creditProgressDiv = document.getElementById('ECTS-' + moduleKey);
+        let progress = Math.round(CreditsByModuleTypeCount[moduleKey].current / CreditsByModuleTypeCount[moduleKey].min * 100);
+        if (progress > 100) {
+            progress = 100;
+        }
+        creditProgressDiv.innerText =
+            CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
+        creditProgressDiv.style.width = progress +'%';
+    }
 }
 
 /*
@@ -277,7 +284,7 @@ function calculateStats(modules) {
             totalCredits += credits;
             let moduleType = parsedModule[ModuleTypeKey]
             if (moduleType in CreditsByModuleTypeCount) {
-                CreditsByModuleTypeCount[moduleType] += credits;
+                CreditsByModuleTypeCount[moduleType].current += credits;
             }
         }
         // if cell is empty, Number('') returns 0!
