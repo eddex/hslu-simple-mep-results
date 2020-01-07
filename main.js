@@ -5,7 +5,6 @@ const GradeKey = 'Grad';
 const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
-
 const GradesCount = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
 const CreditsByModuleTypeCount = {
     Kernmodul: {current: 0, min: 60},
@@ -15,12 +14,26 @@ const CreditsByModuleTypeCount = {
     Zusatzmodul: {current: 0, min: 9}
 };
 
+// TODO: add more possible titles
+var StudyTitles = {
+    "bachelor of science in information & cyber security": "ICS",
+    "bachelor of science in information": "I",
+    "bachelor of science in computer science": "I",
+    "bachelor of science in wirtschaftsinformatik": "WI",
+    "bachelor of science in informatik": "I"
+}
+
 let totalCredits = 0;
 let totalGrades = 0;
 let totalNumericMark = 0;
 let numberOfNumericMarks = 0;
 let totalNumericMarkWithF = 0;
 let numberOfNumericMarksWithF = 0;
+
+function getStudyAcronym(studytitle) {
+    studytitle = studytitle.toLowerCase().replace(/[0-9]/g, '');;
+    return StudyTitles[studytitle]
+}
 
 /*
  * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
@@ -271,6 +284,18 @@ async function generateModuleObjects() {
 
     let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
         .then(response => response.json());
+
+    if(getStudyAcronym(studyTitle) == "ICS"){
+        let icsModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_ics.json'))
+        .then(response => response.json());
+        moduleTypeList = Object.assign(moduleTypeList, icsModuleTypeList);
+     }
+    else if(getStudyAcronym(studyTitle) == "WI"){
+        let wiModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_wi.json'))
+        .then(response => response.json());
+        moduleTypeList = Object.assign(moduleTypeList, wiModuleTypeList);
+    }
+
     let pageData = await fetch(API_URL)
         .then(response => response.json());
     if (!pageData.items) {
