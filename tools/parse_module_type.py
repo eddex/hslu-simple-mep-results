@@ -12,7 +12,6 @@ and save it as 'tools/modulbeschriebe_i.html'.
 The lxml.html.parse method would also be able to parse a website by url,
 but for this we would need to figure out how to login to mycampus by API call.
 '''
-
 from lxml import etree, html
 import json
 from pathlib import Path
@@ -50,6 +49,8 @@ def parseWebsite():
     sections = doc.find_class('download-content large-20 columns append-bottom')
 
     modules_with_type = {}
+    ics_modules_with_type = {}
+    wi_modules_with_type = {}
 
     for section in sections:
         for module_type_html_id in module_type_html_ids:
@@ -95,8 +96,8 @@ def parseWebsite():
     modules_with_type['OSA'] = kernmodul
     modules_with_type['ISM'] = kernmodul
 
-    # only for ics students
-    # modules_with_type['ETHIK'] = kernmodul
+    # Corrections for ICS Students
+    ics_modules_with_type['ETHIK'] = kernmodul
 
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
@@ -112,6 +113,16 @@ def parseWebsite():
 
     j = json.dumps(modules_with_type, sort_keys=True)
     f = open('data/modules_i.json', 'w')
+    f.write(j)
+    f.close()
+
+    j = json.dumps(ics_modules_with_type, sort_keys=True)
+    f = open('data/modules_ics.json', 'w')
+    f.write(j)
+    f.close()
+
+    j = json.dumps(wi_modules_with_type, sort_keys=True)
+    f = open('data/modules_wi.json', 'w')
     f.write(j)
     f.close()
 
