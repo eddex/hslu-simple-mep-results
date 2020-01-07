@@ -30,25 +30,38 @@ let numberOfNumericMarks = 0;
 let totalNumericMarkWithF = 0;
 let numberOfNumericMarksWithF = 0;
 
+/**
+ * Gets the acronym of the students study.
+ * @param {String} studyTitle 
+ * @returns {String} I, ICS or WI
+ * 
+ */
 function getStudyAcronym(studyTitle) {
     studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '');
     return StudyTitles[studyTitle]
 }
 
+/**
+ * Gets the title of the students study
+ * @returns {String}
+ */
 async function getStudyTitle() {
-    let title = "If you see this message, something went wrong"
-    try {
-        const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
+    let title = "If you see this message, something went wrong. Try to reload the page"
 
-        let data = await fetch((URL))
-            .then(response => response.text());
+    const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
 
-        const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
-        const searchStringEnd = "</h2>";
-        title = data.split(searchStringStart)[2].split(searchStringEnd)[0].trim();
-    } catch (error) {
-        console.log(error)
+    let data = await fetch((URL))
+        .then(response => response.text());
+
+    const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
+    const searchStringEnd = "</h2>";
+
+    title = data.split(searchStringStart);
+
+    if(!!title[2]){
+        title = title[2].split(searchStringEnd)[0].trim();
     }
+
     return title;
 }
 /*
