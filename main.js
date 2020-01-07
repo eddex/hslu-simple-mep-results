@@ -188,12 +188,14 @@ async function createCreditsByModuleTypeTable(div) {
 
     for (let moduleKey in CreditsByModuleTypeCount) {
         const creditProgressDiv = document.getElementById('ECTS-' + moduleKey);
+        const creditProgressBarDiv = document.getElementById('Progressbar-' + moduleKey);
+
         const progress = calculateProgress(
             CreditsByModuleTypeCount[moduleKey].current,
             CreditsByModuleTypeCount[moduleKey].min)
         creditProgressDiv.innerText =
             CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
-        creditProgressDiv.style.width = progress +'%';
+        creditProgressBarDiv.style.width = progress +'%';
     }
 }
 

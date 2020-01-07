@@ -19,13 +19,29 @@ td {
   margin-bottom: 0rem;
 }
 
+.progress-title {
+  border: 1px solid #415e6c;
+  box-sizing: border-box;
+  float: left;
+  clear: left;
+  width: 20%;
+}
+.progress-bar {
+  border: 1px solid #415e6c;
+  box-sizing: border-box;
+  float: left;
+  clear: right;
+  width: 80%
+}
 .progress {
   background-color: #92d0ee;
-  padding-left: 2px;
 }
 
 .total-progress {
   height: 100%;
+}
+p {
+  clear: both;
 }
 
 .total-progress-container {
