@@ -22,7 +22,9 @@
       "templates/grades_table.html",
       "templates/credits_by_module_type_table.html",
       "templates/custom_styles.css",
-      "data/modules_i.json"
+      "data/modules_i.json",
+      "data/modules_ics.json",
+      "data/modules_wi.json"
     ]
 
   }
