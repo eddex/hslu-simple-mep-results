@@ -36,15 +36,19 @@ function getStudyAcronym(studyTitle) {
 }
 
 async function getStudyTitle() {
-    const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
+    let title = "If you see this message, something went wrong"
+    try {
+        const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
 
-    let data = await fetch((URL))
-        .then(response => response.text());
+        let data = await fetch((URL))
+            .then(response => response.text());
 
-    const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
-    const searchStringEnd = "</h2>";
-    title = data.split(searchStringStart)[2].split(searchStringEnd)[0].trim();
-    //title = "bachelor of science in information & cyber security";
+        const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
+        const searchStringEnd = "</h2>";
+        title = data.split(searchStringStart)[2].split(searchStringEnd)[0].trim();
+    } catch (error) {
+        console.log(error)
+    }
     return title;
 }
 /*
@@ -242,6 +246,14 @@ function createStudyTitle(div) {
     
     let studyTitle = document.createElement('h2');
     getStudyTitle().then(studyTitleText => {
+        if (!studyTitleText) {
+            const p = document.createElement('p');
+            p.innerHTML = 'HSLU Simple MEP Results Extension failed to load. Please try again later. \
+                More infos on GitHub: <a href="https://github.com/eddex/hslu-simple-mep-results/issues/16" \
+                >Issue #16</a>';
+            div.insertBefore(p, div.firstChild);
+            return;
+        }
         studyTitle.appendChild(document.createTextNode('Studium: ' + studyTitleText));
         div.insertBefore(studyTitle, div.firstChild);
     });
