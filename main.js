@@ -30,11 +30,23 @@ let numberOfNumericMarks = 0;
 let totalNumericMarkWithF = 0;
 let numberOfNumericMarksWithF = 0;
 
-function getStudyAcronym(studytitle) {
-    studytitle = studytitle.toLowerCase().replace(/[0-9]/g, '');;
-    return StudyTitles[studytitle]
+function getStudyAcronym(studyTitle) {
+    studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '');
+    return StudyTitles[studyTitle]
 }
 
+async function getStudyTitle() {
+    const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
+
+    let data = await fetch((URL))
+        .then(response => response.text());
+
+    const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
+    const searchStringEnd = "</h2>";
+    title = data.split(searchStringStart)[2].split(searchStringEnd)[0].trim();
+    //title = "bachelor of science in information & cyber security";
+    return title;
+}
 /*
  * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
  * detail: [
@@ -226,7 +238,14 @@ function createTotalCreditsProgressBar(div) {
 
     div.insertBefore(container, div.firstChild);
 }
-
+function createStudyTitle(div) {
+    
+    let studyTitle = document.createElement('h2');
+    getStudyTitle().then(studyTitleText => {
+        studyTitle.appendChild(document.createTextNode('Studium: ' + studyTitleText));
+        div.insertBefore(studyTitle, div.firstChild);
+    });
+}
 /*
  * Create a heading that displays the average mark over all modules.
  * Modules with grade F are not counted in the average.
@@ -285,12 +304,16 @@ async function generateModuleObjects() {
     let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
         .then(response => response.json());
 
-    if(getStudyAcronym(studyTitle) == "ICS"){
+    let studyTitle = await getStudyTitle()
+        .then(response => response);
+    let studyAcronym = getStudyAcronym(studyTitle);
+    
+    if (studyAcronym == "ICS") {
         let icsModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_ics.json'))
         .then(response => response.json());
         moduleTypeList = Object.assign(moduleTypeList, icsModuleTypeList);
      }
-    else if(getStudyAcronym(studyTitle) == "WI"){
+    else if (studyAcronym == "WI") {
         let wiModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_wi.json'))
         .then(response => response.json());
         moduleTypeList = Object.assign(moduleTypeList, wiModuleTypeList);
@@ -379,6 +402,7 @@ async function generateHtml(modules) {
     createTotalCreditsTitle(div);
 
     await createGradesOverviewTable(div);
+    createStudyTitle(div);
     createAverageMarkTitle(div);
 
     await injectCustomCss(div);
