@@ -58,7 +58,7 @@ async function getStudyTitle() {
 
     title = data.split(searchStringStart);
 
-    if(!!title[2]){
+    if(title[2]){
         title = title[2].split(searchStringEnd)[0].trim();
     }
 
