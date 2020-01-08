@@ -59,9 +59,9 @@ async function getStudyTitle() {
     const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
     const searchStringEnd = "</h2>";
 
-    title = data.split(searchStringStart);
+    data = data.split(searchStringStart);
 
-    if(title[2]){
+    if(data[2]){
         title = title[2].split(searchStringEnd)[0].trim();
     }
     return title;
