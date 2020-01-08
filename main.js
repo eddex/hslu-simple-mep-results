@@ -400,8 +400,6 @@ async function generateHtml(modules) {
     await createGradesOverviewTable(div);
     createStudyTitle(div);
     createAverageMarkTitle(div);
-
-    await injectCustomCss(div);
 }
 
 generateModuleObjects()
