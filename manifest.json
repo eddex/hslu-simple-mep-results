@@ -26,6 +26,12 @@
       "data/modules_i.json",
       "data/modules_ics.json",
       "data/modules_wi.json"
-    ]
+    ],
+
+    "browser_specific_settings": {
+      "gecko": {
+        "update_url": "https://raw.githubusercontent.com/eddex/hslu-simple-mep-results/StudyTypeMapping/updates.json"
+      }
+    }
 
   }
