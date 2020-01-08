@@ -13,5 +13,14 @@ const Helpers = {
             progress = 100;
         }
         return progress;
+    },
+
+    /*
+     * Add an h2 title as the first child of the given DOM element.
+     */
+    addTitleToDocument: (element, text) => {
+        const title = document.createElement('h2');
+        title.appendChild(document.createTextNode(text));
+        element.insertBefore(title, element.firstChild);
     }
 }
