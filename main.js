@@ -210,24 +210,11 @@ async function createGradesOverviewTable(div) {
 }
 
 /*
- * Create a simple header for the modules table.
- */
-function createModulesTableTitle(div) {
-
-    const modulesTitle = document.createElement('h2');
-    modulesTitle.appendChild(document.createTextNode('Modulübersicht'));
-    div.insertBefore(modulesTitle, div.firstChild);
-}
-
-/*
  * Create a heading that displays the number of achieved credits.
  */
 function createTotalCreditsTitle(div) {
-
-    const totalCreditsTitle = document.createElement('h2');
     const progress = Helpers.calculateProgress(totalCredits, 180);
-    totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)'));
-    div.insertBefore(totalCreditsTitle, div.firstChild);
+    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)');
 }
 
 /*
@@ -253,19 +240,16 @@ function createStudyTitle(div) {
     studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studyTitle));
     div.insertBefore(studyTitleTitle, div.firstChild);
 }
+
 /*
  * Create a heading that displays the average mark over all modules.
  * Modules with grade F are not counted in the average.
- * A second average is displayed, where the modules with grade F are
- *  taken into account.
+ * A second average is displayed, where the modules with grade F are taken into account.
  */
 function createAverageMarkTitle(div) {
-
-    let averageMarkTitle = document.createElement('h2');
-    let average = Math.round(totalNumericMark / numberOfNumericMarks * 100) / 100;
-    let averageWithF = Math.round(totalNumericMarkWithF / numberOfNumericMarksWithF * 100) / 100;
-    averageMarkTitle.appendChild(document.createTextNode('Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')'));
-    div.insertBefore(averageMarkTitle, div.firstChild);
+    let average = Number(totalNumericMark / numberOfNumericMarks).toFixed(2);
+    let averageWithF = Number(totalNumericMarkWithF / numberOfNumericMarksWithF).toFixed(2);
+    Helpers.addTitleToDocument(div, 'Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
 /*
@@ -391,7 +375,7 @@ async function generateHtml(modules) {
     calculateStats(modules);
 
     createModulesTable(div, modules);
-    createModulesTableTitle(div);
+    Helpers.addTitleToDocument(div, 'Modulübersicht');
 
     await createCreditsByModuleTypeTable(div);
     createTotalCreditsProgressBar(div);
@@ -400,8 +384,6 @@ async function generateHtml(modules) {
     await createGradesOverviewTable(div);
     createStudyTitle(div);
     createAverageMarkTitle(div);
-
-    await injectCustomCss(div);
 }
 
 generateModuleObjects()
