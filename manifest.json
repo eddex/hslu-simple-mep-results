@@ -14,7 +14,10 @@
     "content_scripts": [
       {
         "matches": ["*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"],
-        "js": ["components/helpers.js", "main.js"],
+        "js": [
+          "components/helpers.js",
+          "components/module_parser.js",
+          "main.js"],
         "css": ["components/custom_styles.css"]
       }
     ],

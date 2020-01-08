@@ -40,7 +40,7 @@ let numberOfNumericMarksWithF = 0;
  *
  */
 function getStudyAcronym(studyTitle) {
-    studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '');
+    studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '').trim();
     return StudyTitles[studyTitle]
 }
 
@@ -60,66 +60,10 @@ async function getStudyTitle() {
     const searchStringEnd = "</h2>";
 
     data = data.split(searchStringStart);
-
-    if(data[2]){
-        title = title[2].split(searchStringEnd)[0].trim();
+    if(data[2]) {
+        title = data[2].split(searchStringEnd)[0].trim();
     }
     return title;
-}
-/*
- * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
- * detail: [
- *   key: "x",
- *   val: "y"
- * ]
- */
-function getItemDetailsValueByKey(details, key) {
-
-    for (detail of details) {
-        if (key == detail.key) {
-            return detail.val;
-        }
-    }
-    return '';
-}
-
-/*
- * The module name includes the module id.
- * But there are different formats for the module names.
- *
- * Modules that are parsed:
- *   Usually a module name looks like this: I.BA_IPCV.F1901
- *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
- *
- * Modules that are not parsed:
- *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
- *   Only the ANRECHINDIVID module is known to have this format.
- *   Probably counted as 'Erweiterungsmodul'.
- */
-function getModuleIdFromModuleName(moduleName) {
-
-    let name = String(moduleName);
-
-    if (name.includes('_')) {
-
-        // for module names like I.BA_AISO_E.F1901
-        name = name.split('_')[1];
-
-        // module names like I.BA_IPCV.F1901 need an additional split
-        if (name.includes('.')) {
-            name = name.split('.')[0];
-        }
-        return name;
-    }
-    else if (name.includes('.')) {
-
-        // for module names like I.ANRECHINDIVID.F1901
-        return name.split('.')[1];
-    }
-    else {
-        console.log('module id not parseable: ' + moduleName);
-        return null;
-    }
 }
 
 /*
@@ -170,7 +114,7 @@ function createModulesTable(div, modules) {
  */
 async function createCreditsByModuleTypeTable(div) {
 
-    let template = await fetch(getExtensionInternalFileUrl('components/credits_by_module_type_table.html'))
+    let template = await fetch(Helpers.getExtensionInternalFileUrl('components/credits_by_module_type_table.html'))
         .then(response => response.text());
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
@@ -196,7 +140,7 @@ async function createCreditsByModuleTypeTable(div) {
  */
 async function createGradesOverviewTable(div) {
 
-    let gradesTableTemplate = await fetch(getExtensionInternalFileUrl('components/grades_table.html'))
+    let gradesTableTemplate = await fetch(Helpers.getExtensionInternalFileUrl('components/grades_table.html'))
         .then(response => response.text());
 
     let gradeOverviewTable = document.createElement('div');
@@ -271,64 +215,6 @@ function getExtensionInternalFileUrl(filePath) {
     return internal_file;
 }
 
-/*
- * Generates an array of module objects from the API and the module type mapping json file.
- */
-async function generateModuleObjects() {
-
-
-    studyTitle = await getStudyTitle().then(studyTitleText => studyTitleText);
-    studyAcronym = getStudyAcronym(studyTitle);
-
-
-    const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=69&total_entries=69&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
-
-    const modules = []
-
-    let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
-        .then(response => response.json());
-
-    if (studyAcronym == "ICS") {
-        let icsModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_ics.json'))
-        .then(response => response.json());
-        moduleTypeList = Object.assign(moduleTypeList, icsModuleTypeList);
-     }
-    else if (studyAcronym == "WI") {
-        let wiModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_wi.json'))
-        .then(response => response.json());
-        moduleTypeList = Object.assign(moduleTypeList, wiModuleTypeList);
-    }
-
-    let pageData = await fetch(API_URL)
-        .then(response => response.json());
-    if (!pageData.items) {
-        // Sometimes our requests get blocked. We have to try again later.
-        return;
-    }
-    pageData.items.forEach(item => {
-
-        let parsedModule = {};
-
-        let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
-        parsedModule.passed = passed;
-
-        parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
-        parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
-
-        let details = item.details;
-        ItemDetailKeys.forEach(key => {
-            let value = getItemDetailsValueByKey(details, key);
-            parsedModule[key] = value;
-        });
-
-        let moduleId = getModuleIdFromModuleName(parsedModule[NameKey]);
-        parsedModule[ModuleTypeKey] = moduleTypeList[moduleId];
-
-        modules.push(parsedModule);
-    })
-
-    return modules;
-}
 
 function calculateStats(modules) {
 
@@ -386,9 +272,14 @@ async function generateHtml(modules) {
     createAverageMarkTitle(div);
 }
 
-generateModuleObjects()
-    .then(modules => generateHtml(modules))
-    .catch(e => {
-        console.log("Booo");
-        console.log(e);
-    });
+getStudyTitle().then(studyTitleText => {
+    studyTitle = studyTitleText;
+    studyAcronym = getStudyAcronym(studyTitle);
+
+    ModuleParser.generateModuleObjects(studyAcronym)
+        .then(modules => generateHtml(modules))
+        .catch(e => {
+            console.log("Booo");
+            console.log(e);
+        });
+});

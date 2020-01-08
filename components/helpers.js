@@ -22,5 +22,24 @@ const Helpers = {
         const title = document.createElement('h2');
         title.appendChild(document.createTextNode(text));
         element.insertBefore(title, element.firstChild);
+    },
+
+    /*
+    * Helper method to read a file that is included in this browser extension.
+    * The file needs to be registered in manifest.json!
+    * Chome and Firefox have different APIs for this.
+    */
+    getExtensionInternalFileUrl: (filePath) => {
+
+        let internal_file;
+        if (typeof browser !== 'undefined') {
+            // firefox
+            internal_file = browser.runtime.getURL(filePath);
+        }
+        else {
+            // chrome
+            internal_file = chrome.runtime.getURL(filePath);
+        }
+        return internal_file;
     }
 }
