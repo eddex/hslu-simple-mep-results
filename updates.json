@@ -3,7 +3,7 @@
         "{64b1a494-88df-447e-b2aa-45d86fcc3c16}": {
             "updates": [
                 {
-                    "version": "2.07",
+                    "version": "2.0.7",
                     "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.7/hslu_simple_mep_results-2.0.7-firefox.xpi",
                     "update_hash": "sha256:7C78E6A2BD2DA4A54E7B854FF7EC22EAC4AF145E28CE5A390CFBEA93F4352737"
                 }
