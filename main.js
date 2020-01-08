@@ -14,6 +14,9 @@ const CreditsByModuleTypeCount = {
     Zusatzmodul: {current: 0, min: 9}
 };
 
+let studyTitle = "DEFAULT_TITLE"
+let studyAcronym = "DEFAULT_ACRONYM"
+
 // TODO: add more possible titles
 var StudyTitles = {
     "bachelor of science in information & cyber security": "ICS",
@@ -61,7 +64,6 @@ async function getStudyTitle() {
     if(title[2]){
         title = title[2].split(searchStringEnd)[0].trim();
     }
-
     return title;
 }
 /*
@@ -259,19 +261,9 @@ function createTotalCreditsProgressBar(div) {
 }
 function createStudyTitle(div) {
     
-    let studyTitle = document.createElement('h2');
-    getStudyTitle().then(studyTitleText => {
-        if (!studyTitleText) {
-            const p = document.createElement('p');
-            p.innerHTML = 'HSLU Simple MEP Results Extension failed to load. Please try again later. \
-                More infos on GitHub: <a href="https://github.com/eddex/hslu-simple-mep-results/issues/16" \
-                >Issue #16</a>';
-            div.insertBefore(p, div.firstChild);
-            return;
-        }
-        studyTitle.appendChild(document.createTextNode('Studium: ' + studyTitleText));
-        div.insertBefore(studyTitle, div.firstChild);
-    });
+    let studyTitleTitle = document.createElement('h2');
+    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studyTitle));
+    div.insertBefore(studyTitleTitle, div.firstChild);
 }
 /*
  * Create a heading that displays the average mark over all modules.
@@ -324,6 +316,11 @@ async function injectCustomCss(div) {
  */
 async function generateModuleObjects() {
 
+
+    studyTitle = await getStudyTitle().then(studyTitleText => studyTitleText);
+    studyAcronym = getStudyAcronym(studyTitle);
+
+
     const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=69&total_entries=69&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
 
     const modules = []
@@ -331,10 +328,6 @@ async function generateModuleObjects() {
     let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
         .then(response => response.json());
 
-    let studyTitle = await getStudyTitle()
-        .then(response => response);
-    let studyAcronym = getStudyAcronym(studyTitle);
-    
     if (studyAcronym == "ICS") {
         let icsModuleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_ics.json'))
         .then(response => response.json());
