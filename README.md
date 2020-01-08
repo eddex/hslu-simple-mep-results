@@ -44,7 +44,7 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
 1. add the following to a `.zip` file:
   - `data/` directory
   - `icons/` directory
-  - `templates/` directory
+  - `components/` directory
   - `LICENSE` file
   - `main.js` file
   - `manifest.json` file

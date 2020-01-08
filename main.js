@@ -35,9 +35,9 @@ let numberOfNumericMarksWithF = 0;
 
 /**
  * Gets the acronym of the students study.
- * @param {String} studyTitle 
+ * @param {String} studyTitle
  * @returns {String} I, ICS or WI
- * 
+ *
  */
 function getStudyAcronym(studyTitle) {
     studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '');
@@ -166,23 +166,11 @@ function createModulesTable(div, modules) {
 }
 
 /*
- * Given a current value and a max value, calculate the percentage.
- * The result can be used for progress bars.
- */
-const calculateProgress = (current, max) => {
-    let progress = Math.round(current / max * 100);
-    if (progress > 100) {
-        progress = 100;
-    }
-    return progress;
-}
-
-/*
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
 async function createCreditsByModuleTypeTable(div) {
 
-    let template = await fetch(getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
+    let template = await fetch(getExtensionInternalFileUrl('components/credits_by_module_type_table.html'))
         .then(response => response.text());
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
@@ -192,7 +180,7 @@ async function createCreditsByModuleTypeTable(div) {
         const creditProgressDiv = document.getElementById('ECTS-' + moduleKey);
         const creditProgressBarDiv = document.getElementById('Progressbar-' + moduleKey);
 
-        const progress = calculateProgress(
+        const progress = Helpers.calculateProgress(
             CreditsByModuleTypeCount[moduleKey].current,
             CreditsByModuleTypeCount[moduleKey].min)
         creditProgressDiv.innerText =
@@ -208,7 +196,7 @@ async function createCreditsByModuleTypeTable(div) {
  */
 async function createGradesOverviewTable(div) {
 
-    let gradesTableTemplate = await fetch(getExtensionInternalFileUrl('templates/grades_table.html'))
+    let gradesTableTemplate = await fetch(getExtensionInternalFileUrl('components/grades_table.html'))
         .then(response => response.text());
 
     let gradeOverviewTable = document.createElement('div');
@@ -237,7 +225,7 @@ function createModulesTableTitle(div) {
 function createTotalCreditsTitle(div) {
 
     const totalCreditsTitle = document.createElement('h2');
-    const progress = calculateProgress(totalCredits, 180);
+    const progress = Helpers.calculateProgress(totalCredits, 180);
     totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)'));
     div.insertBefore(totalCreditsTitle, div.firstChild);
 }
@@ -251,7 +239,7 @@ function createTotalCreditsProgressBar(div) {
     container.classList = 'total-progress-container';
 
     const progressBar = document.createElement('div');
-    const progress = calculateProgress(totalCredits, 180);
+    const progress = Helpers.calculateProgress(totalCredits, 180);
     progressBar.classList = 'total-progress progress';
     progressBar.style.width = progress + '%';
 
@@ -260,7 +248,7 @@ function createTotalCreditsProgressBar(div) {
     div.insertBefore(container, div.firstChild);
 }
 function createStudyTitle(div) {
-    
+
     let studyTitleTitle = document.createElement('h2');
     studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studyTitle));
     div.insertBefore(studyTitleTitle, div.firstChild);
@@ -297,18 +285,6 @@ function getExtensionInternalFileUrl(filePath) {
         internal_file = chrome.runtime.getURL(filePath);
     }
     return internal_file;
-}
-
-/*
- * Add custom CSS rules to the document.
- */
-async function injectCustomCss(div) {
-
-    const css = await fetch(getExtensionInternalFileUrl('templates/custom_styles.css'))
-        .then(response => response.text());
-    let style = document.createElement('style');
-    style.appendChild(document.createTextNode(css));
-    div.insertBefore(style, div.firstChild);
 }
 
 /*
