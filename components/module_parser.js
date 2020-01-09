@@ -88,6 +88,7 @@ const ModuleParser = {
             .then(response => response.json());
         if (!anlasslistApiResponse.items) {
             // Sometimes our requests get blocked. We have to try again later.
+            console.log(`API request failed: ${JSON.stringify(anlasslistApiResponse)}`);
             return;
         }
 
