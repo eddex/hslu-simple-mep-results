@@ -1,15 +1,15 @@
-const ModuleParser = {
+/*
+* Update the base module type list for other studies than information science.
+*
+* Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
+*/
+const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
+    let patch = await fetch(Helpers.getExtensionInternalFileUrl(jsonFilePath))
+        .then(response => response.json());
+    return Object.assign(oldModuleTypeList, patch);
+}
 
-    /*
-     * Update the base module type list for other studies than information science.
-     *
-     * Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
-     */
-    updateModuleTypeList: async (oldModuleTypeList, jsonFilePath) => {
-        let patch = await fetch(Helpers.getExtensionInternalFileUrl(jsonFilePath))
-            .then(response => response.json());
-        return Object.assign(oldModuleTypeList, patch);
-    },
+const ModuleParser = {
 
     /*
     * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
@@ -80,8 +80,8 @@ const ModuleParser = {
             .then(response => response.json());
 
         // module types differ for each study
-        if (studyAcronym !== "I") {
-            moduleTypeList = updateModuleTypeList(moduleTypeList, `data/modules_${String(studyAcronym).toLowerCase()}.json`);
+        if (studyAcronym && studyAcronym !== "I") {
+            moduleTypeList = await updateModuleTypeList(moduleTypeList, `data/modules_${String(studyAcronym).toLowerCase()}.json`);
         }
 
         let anlasslistApiResponse = await fetch(API_URL)
