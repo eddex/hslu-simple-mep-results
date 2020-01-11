@@ -156,5 +156,7 @@
     "WEBLAB": "Majormodul",
     "WEBTEC": "Erweiterungsmodul",
     "WIPRO": "Projektmodul",
-    "XML": "Erweiterungsmodul"
+    "XML": "Erweiterungsmodul",
+    "ISA_TML": "Zusatzmodul",
+    "BA_GEST": "Zusatzmodul"
 }
