@@ -77,6 +77,9 @@ def parseWebsite():
     modules_with_type['ME+TE'] = zusatzmodul
     modules_with_type['WEBLAB'] = majormodul
     modules_with_type['KOHEB'] = zusatzmodul
+    modules_with_type['ISA_TML'] = zusatzmodul
+    modules_with_type['BA_GEST'] = zusatzmodul
+    
 
     # Other modules (that don't appear on the website)
     # Sometimes they just rename modules but the names don't change on 'Meine Anmeldungen'
