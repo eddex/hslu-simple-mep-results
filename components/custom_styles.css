@@ -27,7 +27,7 @@ td {
   background-color: #415e6c;
 }
 
-.progress-container > div {
+.progress-container>div {
   background-color: white;
 }
 
@@ -36,9 +36,14 @@ td {
   display: block;
   height: 100%;
 }
-.progress-text{
+
+.progress-text {
   position: absolute;
   margin-left: 2px;
+}
+
+.progress-title {
+  padding-left: 2px;
 }
 
 .total-progress-container {
