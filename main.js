@@ -5,13 +5,13 @@ const GradeKey = 'Grad';
 const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
-const GradesCount = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
+const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 const CreditsByModuleTypeCount = {
-    Kernmodul: {current: 0, min: 60},
-    Projektmodul: {current: 0, min: 42},
-    Erweiterungsmodul: {current: 0, min: 42},
-    Majormodul: {current: 0, min: 24},
-    Zusatzmodul: {current: 0, min: 9}
+    Kernmodul: { current: 0, min: 60 },
+    Projektmodul: { current: 0, min: 42 },
+    Erweiterungsmodul: { current: 0, min: 42 },
+    Majormodul: { current: 0, min: 24 },
+    Zusatzmodul: { current: 0, min: 9 }
 };
 
 let studyTitle = "DEFAULT_TITLE"
@@ -60,7 +60,7 @@ async function getStudyTitle() {
     const searchStringEnd = "</h2>";
 
     data = data.split(searchStringStart);
-    if(data[2]) {
+    if (data[2]) {
         title = data[2].split(searchStringEnd)[0].trim();
     }
     return title;
