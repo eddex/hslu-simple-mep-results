@@ -180,7 +180,7 @@ function createTotalCreditsProgressBar(div) {
 }
 function createStudyTitle(div) {
 
-    let studyTitleTitle = document.createElement('h2');
+    let studyTitleTitle = document.createElement('h1');
     studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studyTitle));
     div.insertBefore(studyTitleTitle, div.firstChild);
 }
@@ -246,6 +246,10 @@ function calculateStats(modules) {
 
 async function generateHtml(modules) {
 
+    // remove clutter
+    document.getElementById('intro').remove();
+    document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
+
     let div = document.getElementsByClassName('row teaser-section None')[0];
     if (!modules) {
         // API call was blocked.
@@ -268,8 +272,8 @@ async function generateHtml(modules) {
     createTotalCreditsTitle(div);
 
     await createGradesOverviewTable(div);
-    createStudyTitle(div);
     createAverageMarkTitle(div);
+    createStudyTitle(div);
 }
 
 getStudyTitle().then(studyTitleText => {
