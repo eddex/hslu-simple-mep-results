@@ -3,28 +3,30 @@ A browser extension to simplify viewing your MEP results. Shows all modules and 
 
 Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://github.com/eddex)
 
+Want to add some missing modules, fix a bug or add a new, awesome feature? That's great. But please read [CONTRIBUTING.md](CONTRIBUTING.md) first!
+
 ![screenshot](screenshot.png)
 
-## installation
+## Installation
 
-### firefox
+### Firefox
 
 **Releases** (recommended)
 
 - Download the `.xpi` file from the [latest release](https://github.com/eddex/hslu-simple-mep-results/releases)
 - Firefox should prompt you to install the extension, if not..
-  - open Firefox and open the URL `about:addons`
-  - press the gear-button and select *Install Add-on from File...*
-  - select the downloaded `.xpi` file
+  - Open Firefox and open the URL `about:addons`
+  - Press the gear-button and select *Install Add-on from File...*
+  - Select the downloaded `.xpi` file
 
 **From  sources**
-- clone / download this repo (and unzip it)
-- open `about:debugging`
-- on the Add-ons tab click `<Load Temporary Add-on..>`
-- select any file in the downloaded folder
-- open https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/
+- Clone / download this repo (and unzip it)
+- Open `about:debugging`
+- On the Add-ons tab click `<Load Temporary Add-on..>`
+- Select any file in the downloaded folder
+- Open https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/
 
-### chrome
+### Chrome
 
 **Releases**
 
@@ -32,19 +34,21 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
 
 **From sources**
 
-- clone / download this repo (and unzip it)
-- open `chrome://extensions/`
-- enable developer mode
-- click `<Load unpacked>`
-- select the downloaded folder of this repo
-- open https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/
+- Clone / download this repo (and unzip it)
+- Open `chrome://extensions/`
+- Enable developer mode
+- Click `<Load unpacked>`
+- Select the downloaded folder of this repo
+- Open https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/
 
-## create a new release
+# Development
+
+## Create a new release
 
 1. add the following to a `.zip` file:
   - `data/` directory
   - `icons/` directory
-  - `templates/` directory
+  - `components/` directory
   - `LICENSE` file
   - `main.js` file
   - `manifest.json` file

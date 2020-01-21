@@ -14,7 +14,11 @@
     "content_scripts": [
       {
         "matches": ["*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"],
-        "js": ["main.js"]
+        "js": [
+          "components/helpers.js",
+          "components/module_parser.js",
+          "main.js"],
+        "css": ["components/custom_styles.css"]
       }
     ],
 
@@ -27,7 +31,15 @@
       "templates/grades_table.html",
       "templates/credits_by_module_type_table.html",
       "templates/custom_styles.css",
-      "data/modules_i.json"
-    ]
+      "data/modules_i.json",
+      "data/modules_ics.json",
+      "data/modules_wi.json"
+    ],
+
+    "browser_specific_settings": {
+      "gecko": {
+        "update_url": "https://raw.githubusercontent.com/eddex/hslu-simple-mep-results/master/updates.json"
+      }
+    }
 
   }

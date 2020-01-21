@@ -5,15 +5,26 @@ const GradeKey = 'Grad';
 const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
-
-const GradesCount = {A: 0, B: 0, C: 0, D: 0, E: 0, F: 0};
+const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 const CreditsByModuleTypeCount = {
-    Kernmodul: {current: 0, min: 60},
-    Projektmodul: {current: 0, min: 42},
-    Erweiterungsmodul: {current: 0, min: 42},
-    Majormodul: {current: 0, min: 24},
-    Zusatzmodul: {current: 0, min: 9}
+    Kernmodul: { current: 0, min: 66 },
+    Projektmodul: { current: 0, min: 36 },
+    Erweiterungsmodul: { current: 0, min: 42 },
+    Majormodul: { current: 0, min: 24 },
+    Zusatzmodul: { current: 0, min: 9 }
 };
+
+let studyTitle = "DEFAULT_TITLE"
+let studyAcronym = "DEFAULT_ACRONYM"
+
+// TODO: add more possible titles
+var StudyTitles = {
+    "bachelor of science in information & cyber security": "ICS",
+    "bachelor of science in information": "I",
+    "bachelor of science in computer science": "I",
+    "bachelor of science in wirtschaftsinformatik": "WI",
+    "bachelor of science in informatik": "I"
+}
 
 let totalCredits = 0;
 let totalGrades = 0;
@@ -22,60 +33,37 @@ let numberOfNumericMarks = 0;
 let totalNumericMarkWithF = 0;
 let numberOfNumericMarksWithF = 0;
 
-/*
- * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
- * detail: [
- *   key: "x",
- *   val: "y"
- * ]
+/**
+ * Gets the acronym of the students study.
+ * @param {String} studyTitle
+ * @returns {String} I, ICS or WI
+ *
  */
-function getItemDetailsValueByKey(details, key) {
-
-    for (detail of details) {
-        if (key == detail.key) {
-            return detail.val;
-        }
-    }
-    return '';
+function getStudyAcronym(studyTitle) {
+    studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '').trim();
+    return StudyTitles[studyTitle];
 }
 
-/*
- * The module name includes the module id.
- * But there are different formats for the module names.
- *
- * Modules that are parsed:
- *   Usually a module name looks like this: I.BA_IPCV.F1901
- *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
- *
- * Modules that are not parsed:
- *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
- *   Only the ANRECHINDIVID module is known to have this format.
- *   Probably counted as 'Erweiterungsmodul'.
+/**
+ * Gets the title of the students study
+ * @returns {String}
  */
-function getModuleIdFromModuleName(moduleName) {
+async function getStudyTitle() {
+    let title = "If you see this message, something went wrong. Try to reload the page"
 
-    let name = String(moduleName);
+    const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
 
-    if (name.includes('_')) {
+    let data = await fetch((URL))
+        .then(response => response.text());
 
-        // for module names like I.BA_AISO_E.F1901
-        name = name.split('_')[1];
+    const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
+    const searchStringEnd = "</h2>";
 
-        // module names like I.BA_IPCV.F1901 need an additional split
-        if (name.includes('.')) {
-            name = name.split('.')[0];
-        }
-        return name;
+    data = data.split(searchStringStart);
+    if (data[2]) {
+        title = data[2].split(searchStringEnd)[0].trim();
     }
-    else if (name.includes('.')) {
-
-        // for module names like I.ANRECHINDIVID.F1901
-        return name.split('.')[1];
-    }
-    else {
-        console.log('module id not parseable: ' + moduleName);
-        return null;
-    }
+    return title;
 }
 
 /*
@@ -122,36 +110,26 @@ function createModulesTable(div, modules) {
 }
 
 /*
- * Given a current value and a max value, calculate the percentage.
- * The result can be used for progress bars.
- */
-const calculateProgress = (current, max) => {
-    let progress = Math.round(current / max * 100);
-    if (progress > 100) {
-        progress = 100;
-    }
-    return progress;
-}
-
-/*
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
 async function createCreditsByModuleTypeTable(div) {
 
-    let template = await fetch(getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
+    let template = await fetch(Helpers.getExtensionInternalFileUrl('components/credits_by_module_type_table.html'))
         .then(response => response.text());
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
 
     for (let moduleKey in CreditsByModuleTypeCount) {
-        const creditProgressDiv = document.getElementById('ECTS-' + moduleKey);
-        const progress = calculateProgress(
+        const creditProgressBar = document.getElementById('ECTS-' + moduleKey);
+        const creditProgressText = document.getElementById('ECTS-Text-' + moduleKey);
+
+        const progress = Helpers.calculateProgress(
             CreditsByModuleTypeCount[moduleKey].current,
             CreditsByModuleTypeCount[moduleKey].min)
-        creditProgressDiv.innerText =
+        creditProgressText.innerText =
             CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
-        creditProgressDiv.style.width = progress +'%';
+        creditProgressBar.style.width = progress + '%';
     }
 }
 
@@ -162,7 +140,7 @@ async function createCreditsByModuleTypeTable(div) {
  */
 async function createGradesOverviewTable(div) {
 
-    let gradesTableTemplate = await fetch(getExtensionInternalFileUrl('templates/grades_table.html'))
+    let gradesTableTemplate = await fetch(Helpers.getExtensionInternalFileUrl('components/grades_table.html'))
         .then(response => response.text());
 
     let gradeOverviewTable = document.createElement('div');
@@ -176,24 +154,11 @@ async function createGradesOverviewTable(div) {
 }
 
 /*
- * Create a simple header for the modules table.
- */
-function createModulesTableTitle(div) {
-
-    const modulesTitle = document.createElement('h2');
-    modulesTitle.appendChild(document.createTextNode('Modulübersicht'));
-    div.insertBefore(modulesTitle, div.firstChild);
-}
-
-/*
  * Create a heading that displays the number of achieved credits.
  */
 function createTotalCreditsTitle(div) {
-
-    const totalCreditsTitle = document.createElement('h2');
-    const progress = calculateProgress(totalCredits, 180);
-    totalCreditsTitle.appendChild(document.createTextNode('ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)'));
-    div.insertBefore(totalCreditsTitle, div.firstChild);
+    const progress = Helpers.calculateProgress(totalCredits, 180);
+    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)');
 }
 
 /*
@@ -205,7 +170,7 @@ function createTotalCreditsProgressBar(div) {
     container.classList = 'total-progress-container';
 
     const progressBar = document.createElement('div');
-    const progress = calculateProgress(totalCredits, 180);
+    const progress = Helpers.calculateProgress(totalCredits, 180);
     progressBar.classList = 'total-progress progress';
     progressBar.style.width = progress + '%';
 
@@ -213,20 +178,22 @@ function createTotalCreditsProgressBar(div) {
 
     div.insertBefore(container, div.firstChild);
 }
+function createStudyTitle(div) {
+
+    let studyTitleTitle = document.createElement('h1');
+    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studyTitle));
+    div.insertBefore(studyTitleTitle, div.firstChild);
+}
 
 /*
  * Create a heading that displays the average mark over all modules.
  * Modules with grade F are not counted in the average.
- * A second average is displayed, where the modules with grade F are
- *  taken into account.
+ * A second average is displayed, where the modules with grade F are taken into account.
  */
 function createAverageMarkTitle(div) {
-
-    let averageMarkTitle = document.createElement('h2');
-    let average = Math.round(totalNumericMark / numberOfNumericMarks * 100) / 100;
-    let averageWithF = Math.round(totalNumericMarkWithF / numberOfNumericMarksWithF * 100) / 100;
-    averageMarkTitle.appendChild(document.createTextNode('Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')'));
-    div.insertBefore(averageMarkTitle, div.firstChild);
+    let average = Number(totalNumericMark / numberOfNumericMarks).toFixed(2);
+    let averageWithF = Number(totalNumericMarkWithF / numberOfNumericMarksWithF).toFixed(2);
+    Helpers.addTitleToDocument(div, 'Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
 /*
@@ -248,59 +215,6 @@ function getExtensionInternalFileUrl(filePath) {
     return internal_file;
 }
 
-/*
- * Add custom CSS rules to the document.
- */
-async function injectCustomCss(div) {
-
-    const css = await fetch(getExtensionInternalFileUrl('templates/custom_styles.css'))
-        .then(response => response.text());
-    let style = document.createElement('style');
-    style.appendChild(document.createTextNode(css));
-    div.insertBefore(style, div.firstChild);
-}
-
-/*
- * Generates an array of module objects from the API and the module type mapping json file.
- */
-async function generateModuleObjects() {
-
-    const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=69&total_entries=69&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69"
-
-    const modules = []
-
-    let moduleTypeList = await fetch(getExtensionInternalFileUrl('data/modules_i.json'))
-        .then(response => response.json());
-    let pageData = await fetch(API_URL)
-        .then(response => response.json());
-    if (!pageData.items) {
-        // Sometimes our requests get blocked. We have to try again later.
-        return;
-    }
-    pageData.items.forEach(item => {
-
-        let parsedModule = {};
-
-        let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
-        parsedModule.passed = passed;
-
-        parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
-        parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
-
-        let details = item.details;
-        ItemDetailKeys.forEach(key => {
-            let value = getItemDetailsValueByKey(details, key);
-            parsedModule[key] = value;
-        });
-
-        let moduleId = getModuleIdFromModuleName(parsedModule[NameKey]);
-        parsedModule[ModuleTypeKey] = moduleTypeList[moduleId];
-
-        modules.push(parsedModule);
-    })
-
-    return modules;
-}
 
 function calculateStats(modules) {
 
@@ -332,6 +246,10 @@ function calculateStats(modules) {
 
 async function generateHtml(modules) {
 
+    // remove clutter
+    document.getElementById('intro').remove();
+    document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
+
     let div = document.getElementsByClassName('row teaser-section None')[0];
     if (!modules) {
         // API call was blocked.
@@ -347,7 +265,7 @@ async function generateHtml(modules) {
     calculateStats(modules);
 
     createModulesTable(div, modules);
-    createModulesTableTitle(div);
+    Helpers.addTitleToDocument(div, 'Modulübersicht');
 
     await createCreditsByModuleTypeTable(div);
     createTotalCreditsProgressBar(div);
@@ -355,13 +273,17 @@ async function generateHtml(modules) {
 
     await createGradesOverviewTable(div);
     createAverageMarkTitle(div);
-
-    await injectCustomCss(div);
+    createStudyTitle(div);
 }
 
-generateModuleObjects()
-    .then(modules => generateHtml(modules))
-    .catch(e => {
-        console.log("Booo");
-        console.log(e);
-    });
+getStudyTitle().then(studyTitleText => {
+    studyTitle = studyTitleText;
+    studyAcronym = getStudyAcronym(studyTitle);
+
+    ModuleParser.generateModuleObjects(studyAcronym)
+        .then(modules => generateHtml(modules))
+        .catch(e => {
+            console.log("Booo");
+            console.log(e);
+        });
+});
