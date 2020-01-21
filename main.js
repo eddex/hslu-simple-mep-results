@@ -7,8 +7,8 @@ const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 const CreditsByModuleTypeCount = {
-    Kernmodul: { current: 0, min: 60 },
-    Projektmodul: { current: 0, min: 42 },
+    Kernmodul: { current: 0, min: 66 },
+    Projektmodul: { current: 0, min: 36 },
     Erweiterungsmodul: { current: 0, min: 42 },
     Majormodul: { current: 0, min: 24 },
     Zusatzmodul: { current: 0, min: 9 }
@@ -41,7 +41,7 @@ let numberOfNumericMarksWithF = 0;
  */
 function getStudyAcronym(studyTitle) {
     studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '').trim();
-    return StudyTitles[studyTitle]
+    return StudyTitles[studyTitle];
 }
 
 /**
