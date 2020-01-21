@@ -38,7 +38,7 @@
 
     "browser_specific_settings": {
       "gecko": {
-        "update_url": "https://raw.githubusercontent.com/eddex/hslu-simple-mep-results/StudyTypeMapping/updates.json"
+        "update_url": "https://raw.githubusercontent.com/eddex/hslu-simple-mep-results/master/updates.json"
       }
     }
 
