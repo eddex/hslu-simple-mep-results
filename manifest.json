@@ -22,6 +22,11 @@
       }
     ],
 
+    "permissions": [
+      "https://mycampus.hslu.ch/*",
+      "webRequest"
+    ],
+
     "web_accessible_resources": [
       "templates/grades_table.html",
       "templates/credits_by_module_type_table.html",
