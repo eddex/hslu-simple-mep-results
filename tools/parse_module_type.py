@@ -124,17 +124,17 @@ def parseWebsite():
         print (m, modules_with_type[m])
 
     j = json.dumps(modules_with_type, indent=2, sort_keys=True)
-    f = open('../data/modules_i.json', 'w')
+    f = open('../src/data/modules_i.json', 'w')
     f.write(j)
     f.close()
 
     j = json.dumps(ics_modules_with_type, indent=2, sort_keys=True)
-    f = open('../data/modules_ics.json', 'w')
+    f = open('../src/data/modules_ics.json', 'w')
     f.write(j)
     f.close()
 
     j = json.dumps(wi_modules_with_type, indent=2, sort_keys=True)
-    f = open('../data/modules_wi.json', 'w')
+    f = open('../src/data/modules_wi.json', 'w')
     f.write(j)
     f.close()
 
