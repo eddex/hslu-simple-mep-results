@@ -1,3 +1,17 @@
 {
-    "ETHIK": "Kernmodul"
+  "ADS": "Kernmodul",
+  "ANLS": "Kernmodul",
+  "CRS": "Erweiterungsmodul",
+  "DB&S": "Kernmodul",
+  "DSO": "Kernmodul",
+  "ETHIK": "Kernmodul",
+  "INTROL": "Kernmodul",
+  "ISLAB_K": "Kernmodul",
+  "ISM": "Kernmodul",
+  "NETW1": "Kernmodul",
+  "NETW2": "Kernmodul",
+  "OSA": "Kernmodul",
+  "PRIVACY1": "Kernmodul",
+  "SPREN1": "Kernmodul",
+  "SPTA": "Kernmodul"
 }
