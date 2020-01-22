@@ -143,8 +143,15 @@ const ModuleParser = {
             return;
         }
 
-        const firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - 1];
+        let firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - 1];
+        let i = 1;
+        isAutumnSemester = ModuleParser.isAutumnSemester(firstModule);
 
+        while(isAutumnSemester == undefined){
+            firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - i];
+            isAutumnSemester = ModuleParser.isAutumnSemester(firstModule);
+            i++;
+        }
         anlasslistApiResponse.items.forEach(item => {
 
             let parsedModule = {};
