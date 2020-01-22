@@ -2,8 +2,6 @@ const NameKey = 'Nummer';
 const CreditsKey = 'ECTS-Punkte';
 const MarkKey = 'Bewertung';
 const GradeKey = 'Grad';
-const FromKey = 'From'
-const TermKey = 'Term'
 const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
@@ -257,9 +255,8 @@ function createChart(div, modules) {
 
 
     const labels = []
-    //CreditByTermCount(Number(modul[TermKey])) += Number(modul[CreditsKey]),
     modules.forEach(modul => {
-        CreditsBySemesterCount[modul[TermKey]] += Number(modul[CreditsKey]);
+        CreditsBySemesterCount[modul.semester] += Number(modul[CreditsKey]);
     })
 
     for (let index = 0; index < CreditsBySemesterCount.length; index++) {

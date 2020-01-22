@@ -76,8 +76,6 @@ const ModuleParser = {
 
         const modules = [];
 
-
-
         let moduleTypeList = await fetch(Helpers.getExtensionInternalFileUrl('data/modules_i.json'))
             .then(response => response.json());
 
@@ -94,8 +92,7 @@ const ModuleParser = {
             return;
         }
 
-        let anlassListe = anlasslistApiResponse.items;
-        const firstModul = anlassListe[anlassListe.length - 1];
+        const firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - 1];
 
         const STARTMONTHSPRINGTERM = 0
         const STARTMONTHAUTUMNTERM = 5
@@ -103,9 +100,8 @@ const ModuleParser = {
         const ENDMONTHAUTUMNTERM = 11
         const ENDMONTHSPRINGTERM = 4
 
-
-        const firstModulYear = (new Date(firstModul.from)).getFullYear();
-        const firstModulMonth = (new Date(firstModul.from)).getMonth();
+        const firstModuleYear = (new Date(firstModule.from)).getFullYear();
+        const firstModuleMonth = (new Date(firstModule.from)).getMonth();
 
         anlasslistApiResponse.items.forEach(item => {
 
@@ -121,36 +117,35 @@ const ModuleParser = {
             startMonth = (new Date(item.from)).getMonth();
             endMonth = (new Date(item.to)).getMonth();
 
-            let term = "Something went wrong"
+            let semester = "Something went wrong"
 
-        
-            if (firstModulMonth >= STARTMONTHAUTUMNTERM) {
+            if (firstModuleMonth >= STARTMONTHAUTUMNTERM) {
                 if (endMonth == ENDMONTHAUTUMNTERM) {
-                    term = (startYear - firstModulYear) * 2 + 1
+                    semester = (startYear - firstModuleYear) * 2 + 1
                 }
                 else if(endMonth >= ENDMONTHSPRINGTERM){
-                    term = (startYear - firstModulYear) * 2
+                    semester = (startYear - firstModuleYear) * 2
                 }
                 else {
-                    term = "Something went wrong"
+                    semester = "Something went wrong"
                 }
-            } 
-            else if (firstModulMonth >= STARTMONTHSPRINGTERM) {
+            }
+            else if (firstModuleMonth >= STARTMONTHSPRINGTERM) {
                 if (endMonth == ENDMONTHSPRINGTERM) {
-                    term = (startYear - firstModulYear) * 2 + 1
+                    semester = (startYear - firstModuleYear) * 2 + 1
                 }
                 else if(starendMonthtMonth == ENDMONTHAUTUMNTERM) {
-                    term = (startYear - firstModulYear) * 2 + 2
+                    semester = (startYear - firstModuleYear) * 2 + 2
                 }
                 else {
-                    term = "Something went wrong"
+                    semester = "Something went wrong"
                 }
             }
             else {
-                term = "Something went wrong"
+                semester = "Something went wrong"
             }
 
-            parsedModule[TermKey] = term;
+            parsedModule.semester = semester;
 
             let details = item.details;
             ItemDetailKeys.forEach(key => {
