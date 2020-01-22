@@ -117,17 +117,18 @@ const ModuleParser = {
             startMonth = (new Date(item.from)).getMonth();
             endMonth = (new Date(item.to)).getMonth();
 
-            let semester = "Something went wrong"
+            let semester = "n/a"
 
             if (firstModuleMonth >= STARTMONTHAUTUMNTERM) {
-                if (endMonth == ENDMONTHAUTUMNTERM) {
+                if (endMonth < 2 || endMonth > 10) {
                     semester = (startYear - firstModuleYear) * 2 + 1
                 }
-                else if(endMonth >= ENDMONTHSPRINGTERM){
+                else if(endMonth > 3 && endMonth < 11){
                     semester = (startYear - firstModuleYear) * 2
                 }
                 else {
-                    semester = "Something went wrong"
+                    semester = "n/a"
+
                 }
             }
             else if (firstModuleMonth >= STARTMONTHSPRINGTERM) {
@@ -138,14 +139,17 @@ const ModuleParser = {
                     semester = (startYear - firstModuleYear) * 2 + 2
                 }
                 else {
-                    semester = "Something went wrong"
+                    semester = "n/a"
                 }
             }
             else {
-                semester = "Something went wrong"
+                semester = "n/a"
             }
 
             parsedModule.semester = semester;
+
+            console.log(parsedModule)
+            console.log(endMonth)
 
             let details = item.details;
             ItemDetailKeys.forEach(key => {
