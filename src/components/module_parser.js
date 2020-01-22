@@ -29,6 +29,57 @@ const ModuleParser = {
     },
 
     /*
+     * Check if a module was done in Autumn.
+     * Modules are marked with 'H' for 'Herbstsemester' (autumn)
+     * or 'F' for 'Frühlingssemester' (spring).
+     */
+    isAutumnSemester: (hsluModule) => {
+        const includesH = hsluModule.anlassnumber.split('.')[2].includes('H');
+        const includesF = hsluModule.anlassnumber.split('.')[2].includes('F');
+        return includesH || includesF ? includesH : undefined;
+    },
+
+    /*
+     * Calculate the semester.
+     */
+    calculateSemester: (hsluModule, firstModule) => {
+
+        const startYear = new Date(firstModule.from).getFullYear();
+        const isStartInAutumn = ModuleParser.isAutumnSemester(firstModule);
+
+        // the lastPart of the anlassnumber is something like 'F1901'
+        const lastPart = hsluModule.anlassnumber.split('.')[2];
+        const moduleYear = Number('20' + lastPart.substring(1, 3));
+        const isModuleInAutumn = ModuleParser.isAutumnSemester(hsluModule);
+
+        const yearDifference = (moduleYear - startYear)
+
+        let semester = undefined;
+        if (isModuleInAutumn === undefined) {
+            // we need this early abort because of entries like 'I.BA_PTA_b.1618'
+            // (which is not even a real module!)
+            return semester;
+        }
+
+        if (isStartInAutumn) {
+            if (isModuleInAutumn) {
+                semester = yearDifference * 2 + 1;
+            }
+            else {
+                semester = yearDifference * 2;
+            }
+        } else {
+            if (isModuleInAutumn){
+                semester = yearDifference * 2 + 2;
+            }
+            else {
+                semester = yearDifference * 2 + 1;
+            }
+        }
+        return semester;
+    },
+
+    /*
     * The module name includes the module id.
     * But there are different formats for the module names.
     *
@@ -94,15 +145,6 @@ const ModuleParser = {
 
         const firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - 1];
 
-        const STARTMONTHSPRINGTERM = 0
-        const STARTMONTHAUTUMNTERM = 5
-
-        const ENDMONTHAUTUMNTERM = 11
-        const ENDMONTHSPRINGTERM = 4
-
-        const firstModuleYear = (new Date(firstModule.from)).getFullYear();
-        const firstModuleMonth = (new Date(firstModule.from)).getMonth();
-
         anlasslistApiResponse.items.forEach(item => {
 
             let parsedModule = {};
@@ -112,50 +154,14 @@ const ModuleParser = {
 
             parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
             parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
+            parsedModule[NameKey] = item.anlassnumber;
+            parsedModule.from = item.from;
+            parsedModule.to = item.to;
 
-            startYear = (new Date(item.from)).getFullYear();
-            startMonth = (new Date(item.from)).getMonth();
-            endMonth = (new Date(item.to)).getMonth();
-
-            let semester = "n/a"
-
-            if (firstModuleMonth >= STARTMONTHAUTUMNTERM) {
-                if (endMonth < 2 || endMonth > 10) {
-                    semester = (startYear - firstModuleYear) * 2 + 1
-                }
-                else if(endMonth > 3 && endMonth < 11){
-                    semester = (startYear - firstModuleYear) * 2
-                }
-                else {
-                    semester = "n/a"
-
-                }
-            }
-            else if (firstModuleMonth >= STARTMONTHSPRINGTERM) {
-                if (endMonth == ENDMONTHSPRINGTERM) {
-                    semester = (startYear - firstModuleYear) * 2 + 1
-                }
-                else if(starendMonthtMonth == ENDMONTHAUTUMNTERM) {
-                    semester = (startYear - firstModuleYear) * 2 + 2
-                }
-                else {
-                    semester = "n/a"
-                }
-            }
-            else {
-                semester = "n/a"
-            }
-
-            parsedModule.semester = semester;
-
-            console.log(parsedModule)
-            console.log(endMonth)
+            parsedModule.semester = ModuleParser.calculateSemester(item, firstModule);
 
             let details = item.details;
-            ItemDetailKeys.forEach(key => {
-                let value = ModuleParser.getItemDetailsValueByKey(details, key);
-                parsedModule[key] = value;
-            });
+            parsedModule[CreditsKey] = ModuleParser.getItemDetailsValueByKey(details, CreditsKey);
 
             let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule[NameKey]);
             parsedModule[ModuleTypeKey] = moduleTypeList[moduleId];

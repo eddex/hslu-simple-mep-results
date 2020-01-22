@@ -1,8 +1,7 @@
-const NameKey = 'Nummer';
+const NameKey = 'Modul-Name';
 const CreditsKey = 'ECTS-Punkte';
 const MarkKey = 'Bewertung';
 const GradeKey = 'Grad';
-const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
@@ -248,6 +247,19 @@ function calculateStats(modules) {
     });
 }
 
+const getBurndownValue = (semester) => {
+    if (CreditsBySemesterCount[semester-1] === 0) {
+        // if no credits were achieved, don't show it in the graph
+        return undefined;
+    }
+    
+    let burndownValue = 180;
+    for (let index = 0; index < semester; index++) {
+        burndownValue -= CreditsBySemesterCount[index]
+    }
+    return burndownValue;
+}
+
 function createChart(div, modules) {
     canvas = document.createElement("canvas");
     canvas.setAttribute("id", "myChart");
@@ -256,14 +268,14 @@ function createChart(div, modules) {
 
     const labels = []
     modules.forEach(modul => {
-        CreditsBySemesterCount[modul.semester] += Number(modul[CreditsKey]);
+        if (modul[GradeKey] != 'F' && modul.semester != undefined) {
+            CreditsBySemesterCount[modul.semester - 1] += Number(modul[CreditsKey]);
+        }
     })
 
-    for (let index = 0; index < CreditsBySemesterCount.length; index++) {
+    for (let index = 0; index <= CreditsBySemesterCount.length; index++) {
         console.log("CreditBySemesterCount[index]", CreditsBySemesterCount[index])
-        if(CreditsBySemesterCount[index] != 0 ){
-            labels.push(index)   
-        }
+        labels.push(index)
     }
     console.log("CreditBySemesterCount", CreditsBySemesterCount);
 
@@ -273,16 +285,17 @@ function createChart(div, modules) {
     let data = {
         labels: labels,
         datasets: [{
-            label: 'Semester',
+            label: 'Your remaining credits',
             data: [
-                CreditsBySemesterCount[1],
-                CreditsBySemesterCount[2],
-                CreditsBySemesterCount[3],
-                CreditsBySemesterCount[4],
-                CreditsBySemesterCount[5],
-                CreditsBySemesterCount[6],
-                CreditsBySemesterCount[7],
-                CreditsBySemesterCount[8]
+                getBurndownValue(0),
+                getBurndownValue(1),
+                getBurndownValue(2),
+                getBurndownValue(3),
+                getBurndownValue(4),
+                getBurndownValue(5),
+                getBurndownValue(6),
+                getBurndownValue(7),
+                getBurndownValue(8)
             ],
             backgroundColor: [
                 'rgba(135, 206, 235, 0.5)',
@@ -298,13 +311,80 @@ function createChart(div, modules) {
                 'rgba(135, 206, 235, 1)'
             ],
             borderWidth: 2
+        },
+        {
+            label: 'Ideal remaining credits (part time)',
+            data: [
+                180,
+                180 / 8 * 7,
+                180 / 8 * 6,
+                180 / 8 * 5,
+                180 / 8 * 4,
+                180 / 8 * 3,
+                180 / 8 * 2,
+                180 / 8 * 1,
+                0
+            ],
+            backgroundColor: [
+                'rgba(255, 206, 235, 0.5)',
+            ],
+            borderColor: [
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)',
+                'rgba(255, 206, 235, 1)'
+            ],
+            borderWidth: 2
+        },
+        {
+            label: 'Ideal remaining credits (full time)',
+            data: [
+                180,
+                180 / 6 * 5,
+                180 / 6 * 4,
+                180 / 6 * 3,
+                180 / 6 * 2,
+                180 / 6 * 1,
+                0
+            ],
+            backgroundColor: [
+                'rgba(206, 255, 235, 0.5)',
+            ],
+            borderColor: [
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)',
+                'rgba(206, 255, 235, 1)'
+            ],
+            borderWidth: 2
         }]
     }
+
     let options = {
         scales: {
             yAxes: [{
                 ticks: {
                     beginAtZero: true
+                },
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Remaining credits'
+                }
+            }],
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Semester'
                 }
             }]
         }
