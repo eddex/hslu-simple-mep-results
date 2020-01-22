@@ -19,9 +19,11 @@ jobs:
         with:
           cmd: build
           source: src
+          target: target 
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@master
+        if: failure()
         with:
           name: target.xpi
           path: ${{ steps.web-ext-build.outputs.target }}
