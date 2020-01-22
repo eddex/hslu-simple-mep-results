@@ -76,6 +76,8 @@ const ModuleParser = {
 
         const modules = [];
 
+
+
         let moduleTypeList = await fetch(Helpers.getExtensionInternalFileUrl('data/modules_i.json'))
             .then(response => response.json());
 
@@ -92,6 +94,15 @@ const ModuleParser = {
             return;
         }
 
+        let anlassListe = anlasslistApiResponse.items;
+        const firstModul = anlassListe[anlassListe.length - 1];
+
+        const STARTMONTHSPRINGTERM = 1
+        const STARTMONTHAUTUMNTERM = 8
+
+        const firstModulYear = (new Date(firstModul.from)).getFullYear();
+        const firstModulMonth = (new Date(firstModul.from)).getMonth();
+
         anlasslistApiResponse.items.forEach(item => {
 
             let parsedModule = {};
@@ -101,6 +112,41 @@ const ModuleParser = {
 
             parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
             parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
+            //parsedModule[FromKey] = item.from === null ? 'n/a' : item.from;
+
+            startYear = (new Date(item.from)).getFullYear();
+            startMonth = (new Date(item.from)).getMonth();
+
+            let term = "Something went wrong"
+
+        
+            if (firstModulMonth == STARTMONTHAUTUMNTERM) {
+                if (startMonth == STARTMONTHAUTUMNTERM) {
+                    term = (startYear - firstModulYear) * 2 + 1
+                }
+                else if(startMonth == STARTMONTHSPRINGTERM){
+                    term = (startYear - firstModulYear) * 2
+                }
+                else {
+                    term = "Something went wrong"
+                }
+            } 
+            else if (firstModulMonth == STARTMONTHSPRINGTERM) {
+                if (startMonth == STARTMONTHSPRINGTERM) {
+                    term = (startYear - firstModulYear) * 2 + 1
+                }
+                else if(startMonth == STARTMONTHAUTUMNTERM) {
+                    term = (startYear - firstModulYear) * 2 + 2
+                }
+                else {
+                    term = "Something went wrong"
+                }
+            }
+            else {
+                term = "Something went wrong"
+            }
+
+            parsedModule[TermKey] = term;
 
             let details = item.details;
             ItemDetailKeys.forEach(key => {

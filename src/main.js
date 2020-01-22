@@ -2,10 +2,16 @@ const NameKey = 'Nummer';
 const CreditsKey = 'ECTS-Punkte';
 const MarkKey = 'Bewertung';
 const GradeKey = 'Grad';
+const FromKey = 'From'
+const TermKey = 'Term'
 const ItemDetailKeys = [NameKey, CreditsKey];
 const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+
+//const CreditByTermCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
+const CreditByTermCount = [0,0,0,0,0,0,0,0];
+
 const CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
     Projektmodul: { current: 0, min: 36 },
@@ -244,11 +250,85 @@ function calculateStats(modules) {
     });
 }
 
+function createChart(div, modules) {
+    canvas = document.createElement("canvas");
+    canvas.setAttribute("id", "myChart");
+    div.insertBefore(canvas, div.firstChild);
+
+
+    const labels = []
+    //CreditByTermCount(Number(modul[TermKey])) += Number(modul[CreditsKey]),
+    modules.forEach(modul => {
+        CreditByTermCount[modul[TermKey]] += Number(modul[CreditsKey]);
+    })
+
+    for (let index = 0; index < CreditByTermCount.length; index++) {
+        console.log("CreditByTermCount[index]", CreditByTermCount[index])
+        if(CreditByTermCount[index] != 0 ){
+            labels.push(index)   
+        }
+    }
+    console.log("CreditByTermCount", CreditByTermCount);
+
+    console.log("labels", labels);
+
+    let type = 'line'
+    let data = {
+        labels: labels,
+        datasets: [{
+            label: 'Term',
+            data: [
+                CreditByTermCount[1],
+                CreditByTermCount[2],
+                CreditByTermCount[3],
+                CreditByTermCount[4],
+                CreditByTermCount[5],
+                CreditByTermCount[6],
+                CreditByTermCount[7],
+                CreditByTermCount[8]
+            ],
+            backgroundColor: [
+                'rgba(135, 206, 235, 0.5)',
+            ],
+            borderColor: [
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)',
+                'rgba(135, 206, 235, 1)'
+            ],
+            borderWidth: 2
+        }]
+    }
+    let options = {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+
+    new Chart(canvas, {
+        type: type,
+        data: data,
+        options: options
+    });
+}
+
 async function generateHtml(modules) {
 
     // remove clutter
-    document.getElementById('intro').remove();
-    document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
+    try {
+        document.getElementById('intro').remove();
+        document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
+    } catch (error) {
+        console.log("NOTITLE, DONT CARE")
+    }
 
     let div = document.getElementsByClassName('row teaser-section None')[0];
     if (!modules) {
@@ -263,7 +343,6 @@ async function generateHtml(modules) {
     }
 
     calculateStats(modules);
-
     createModulesTable(div, modules);
     Helpers.addTitleToDocument(div, 'Modulübersicht');
 
@@ -273,6 +352,7 @@ async function generateHtml(modules) {
 
     await createGradesOverviewTable(div);
     createAverageMarkTitle(div);
+    createChart(div, modules);
     createStudyTitle(div);
 }
 
