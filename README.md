@@ -45,7 +45,7 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
 
 ## Create a new release
 
-1. add the following to a `.zip` file:
+1. add everthing from `src` to a `.zip` file:
   - `data/` directory
   - `icons/` directory
   - `components/` directory
