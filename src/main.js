@@ -10,7 +10,7 @@ const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKe
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
 //const CreditByTermCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
-const CreditByTermCount = [0,0,0,0,0,0,0,0];
+const CreditsBySemesterCount = [0,0,0,0,0,0,0,0];
 
 const CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
@@ -120,7 +120,7 @@ function createModulesTable(div, modules) {
  */
 async function createCreditsByModuleTypeTable(div) {
 
-    let template = await fetch(Helpers.getExtensionInternalFileUrl('components/credits_by_module_type_table.html'))
+    let template = await fetch(Helpers.getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
         .then(response => response.text());
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
@@ -146,7 +146,7 @@ async function createCreditsByModuleTypeTable(div) {
  */
 async function createGradesOverviewTable(div) {
 
-    let gradesTableTemplate = await fetch(Helpers.getExtensionInternalFileUrl('components/grades_table.html'))
+    let gradesTableTemplate = await fetch(Helpers.getExtensionInternalFileUrl('templates/grades_table.html'))
         .then(response => response.text());
 
     let gradeOverviewTable = document.createElement('div');
@@ -259,16 +259,16 @@ function createChart(div, modules) {
     const labels = []
     //CreditByTermCount(Number(modul[TermKey])) += Number(modul[CreditsKey]),
     modules.forEach(modul => {
-        CreditByTermCount[modul[TermKey]] += Number(modul[CreditsKey]);
+        CreditsBySemesterCount[modul[TermKey]] += Number(modul[CreditsKey]);
     })
 
-    for (let index = 0; index < CreditByTermCount.length; index++) {
-        console.log("CreditByTermCount[index]", CreditByTermCount[index])
-        if(CreditByTermCount[index] != 0 ){
+    for (let index = 0; index < CreditsBySemesterCount.length; index++) {
+        console.log("CreditBySemesterCount[index]", CreditsBySemesterCount[index])
+        if(CreditsBySemesterCount[index] != 0 ){
             labels.push(index)   
         }
     }
-    console.log("CreditByTermCount", CreditByTermCount);
+    console.log("CreditBySemesterCount", CreditsBySemesterCount);
 
     console.log("labels", labels);
 
@@ -276,16 +276,16 @@ function createChart(div, modules) {
     let data = {
         labels: labels,
         datasets: [{
-            label: 'Term',
+            label: 'Semester',
             data: [
-                CreditByTermCount[1],
-                CreditByTermCount[2],
-                CreditByTermCount[3],
-                CreditByTermCount[4],
-                CreditByTermCount[5],
-                CreditByTermCount[6],
-                CreditByTermCount[7],
-                CreditByTermCount[8]
+                CreditsBySemesterCount[1],
+                CreditsBySemesterCount[2],
+                CreditsBySemesterCount[3],
+                CreditsBySemesterCount[4],
+                CreditsBySemesterCount[5],
+                CreditsBySemesterCount[6],
+                CreditsBySemesterCount[7],
+                CreditsBySemesterCount[8]
             ],
             backgroundColor: [
                 'rgba(135, 206, 235, 0.5)',

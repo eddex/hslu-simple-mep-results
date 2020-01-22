@@ -17,9 +17,9 @@
         "js": [
           "components/helpers.js",
           "components/module_parser.js",
-          "components/Chart.bundle.min.js",
+          "lib/Chart.bundle.min.js",
           "main.js"],
-        "css": ["components/custom_styles.css"]
+        "css": ["templates/custom_styles.css"]
       }
     ],
 
