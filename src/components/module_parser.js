@@ -97,8 +97,12 @@ const ModuleParser = {
         let anlassListe = anlasslistApiResponse.items;
         const firstModul = anlassListe[anlassListe.length - 1];
 
-        const STARTMONTHSPRINGTERM = 1
-        const STARTMONTHAUTUMNTERM = 8
+        const STARTMONTHSPRINGTERM = 0
+        const STARTMONTHAUTUMNTERM = 5
+
+        const ENDMONTHAUTUMNTERM = 11
+        const ENDMONTHSPRINGTERM = 4
+
 
         const firstModulYear = (new Date(firstModul.from)).getFullYear();
         const firstModulMonth = (new Date(firstModul.from)).getMonth();
@@ -112,30 +116,30 @@ const ModuleParser = {
 
             parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
             parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
-            //parsedModule[FromKey] = item.from === null ? 'n/a' : item.from;
 
             startYear = (new Date(item.from)).getFullYear();
             startMonth = (new Date(item.from)).getMonth();
+            endMonth = (new Date(item.to)).getMonth();
 
             let term = "Something went wrong"
 
         
-            if (firstModulMonth == STARTMONTHAUTUMNTERM) {
-                if (startMonth == STARTMONTHAUTUMNTERM) {
+            if (firstModulMonth >= STARTMONTHAUTUMNTERM) {
+                if (endMonth == ENDMONTHAUTUMNTERM) {
                     term = (startYear - firstModulYear) * 2 + 1
                 }
-                else if(startMonth == STARTMONTHSPRINGTERM){
+                else if(endMonth >= ENDMONTHSPRINGTERM){
                     term = (startYear - firstModulYear) * 2
                 }
                 else {
                     term = "Something went wrong"
                 }
             } 
-            else if (firstModulMonth == STARTMONTHSPRINGTERM) {
-                if (startMonth == STARTMONTHSPRINGTERM) {
+            else if (firstModulMonth >= STARTMONTHSPRINGTERM) {
+                if (endMonth == ENDMONTHSPRINGTERM) {
                     term = (startYear - firstModulYear) * 2 + 1
                 }
-                else if(startMonth == STARTMONTHAUTUMNTERM) {
+                else if(starendMonthtMonth == ENDMONTHAUTUMNTERM) {
                     term = (startYear - firstModulYear) * 2 + 2
                 }
                 else {
