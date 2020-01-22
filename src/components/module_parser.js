@@ -69,7 +69,7 @@ const ModuleParser = {
                 semester = yearDifference * 2;
             }
         } else {
-            if (isModuleInAutumn){
+            if (isModuleInAutumn) {
                 semester = yearDifference * 2 + 2;
             }
             else {
@@ -143,15 +143,10 @@ const ModuleParser = {
             return;
         }
 
-        let firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - 1];
-        let i = 1;
-        isAutumnSemester = ModuleParser.isAutumnSemester(firstModule);
+        firstModule = anlasslistApiResponse.items
+            .reverse()
+            .find(modul => ModuleParser.isAutumnSemester(modul) != undefined)
 
-        while(isAutumnSemester == undefined){
-            firstModule = anlasslistApiResponse.items[anlasslistApiResponse.items.length - i];
-            isAutumnSemester = ModuleParser.isAutumnSemester(firstModule);
-            i++;
-        }
         anlasslistApiResponse.items.forEach(item => {
 
             let parsedModule = {};

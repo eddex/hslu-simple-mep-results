@@ -274,12 +274,8 @@ function createChart(div, modules) {
     })
 
     for (let index = 0; index <= CreditsBySemesterCount.length; index++) {
-        console.log("CreditBySemesterCount[index]", CreditsBySemesterCount[index])
         labels.push(index)
     }
-    console.log("CreditBySemesterCount", CreditsBySemesterCount);
-
-    console.log("labels", labels);
 
     let type = 'line'
     let data = {
