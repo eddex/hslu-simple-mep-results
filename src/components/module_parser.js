@@ -144,8 +144,9 @@ const ModuleParser = {
         }
 
         firstModule = anlasslistApiResponse.items
+            .slice()
             .reverse()
-            .find(modul => ModuleParser.isAutumnSemester(modul) != undefined)
+            .find(modul => ModuleParser.isAutumnSemester(modul) != undefined);
 
         anlasslistApiResponse.items.forEach(item => {
 
