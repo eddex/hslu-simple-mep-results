@@ -17,8 +17,8 @@ const CreditsByModuleTypeCount = {
     Zusatzmodul: { current: 0, min: 9 }
 };
 
-let studyTitle = "DEFAULT_TITLE"
-let studyAcronym = "DEFAULT_ACRONYM"
+let isPartTime = false
+let studentInformations = {}
 
 // TODO: add more possible titles
 var StudyTitles = {
@@ -54,17 +54,15 @@ function getStudyAcronym(studyTitle) {
 async function getStudyTitle() {
     let title = "If you see this message, something went wrong. Try to reload the page"
 
-    const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
-
-    let data = await fetch((URL))
-        .then(response => response.text());
+function getStudyTitle(studentData) {
 
     const searchStringStart = '<h2 class="section-title large-20 columns nospace">';
     const searchStringEnd = "</h2>";
 
-    data = data.split(searchStringStart);
-    if (data[2]) {
-        title = data[2].split(searchStringEnd)[0].trim();
+    studentData = studentData.split(searchStringStart);
+
+    if (studentData[2]) {
+        title = studentData[2].split(searchStringEnd)[0].trim();
     }
     return title;
 }
@@ -207,7 +205,7 @@ function createTotalCreditsProgressBar(div) {
 function createStudyTitle(div) {
 
     let studyTitleTitle = document.createElement('h1');
-    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studyTitle));
+    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studentInformations.studyTitle));
     div.insertBefore(studyTitleTitle, div.firstChild);
 }
 
@@ -516,10 +514,12 @@ getStudyTitle().then(studyTitleText => {
     studyTitle = studyTitleText;
     studyAcronym = getStudyAcronym(studyTitle);
 
-    ModuleParser.generateModuleObjects(studyAcronym)
+getStudentInformations()
+    .then(
+        ModuleParser.generateModuleObjects(studentInformations.studyAcronym)
         .then(modules => generateHtml(modules))
         .catch(e => {
             console.log("Booo");
             console.log(e);
-        });
-});
+        })
+    );
