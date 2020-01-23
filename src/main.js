@@ -278,9 +278,41 @@ function createChart(div, modules) {
     }
 
     let type = 'line'
+
     let data = {
         labels: labels,
-        datasets: [{
+        datasets: [
+            {
+                label: 'Total Credits by Semster',
+                data:
+                    [
+                        0,
+                        CreditsBySemesterCount[0],
+                        CreditsBySemesterCount[1],
+                        CreditsBySemesterCount[2],
+                        CreditsBySemesterCount[3],
+                        CreditsBySemesterCount[4],
+                        CreditsBySemesterCount[5],
+                        CreditsBySemesterCount[6],
+                        CreditsBySemesterCount[7]
+                    ],
+
+                backgroundColor: [
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                    'rgba(65, 94, 108, 0.8)',
+                ],
+                // Changes this dataset to become a line
+                type: 'bar',
+                yAxisID: 'y-axis-2'
+
+            },
+            {
             label: 'Your remaining credits',
             data: [
                 getBurndownValue(0),
@@ -306,9 +338,14 @@ function createChart(div, modules) {
                 'rgba(135, 206, 235, 1)',
                 'rgba(135, 206, 235, 1)'
             ],
-            borderWidth: 2
-        },
-        {
+                borderWidth: 2,
+                yAxisID: 'y-axis-1'
+
+            }
+        ]
+    }
+    if (isPartTime) {
+        data.datasets.push({
             label: 'Ideal remaining credits (part time)',
             data: [
                 180,
@@ -335,7 +372,10 @@ function createChart(div, modules) {
                 'rgba(255, 206, 235, 1)'
             ],
             borderWidth: 2
-        },
+        })
+    }
+    else {
+        data.datasets.push(
         {
             label: 'Ideal remaining credits (full time)',
             data: [
@@ -361,21 +401,41 @@ function createChart(div, modules) {
                 'rgba(206, 255, 235, 1)'
             ],
             borderWidth: 2
-        }]
+            }
+        )
     }
 
     let options = {
         scales: {
-            yAxes: [{
+            yAxes: [
+                {
                 ticks: {
                     beginAtZero: true
                 },
                 display: true,
+                    position: 'left',
                 scaleLabel: {
                     display: true,
                     labelString: 'Remaining credits'
+                    },
+                    id: 'y-axis-1',
+
+                },
+                {
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 180
+                    },
+                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                    display: true,
+                    position: 'right',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Credits by semster'
+                    },
+                    id: 'y-axis-2',
                 }
-            }],
+            ],
             xAxes: [{
                 display: true,
                 scaleLabel: {
