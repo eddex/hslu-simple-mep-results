@@ -362,7 +362,7 @@ function createChart(div, modules) {
             }
         ]
     }
-    if (isPartTime) {
+    if (studentInformations.isPartTime) {
         data.datasets.push({
             label: 'Ideal remaining credits (part time)',
             data: [
