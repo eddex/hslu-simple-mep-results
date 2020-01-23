@@ -7,7 +7,7 @@ const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKe
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
 //const CreditByTermCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
-const CreditsBySemesterCount = [0,0,0,0,0,0,0,0];
+const CreditsBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0];
 
 const CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
@@ -51,8 +51,6 @@ function getStudyAcronym(studyTitle) {
  * Gets the title of the students study
  * @returns {String}
  */
-async function getStudyTitle() {
-    let title = "If you see this message, something went wrong. Try to reload the page"
 
 function getStudyTitle(studentData) {
 
@@ -269,11 +267,11 @@ function calculateStats(modules) {
 }
 
 const getBurndownValue = (semester) => {
-    if (CreditsBySemesterCount[semester-1] === 0) {
+    if (CreditsBySemesterCount[semester - 1] === 0) {
         // if no credits were achieved, don't show it in the graph
         return undefined;
     }
-    
+
     let burndownValue = 180;
     for (let index = 0; index < semester; index++) {
         burndownValue -= CreditsBySemesterCount[index]
@@ -283,7 +281,6 @@ const getBurndownValue = (semester) => {
 
 function createChart(div, modules) {
     canvas = document.createElement("canvas");
-    canvas.setAttribute("id", "myChart");
     div.insertBefore(canvas, div.firstChild);
 
 
@@ -334,31 +331,31 @@ function createChart(div, modules) {
 
             },
             {
-            label: 'Your remaining credits',
-            data: [
-                getBurndownValue(0),
-                getBurndownValue(1),
-                getBurndownValue(2),
-                getBurndownValue(3),
-                getBurndownValue(4),
-                getBurndownValue(5),
-                getBurndownValue(6),
-                getBurndownValue(7),
-                getBurndownValue(8)
-            ],
-            backgroundColor: [
-                'rgba(135, 206, 235, 0.5)',
-            ],
-            borderColor: [
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)',
-                'rgba(135, 206, 235, 1)'
-            ],
+                label: 'Your remaining credits',
+                data: [
+                    getBurndownValue(0),
+                    getBurndownValue(1),
+                    getBurndownValue(2),
+                    getBurndownValue(3),
+                    getBurndownValue(4),
+                    getBurndownValue(5),
+                    getBurndownValue(6),
+                    getBurndownValue(7),
+                    getBurndownValue(8)
+                ],
+                backgroundColor: [
+                    'rgba(135, 206, 235, 0.5)',
+                ],
+                borderColor: [
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)',
+                    'rgba(135, 206, 235, 1)'
+                ],
                 borderWidth: 2,
                 yAxisID: 'y-axis-1'
 
@@ -397,31 +394,31 @@ function createChart(div, modules) {
     }
     else {
         data.datasets.push(
-        {
-            label: 'Ideal remaining credits (full time)',
-            data: [
-                180,
-                180 / 6 * 5,
-                180 / 6 * 4,
-                180 / 6 * 3,
-                180 / 6 * 2,
-                180 / 6 * 1,
-                0
-            ],
-            backgroundColor: [
-                'rgba(206, 255, 235, 0.5)',
-            ],
-            borderColor: [
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)',
-                'rgba(206, 255, 235, 1)'
-            ],
-            borderWidth: 2
+            {
+                label: 'Ideal remaining credits (full time)',
+                data: [
+                    180,
+                    180 / 6 * 5,
+                    180 / 6 * 4,
+                    180 / 6 * 3,
+                    180 / 6 * 2,
+                    180 / 6 * 1,
+                    0
+                ],
+                backgroundColor: [
+                    'rgba(206, 255, 235, 0.5)',
+                ],
+                borderColor: [
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)',
+                    'rgba(206, 255, 235, 1)'
+                ],
+                borderWidth: 2
             }
         )
     }
@@ -430,14 +427,14 @@ function createChart(div, modules) {
         scales: {
             yAxes: [
                 {
-                ticks: {
-                    beginAtZero: true
-                },
-                display: true,
-                    position: 'left',
-                scaleLabel: {
+                    ticks: {
+                        beginAtZero: true
+                    },
                     display: true,
-                    labelString: 'Remaining credits'
+                    position: 'left',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Remaining credits'
                     },
                     id: 'y-axis-1',
 
@@ -510,16 +507,12 @@ async function generateHtml(modules) {
     createStudyTitle(div);
 }
 
-getStudyTitle().then(studyTitleText => {
-    studyTitle = studyTitleText;
-    studyAcronym = getStudyAcronym(studyTitle);
-
 getStudentInformations()
     .then(
         ModuleParser.generateModuleObjects(studentInformations.studyAcronym)
-        .then(modules => generateHtml(modules))
-        .catch(e => {
-            console.log("Booo");
-            console.log(e);
-        })
+            .then(modules => generateHtml(modules))
+            .catch(e => {
+                console.log("Booo");
+                console.log(e);
+            })
     );
