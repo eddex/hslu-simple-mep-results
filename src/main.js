@@ -69,6 +69,29 @@ async function getStudyTitle() {
     return title;
 }
 
+/**
+ * Return if Student is Partime
+ * @returns {boolean}
+ *  */
+function isPartTimeStudent(studentData) {
+
+    const searchStringStart = '<dt>Ausbildungsform</dt>';
+    const searchStringEnd = "</dd>";
+
+    return studentData.split(searchStringStart)[1].split(searchStringEnd)[0].includes('Berufsbegleitend');
+}
+
+async function getStudentInformations() {
+    const URL = "https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-daten/"
+
+    let studentData = await fetch((URL))
+        .then(response => response.text());
+
+    studentInformations.isPartTime = isPartTimeStudent(studentData);
+
+    studentInformations.studyTitle = getStudyTitle(studentData);
+    studentInformations.studyAcronym = getStudyAcronym(studentInformations.studyTitle);
+}
 /*
  * Creates one row of the modules table.
  */
