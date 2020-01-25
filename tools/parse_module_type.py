@@ -20,6 +20,40 @@ from lxml import etree, html
 import json
 from pathlib import Path
 
+# wahlkernmodulec12 ignored, just duplicates / obsolete modules
+module_type_html_ids = [
+    'kernmodulestudienganginformatik',
+    'projektmodulestudienganginformatik',
+    'erweiterungsmodulestudienganginformatik',
+    'majormoduleerweiterungsmodule',
+    'zusatzmodulestudienganginformatik',
+    'zusatzmodulestudienganginformatikangebotta'
+    'kernmodule',
+    'projektmodules',
+    'erweiterungsmodule',
+    'zusatzmodule',
+]
+
+kernmodul = 'Kernmodul'
+projektmodul = 'Projektmodul'
+erweiterungsmodul = 'Erweiterungsmodul'
+majormodul = 'Majormodul'
+zusatzmodul = 'Zusatzmodul'
+
+# parse module types from HTML
+id_to_type_mapping = {
+    'kernmodulestudienganginformatik': kernmodul,
+    'projektmodulestudienganginformatik': projektmodul,
+    'erweiterungsmodulestudienganginformatik': erweiterungsmodul,
+    'majormoduleerweiterungsmodule': majormodul,
+    'zusatzmodulestudienganginformatik': zusatzmodul,
+    'zusatzmodulestudienganginformatikangebotta': zusatzmodul,
+    'kernmodule': kernmodul,
+    'projektmodules':  projektmodul,
+    'erweiterungsmodule': erweiterungsmodul,
+    'zusatzmodule': zusatzmodul
+}
+
 
 def readFileAsJSON(fileName):
     file_read = open(fileName, 'r')
@@ -46,40 +80,6 @@ def writeModuleFiles(fileName, modules):
 
 
 def parseWebsite():
-
-    # wahlkernmodulec12 ignored, just duplicates / obsolete modules
-    module_type_html_ids = [
-        'kernmodulestudienganginformatik',
-        'projektmodulestudienganginformatik',
-        'erweiterungsmodulestudienganginformatik',
-        'majormoduleerweiterungsmodule',
-        'zusatzmodulestudienganginformatik',
-        'zusatzmodulestudienganginformatikangebotta'
-        'kernmodule',
-        'projektmodules',
-        'erweiterungsmodule',
-        'zusatzmodule',
-    ]
-
-    kernmodul = 'Kernmodul'
-    projektmodul = 'Projektmodul'
-    erweiterungsmodul = 'Erweiterungsmodul'
-    majormodul = 'Majormodul'
-    zusatzmodul = 'Zusatzmodul'
-
-    # parse module types from HTML
-    id_to_type_mapping = {
-        'kernmodulestudienganginformatik': kernmodul,
-        'projektmodulestudienganginformatik': projektmodul,
-        'erweiterungsmodulestudienganginformatik': erweiterungsmodul,
-        'majormoduleerweiterungsmodule': majormodul,
-        'zusatzmodulestudienganginformatik': zusatzmodul,
-        'zusatzmodulestudienganginformatikangebotta': zusatzmodul,
-        'kernmodule': kernmodul,
-        'projektmodules':  projektmodul,
-        'erweiterungsmodule': erweiterungsmodul,
-        'zusatzmodule': zusatzmodul
-    }
 
     tree = html.parse('./modulbeschriebe_i.html')
     doc = html.fromstring(etree.tostring(tree))
