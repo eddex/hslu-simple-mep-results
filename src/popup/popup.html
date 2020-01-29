@@ -1,51 +1,68 @@
 <html>
 <header>
-  <link type="text/css" rel="stylesheet" charset="UTF-8" href="popup_style.css">
-  <meta charset="UTF-8">
-
+    <link type="text/css" rel="stylesheet" charset="UTF-8" href="popup_style.css">
+    <meta charset="UTF-8">
 </header>
 
 <body>
-  Moduletype:<br>
-  <select id="moduleType" name="study">
-    <option value="Kernmodul">Kernmodul</option>
-    <option value="Projektmodul">Projektmodul</option>
-    <option value="Erweiterungsmodul">Erweiterungsmodul</option>
-    <option value="Majormodul">Majormodul</option>
-    <option value="Zusatzmodul">Zusatzmodul</option>
-  </select><br>
+    <div class="grid-container-form">
+        <div class="grid-item custom-select">Moduletype</div>
+        <div class="grid-item">
+            <select id="moduleType" name="study">
+              <option value="Kernmodul">Kernmodul</option>
+              <option value="Projektmodul">Projektmodul</option>
+              <option value="Erweiterungsmodul">Erweiterungsmodul</option>
+              <option value="Majormodul">Majormodul</option>
+              <option value="Zusatzmodul">Zusatzmodul</option>
+          </select>
+        </div>
+        <div class="grid-item">Kuerzel</div>
+        <div class="grid-item">
+            <input id="modulAcronym" type="text" value="testModul"><br>
+        </div>
+        <div class="grid-item">Durchfuehrung:</div>
+        <div class="grid-item radio-container">
+            <label class="container">H
+            <input type="radio" checked="checked" name="moduleImplementation">
+            <label class="container">F
+            <input type="radio" checked="checked" name="moduleImplementation">
+        </div>
+        <div class="grid-item">Durchfuehrungsjahr</div>
+        <div class="grid-item"> <select id="moduleYear"></select><br>
+        </div>
+        <div class="grid-item">Bewertung</div>
+        <div class="grid-item">
+            <input type="number" id="moduleMark" name="grade" step="0.5" value="5" min="0" max="6">
+            <p>0 - für keine Bewertung</p>
+        </div>
+        <div class="grid-item">Grad</div>
+        <div class="grid-item">
+            <select id="moduleGrade">
+              <option>A</option>
+              <option>B</option>
+              <option>C</option>
+              <option>D</option>
+              <option>E</option>
+              <option>F</option>
+              <option>-</option>
+            </select>
+            <p>- für keinen Grad</p>
+        </div>
+        <div class="grid-item">Credits</div>
+        <div class="grid-item">
+            <input type="number" id="modulCredits" name="credits" value="3" min="1" max="15"><br>
+        </div>
+    </div>
+    <div class="grid-container-buttons">
+        <input class="button" id="submitModul" type="submit" value="Save Modul">
+        <input class="button" id="removeModule" type="submit" value="Remove Module">
+        <input class="button" id="resetModuls" type="submit" value="Reset Modules">
+    </div>
 
-  Kuerzel:<br>
-  <input id="modulAcronym" type="text" value="testModul"><br>
-
-  Durchfuehrung:<br>
-  <input type="radio" name="moduleImplementation" value="H" checked>H
-  <input type="radio" name="moduleImplementation" value="F">F
-  <select id="moduleYear"></select><br>
-
-  Grade:<br>
-  <input type="number" id="moduleMark" name="grade" step="0.5" value="3" min="1" max="6"><br>
-  
-  Bewertung:<br>
-  <select id="moduleGrade">
-    <option>A</option>
-    <option>B</option>
-    <option>C</option>
-    <option>D</option>
-    <option>E</option>
-    <option>F</option>
-  </select><br>
-
-  Credits:<br>
-  <input type="number" id="modulCredits" name="credits" value="3" min="1" max="15"><br>
-  <input id="submitModul" type="submit" value="Save Modul">
-  <input id="removeModule" type="submit" value="Remove Module">
-  <input id="resetModuls" type="submit" value="Reset Modules">
-
-  <div>
-    <select hidden="" id="ModulList" name="list_box_name[]" size="number_of_options" multiple="single"></select>
-  </div>
-  <script src="popup.js"></script>
+    <div>
+        <select hidden="" id="ModulList" name="list_box_name[]" size="number_of_options" multiple="single"></select>
+    </div>
+    <script src="popup.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,43 @@
+.grid-container-form {
+    display: grid;
+    grid-template-columns: auto auto;
+    background-color: black;
+    padding: 1px;
+}
+
+.grid-container-buttons {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    background-color: white;
+    padding: 1px;
+}
+
+.grid-item {
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    font-size: 20px;
+    text-align: left;
+}
+
+.custom-select {
+    position: relative;
+    font-family: Arial;
+}
+
+p {
+    font-size: 10;
+    margin: 0;
+}
+
+.button {
+    width: 100%;
+    background-color: #415e6c;
+    color: white;
+    padding: 10px;
+    margin: 2px;
+    margin-right: 20px;
+    border: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
