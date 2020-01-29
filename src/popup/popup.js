@@ -10,10 +10,9 @@ function gotItem(item) {
     console.log("got modul", item);
     return item
 }
+
 async function populateModulList() {
-
     modules = await getLocalStorage();
-
     // reset ModulList
     let selectModulList = document.getElementById("ModulList");;
     let selectParentNode = selectModulList.parentNode;
@@ -41,18 +40,23 @@ function populateYearList() {
     }
     document.getElementById("moduleYear").innerHTML = options;
 }
+
 async function clearModules() {
     await browser.storage.local.clear()
 }
+
 async function getLocalStorage() {
     return await browser.storage.local.get();
 }
+
 async function addItemToLocalStorage(item) {
     browser.storage.local.set(item).then(setItem, onError);
 }
+
 async function removeItemFromLocalStorage(item) {
     browser.storage.local.remove(item);
 }
+
 async function removeModule() {
     modules = await getLocalStorage();
     modulList = document.getElementById("ModulList")
@@ -61,6 +65,7 @@ async function removeModule() {
     let modulAcronym = modulList.options[selectedIndex].value;
     removeItemFromLocalStorage(modulAcronym)
 }
+
 async function addCustomModul() {
     let modulAcronym = document.getElementById("modulAcronym").value;
     let moduleType = document.getElementById("moduleType").value;
@@ -99,7 +104,6 @@ async function addCustomModul() {
     console.log("modulList[modulAcronym]", modulList[modulAcronym])
     addItemToLocalStorage(modulList);
 }
-
 
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
