@@ -1,8 +1,8 @@
 /*
-* Update the base module type list for other studies than information science.
-*
-* Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
-*/
+ * Update the base module type list for other studies than information science.
+ *
+ * Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
+ */
 const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
     let patch = await fetch(Helpers.getExtensionInternalFileUrl(jsonFilePath))
         .then(response => response.json());
@@ -12,12 +12,12 @@ const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
 const ModuleParser = {
 
     /*
-    * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
-    * detail: [
-    *   key: "x",
-    *   val: "y"
-    * ]
-    */
+     * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
+     * detail: [
+     *   key: "x",
+     *   val: "y"
+     * ]
+     */
     getItemDetailsValueByKey: (details, key) => {
 
         for (detail of details) {
@@ -29,18 +29,18 @@ const ModuleParser = {
     },
 
     /*
-    * The module name includes the module id.
-    * But there are different formats for the module names.
-    *
-    * Modules that are parsed:
-    *   Usually a module name looks like this: I.BA_IPCV.F1901
-    *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
-    *
-    * Modules that are not parsed:
-    *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
-    *   Only the ANRECHINDIVID module is known to have this format.
-    *   Probably counted as 'Erweiterungsmodul'.
-    */
+     * The module name includes the module id.
+     * But there are different formats for the module names.
+     *
+     * Modules that are parsed:
+     *   Usually a module name looks like this: I.BA_IPCV.F1901
+     *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
+     *
+     * Modules that are not parsed:
+     *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
+     *   Only the ANRECHINDIVID module is known to have this format.
+     *   Probably counted as 'Erweiterungsmodul'.
+     */
     getModuleIdFromModuleName: (moduleName) => {
 
         let name = String(moduleName);
@@ -55,7 +55,7 @@ const ModuleParser = {
                 name = name.split('.')[0];
             }
             return name;
-        }
+        } 
         else if (name.includes('.')) {
 
             // for module names like I.ANRECHINDIVID.F1901
@@ -68,8 +68,8 @@ const ModuleParser = {
     },
 
     /*
-    * Generates an array of module objects using the API and the module type mapping json file.
-    */
+     * Generates an array of module objects using the API and the module type mapping json file.
+     */
     generateModuleObjects: async (studyAcronym) => {
 
         const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=69&total_entries=69&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69";
@@ -125,7 +125,7 @@ const ModuleParser = {
                 parsedModule[CreditsKey] = module.credits
 
                 //create modul number
-                let moduleName = "I." + module.acronym + "." + module.semster + module.year.slice(module.year.length -2) + "01"
+                let moduleName = "M." + module.acronym + "." + module.semster + module.year.slice(module.year.length - 2) + "01"
                 parsedModule[NameKey] = moduleName;
                 console.log(parsedModule);
                 modules.push(parsedModule);
