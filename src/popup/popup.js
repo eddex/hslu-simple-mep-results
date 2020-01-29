@@ -64,6 +64,9 @@ async function addCustomModul() {
   let moduleType = document.getElementById("moduleType").value;
   let modulCredits = document.getElementById("modulCredits").value;
   let moduleGrade = document.getElementById("moduleGrade").value;
+    if (moduleGrade == "-") {
+        moduleGrade = 'n/a';
+    }
 
   let modulYearList = document.getElementById("moduleYear")
   let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
@@ -77,7 +80,9 @@ async function addCustomModul() {
   }
 
   let moduleMark = document.getElementById("moduleMark").value;
-
+    if (moduleMark < 1) {
+        moduleMark = 'n/a';
+    }
   
   let modulList = await getLocalStorage();
   modulList[modulAcronym] = {
@@ -85,7 +90,7 @@ async function addCustomModul() {
     type: moduleType,
     credits: modulCredits,
     mark: moduleMark,
-    grade: moduleMark < 4 ? 'F' : moduleGrade,
+        grade: moduleGrade,
     year: moduleYear,
     semster: modulSemester
   }
