@@ -1,48 +1,49 @@
 {
-  "manifest_version": 2,
-  "name": "HSLU simple MEP results",
-  "version": "2.0.7",
-  "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
-  "icons": {
-    "48": "icons/icon-48.png",
-    "96": "icons/icon-96.png"
-  },
-  "browser_action": {
-    "default_icon": "icons/icon-48.png",
-    "default_title": "HSLU simple MEP results",
-    "default_popup": "popup/popup.html"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"
-      ],
-      "js": [
-        "components/helpers.js",
-        "components/module_parser.js",
-        "main.js"
-      ],
-      "css": [
-        "components/custom_styles.css"
-      ]
+    "manifest_version": 2,
+    "name": "HSLU simple MEP results",
+    "version": "2.0.7",
+    "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
+    "icons": {
+        "48": "icons/icon-48.png",
+        "96": "icons/icon-96.png"
+    },
+    "browser_action": {
+        "default_icon": "icons/icon-48.png",
+        "default_title": "HSLU simple MEP results",
+        "default_popup": "popup/popup.html",
+        "browser_style": true
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"
+            ],
+            "js": [
+                "components/helpers.js",
+                "components/module_parser.js",
+                "main.js"
+            ],
+            "css": [
+                "components/custom_styles.css"
+            ]
+        }
+    ],
+    "permissions": [
+        "https://mycampus.hslu.ch/*",
+        "webRequest",
+        "storage"
+    ],
+    "web_accessible_resources": [
+        "templates/grades_table.html",
+        "templates/credits_by_module_type_table.html",
+        "templates/custom_styles.css",
+        "data/modules_i.json",
+        "data/modules_ics.json",
+        "data/modules_wi.json"
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "update_url": "https://raw.githubusercontent.com/eddex/hslu-simple-mep-results/master/updates.json"
+        }
     }
-  ],
-  "permissions": [
-    "https://mycampus.hslu.ch/*",
-    "webRequest",
-    "storage"
-  ],
-  "web_accessible_resources": [
-    "templates/grades_table.html",
-    "templates/credits_by_module_type_table.html",
-    "templates/custom_styles.css",
-    "data/modules_i.json",
-    "data/modules_ics.json",
-    "data/modules_wi.json"
-  ],
-  "browser_specific_settings": {
-    "gecko": {
-      "update_url": "https://raw.githubusercontent.com/eddex/hslu-simple-mep-results/master/updates.json"
-    }
-  }
 }
