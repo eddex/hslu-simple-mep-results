@@ -29,6 +29,16 @@ async function populateModulList() {
     modulList.hidden = true;
   }
 }
+
+function populateYearList() {
+  var year = (new Date()).getFullYear() - 8;
+  var till = (new Date()).getFullYear();
+  var options = "";
+  for (var y = year; y <= till; y++) {
+    options += "<option>" + y + "</option>";
+  }
+  document.getElementById("moduleYear").innerHTML = options;
+}
 async function clearModules() {
   await browser.storage.local.clear()
 }
@@ -50,9 +60,13 @@ async function removeModule() {
   removeItemFromLocalStorage(modulAcronym)
 }
 async function addCustomModul() {
-  modulAcronym = document.getElementById("modulAcronym").value;
-  moduleType = document.getElementById("moduleType").value;
-  modulCredits = document.getElementById("modulCredits").value;
+  let modulAcronym = document.getElementById("modulAcronym").value;
+  let moduleType = document.getElementById("moduleType").value;
+  let modulCredits = document.getElementById("modulCredits").value;
+  let moduleGrade = document.getElementById("moduleGrade").value;
+
+  let modulYearList = document.getElementById("moduleYear")
+  let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
 
   var modulSemesterRadios = document.getElementsByName('moduleImplementation');
   for (var i = 0, length = modulSemesterRadios.length; i < length; i++) {
@@ -61,14 +75,21 @@ async function addCustomModul() {
       break;
     }
   }
+
+  let moduleMark = document.getElementById("moduleMark").value;
+
+  
   let modulList = await getLocalStorage();
   modulList[modulAcronym] = {
     acronym: modulAcronym,
     type: moduleType,
     credits: modulCredits,
+    mark: moduleMark,
+    grade: moduleMark < 4 ? 'F' : moduleGrade,
+    year: moduleYear,
     semster: modulSemester
   }
-
+  console.log("modulList[modulAcronym]", modulList[modulAcronym])
   addItemToLocalStorage(modulList);
 }
 
@@ -84,6 +105,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   //first time
   populateModulList();
+  populateYearList();
 
   //every time the storage changes(set)
   browser.storage.onChanged.addListener(populateModulList).then();
