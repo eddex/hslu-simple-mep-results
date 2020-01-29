@@ -110,10 +110,28 @@ const ModuleParser = {
 
             let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule[NameKey]);
             parsedModule[ModuleTypeKey] = moduleTypeList[moduleId];
-
             modules.push(parsedModule);
         });
 
+        let customModules = await browser.storage.local.get();
+        for (const customModule in customModules) {
+            if (customModules.hasOwnProperty(customModule)) {
+                const module = customModules[customModule];
+                let parsedModule = {};
+                parsedModule.passed = module.grade == 'F' ? false : true;
+                parsedModule[MarkKey] = module.mark;
+                parsedModule[GradeKey] = module.grade;
+                parsedModule[ModuleTypeKey] = module.type;
+                parsedModule[CreditsKey] = module.credits
+
+                //create modul number
+                let moduleName = "I." + module.acronym + "." + module.semster + module.year.slice(module.year.length -2) + "01"
+                parsedModule[NameKey] = moduleName;
+                console.log(parsedModule);
+                modules.push(parsedModule);
+
+            }
+        }
         return modules;
     }
 }
