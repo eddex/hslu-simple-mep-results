@@ -10,7 +10,7 @@ function gotItem(item) {
 }
 async function populateModulList() {
 
-  modules = await getCustomModuls();
+  modules = await getLocalStorage();
 
   // reset ModulList
   let selectModulList = document.getElementById("ModulList");;
@@ -18,102 +18,75 @@ async function populateModulList() {
   let modulList = selectModulList.cloneNode(false); // Make a shallow copy
   selectParentNode.replaceChild(modulList, selectModulList);
 
-  if (modules.customModuls) {
-    modules = modules.customModuls;
-
-    modules.forEach(module => {
-      modulName = module.modulAcronym
-      modulList.options[modulList.options.length] = new Option(modulName);
-    });
-    modulList.hidden = false;
+  if (!(Object.keys(modules).length === 0) && modules.constructor === Object) {
+    for (let module in modules) {
+      console.log("acronym", modules[module].acronym)
+      modulList.options[modulList.options.length] = new Option(modules[module].acronym);
+      modulList.hidden = false;
+    }
   }
   else {
     modulList.hidden = true;
   }
 }
-async function resetModuls() {
+async function clearModules() {
   await browser.storage.local.clear()
-  populateModulList();
+}
+async function getLocalStorage() {
+  return await browser.storage.local.get();
+}
+async function addItemToLocalStorage(item) {
+  browser.storage.local.set(item).then(setItem, onError);
+}
+async function removeItemFromLocalStorage(item) {
+  browser.storage.local.remove(item);
 }
 async function removeModule() {
-  console.log("DeleteModul")
-  modules = await getCustomModuls();
+  modules = await getLocalStorage();
   modulList = document.getElementById("ModulList")
 
   var selectedIndex = modulList.selectedIndex
   let modulAcronym = modulList.options[selectedIndex].value;
-  console.log("module", modulAcronym)
-  
-  if (modules.customModuls) {
-    modules = modules.customModuls;
-
-    const isModul = (moduleArray) => moduleArray.modulAcronym == modulAcronym;
-
-    let moduleIndex = modules.findIndex(isModul)
-    console.log("modulIndex", moduleIndex)
-    console.log(modules)
-    modules.splice(moduleIndex, 1)
-    console.log(modules)
-
-    storageObject = {
-      customModuls: modules
-    }
-    browser.storage.local.set(storageObject).then(setItem, onError);
-  }
-  populateModulList();
+  removeItemFromLocalStorage(modulAcronym)
 }
-
-async function saveCustomModul() {
+async function addCustomModul() {
   modulAcronym = document.getElementById("modulAcronym").value;
   moduleType = document.getElementById("moduleType").value;
   modulCredits = document.getElementById("modulCredits").value;
-  let customModuls = []
 
   var modulSemesterRadios = document.getElementsByName('moduleImplementation');
   for (var i = 0, length = modulSemesterRadios.length; i < length; i++) {
     if (modulSemesterRadios[i].checked) {
       modulSemester = modulSemesterRadios[i].value;
-      // only one radio can be logically checked, don't check the rest
       break;
     }
   }
-
-  let newCustomModuls = {
-    modulAcronym: modulAcronym,
-    moduleType: moduleType,
-    modulCredits: modulCredits
+  let modulList = await getLocalStorage();
+  modulList[modulAcronym] = {
+    acronym: modulAcronym,
+    type: moduleType,
+    credits: modulCredits,
+    semster: modulSemester
   }
-  let existingCustomModuls = await getCustomModuls();
 
-  if (!(Object.keys(existingCustomModuls).length === 0)) {
-    existingCustomModuls = existingCustomModuls.customModuls
-    console.log("add existing Custom Moduls")
-    console.log("existingCustomModuls", existingCustomModuls)
-
-    // customModuls.push(existingCustomModuls);
-    for (let index = 0; index < existingCustomModuls.length; index++) {
-      customModuls.push(existingCustomModuls[index]);
-    }
-  }
-  customModuls.push(newCustomModuls)
-  storageObject = {
-    customModuls: customModuls
-  }
-  browser.storage.local.set(storageObject).then(setItem, onError);
-  populateModulList();
+  addItemToLocalStorage(modulList);
 }
-async function getCustomModuls() {
-  let modules = await browser.storage.local.get(["customModuls"])
-  return modules
 
-}
+
 window.addEventListener('DOMContentLoaded', (event) => {
   console.log('DOM fully loaded and parsed');
   submitButton = document.getElementById("submitModul");
   resetButton = document.getElementById("resetModuls");
   deleteButton = document.getElementById("removeModule");
-  submitButton.addEventListener('click', saveCustomModul);
-  resetButton.addEventListener('click', resetModuls);
+  submitButton.addEventListener('click', addCustomModul);
+  resetButton.addEventListener('click', clearModules);
   deleteButton.addEventListener('click', removeModule);
+
+  //first time
   populateModulList();
+
+  //every time the storage changes(set)
+  browser.storage.onChanged.addListener(populateModulList).then();
+
 });
+
