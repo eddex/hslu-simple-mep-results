@@ -1,0 +1,37 @@
+<html>
+<header>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="popup_style.css">
+  <meta charset="UTF-8">
+
+</header>
+
+<body>
+  Moduletype:<br>
+  <select id="moduleType" name="study">
+    <option value="Kernmodul">Kernmodul</option>
+    <option value="Projektmodul">Projektmodul</option>
+    <option value="Erweiterungsmodul">Erweiterungsmodul</option>
+    <option value="Majormodul">Majormodul</option>
+    <option value="Zusatzmodul">Zusatzmodul</option>
+  </select><br>
+
+  Kuerzel:<br>
+  <input id="modulAcronym" type="text" value="testModul"><br>
+
+  Durchfuehrung:<br>
+  <input type="radio" name="moduleImplementation" value="H" checked>H
+  <input type="radio" name="moduleImplementation" value="F">F<br>
+  Credits:<br>
+  <input type="number" id="modulCredits" name="credits" value="3" min="1" max="15"><br>
+  <input id="submitModul" type="submit" value="Speicher">
+  <input id="resetModuls" type="submit" value="Reset Modules">
+  <input id="removeModule" type="submit" value="Remove Module">
+  <input type="reset" value="Reset"><br>
+  <div>
+    <select hidden="" id="ModulList" name="list_box_name[]" size="number_of_options" multiple="single"></select>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
