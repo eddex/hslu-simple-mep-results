@@ -497,13 +497,14 @@ async function generateHtml(modules) {
     createModulesTable(div, modules);
     Helpers.addTitleToDocument(div, 'Modulübersicht');
 
+    await createGradesOverviewTable(div);
+    createAverageMarkTitle(div);
+
     await createCreditsByModuleTypeTable(div);
+    createChart(div, modules);
     createTotalCreditsProgressBar(div);
     createTotalCreditsTitle(div);
 
-    await createGradesOverviewTable(div);
-    createAverageMarkTitle(div);
-    createChart(div, modules);
     createStudyTitle(div);
 }
 
