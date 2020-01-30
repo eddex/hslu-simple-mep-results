@@ -1,12 +1,12 @@
-const NameKey = 'Modul-Name';
-const CreditsKey = 'ECTS-Punkte';
-const MarkKey = 'Bewertung';
-const GradeKey = 'Grad';
-const ModuleTypeKey = 'Modul-Typ';
-const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
-const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+const _NameKey = 'Modul-Name';
+const _CreditsKey = 'ECTS-Punkte';
+const _MarkKey = 'Bewertung';
+const _GradeKey = 'Grad';
+const _ModuleTypeKey = 'Modul-Typ';
+const _ModuleTableHeaders = [_NameKey, _ModuleTypeKey, _CreditsKey, _MarkKey, _GradeKey]
+const _GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
-const CreditsByModuleTypeCount = {
+const _CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
     Projektmodul: { current: 0, min: 36 },
     Erweiterungsmodul: { current: 0, min: 42 },
@@ -14,11 +14,10 @@ const CreditsByModuleTypeCount = {
     Zusatzmodul: { current: 0, min: 9 }
 };
 
-let isPartTime = false
-let studentInformations = {}
+const _StudentInformations = {}
 
 // TODO: add more possible titles
-var StudyTitles = {
+const _StudyTitles = {
     "bachelor of science in information & cyber security": "ICS",
     "bachelor of science in information": "I",
     "bachelor of science in computer science": "I",
@@ -26,12 +25,12 @@ var StudyTitles = {
     "bachelor of science in informatik": "I"
 }
 
-let totalCredits = 0;
-let totalGrades = 0;
-let totalNumericMark = 0;
-let numberOfNumericMarks = 0;
-let totalNumericMarkWithF = 0;
-let numberOfNumericMarksWithF = 0;
+let _totalCredits = 0;
+let _totalGrades = 0;
+let _totalNumericMark = 0;
+let _numberOfNumericMarks = 0;
+let _totalNumericMarkWithF = 0;
+let _numberOfNumericMarksWithF = 0;
 
 /**
  * Gets the acronym of the students study.
@@ -41,7 +40,7 @@ let numberOfNumericMarksWithF = 0;
  */
 function getStudyAcronym(studyTitle) {
     studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '').trim();
-    return StudyTitles[studyTitle];
+    return _StudyTitles[studyTitle];
 }
 
 /**
@@ -80,10 +79,10 @@ async function getStudentInformations() {
     let studentData = await fetch((URL))
         .then(response => response.text());
 
-    studentInformations.isPartTime = isPartTimeStudent(studentData);
+    _StudentInformations.isPartTime = isPartTimeStudent(studentData);
 
-    studentInformations.studyTitle = getStudyTitle(studentData);
-    studentInformations.studyAcronym = getStudyAcronym(studentInformations.studyTitle);
+    _StudentInformations.studyTitle = getStudyTitle(studentData);
+    _StudentInformations.studyAcronym = getStudyAcronym(_StudentInformations.studyTitle);
 }
 /*
  * Creates one row of the modules table.
@@ -92,7 +91,7 @@ function createModulesTableRow(parsedModule) {
 
     let tr = document.createElement('tr');
 
-    ModuleTableHeaders.forEach(attributeKey => {
+    _ModuleTableHeaders.forEach(attributeKey => {
         let td = document.createElement('td');
         td.appendChild(document.createTextNode(parsedModule[attributeKey]));
         tr.appendChild(td);
@@ -111,9 +110,9 @@ function createModulesTable(div, modules) {
 
     let header = table.createTHead();
     let row = header.insertRow(0);
-    for (let i = 0; i < ModuleTableHeaders.length; i++) {
+    for (let i = 0; i < _ModuleTableHeaders.length; i++) {
         let cell = row.insertCell(i);
-        cell.appendChild(document.createTextNode(ModuleTableHeaders[i]));
+        cell.appendChild(document.createTextNode(_ModuleTableHeaders[i]));
         cell.setAttribute('style', 'font-weight: bold');
     }
 
@@ -139,15 +138,15 @@ async function createCreditsByModuleTypeTable(div) {
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
 
-    for (let moduleKey in CreditsByModuleTypeCount) {
+    for (let moduleKey in _CreditsByModuleTypeCount) {
         const creditProgressBar = document.getElementById('ECTS-' + moduleKey);
         const creditProgressText = document.getElementById('ECTS-Text-' + moduleKey);
 
         const progress = Helpers.calculateProgress(
-            CreditsByModuleTypeCount[moduleKey].current,
-            CreditsByModuleTypeCount[moduleKey].min)
+            _CreditsByModuleTypeCount[moduleKey].current,
+            _CreditsByModuleTypeCount[moduleKey].min)
         creditProgressText.innerText =
-            CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
+            _CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
         creditProgressBar.style.width = progress + '%';
     }
 }
@@ -163,9 +162,9 @@ async function createGradesOverviewTable(div) {
         .then(response => response.text());
 
     let gradeOverviewTable = document.createElement('div');
-    for (let gradeId in GradesCount) {
-        gradesTableTemplate = String(gradesTableTemplate).replace('count-' + gradeId, GradesCount[gradeId]);
-        let gradePercentageRounded = Math.round(10000 * GradesCount[gradeId] / totalGrades) / 100;
+    for (let gradeId in _GradesCount) {
+        gradesTableTemplate = String(gradesTableTemplate).replace('count-' + gradeId, _GradesCount[gradeId]);
+        let gradePercentageRounded = Math.round(10000 * _GradesCount[gradeId] / _totalGrades) / 100;
         gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
     }
     gradeOverviewTable.innerHTML = gradesTableTemplate;
@@ -176,8 +175,8 @@ async function createGradesOverviewTable(div) {
  * Create a heading that displays the number of achieved credits.
  */
 function createTotalCreditsTitle(div) {
-    const progress = Helpers.calculateProgress(totalCredits, 180);
-    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + totalCredits + '/180 (' + progress + '%)');
+    const progress = Helpers.calculateProgress(_totalCredits, 180);
+    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + _totalCredits + '/180 (' + progress + '%)');
 }
 
 /*
@@ -189,7 +188,7 @@ function createTotalCreditsProgressBar(div) {
     container.classList = 'total-progress-container';
 
     const progressBar = document.createElement('div');
-    const progress = Helpers.calculateProgress(totalCredits, 180);
+    const progress = Helpers.calculateProgress(_totalCredits, 180);
     progressBar.classList = 'total-progress progress';
     progressBar.style.width = progress + '%';
 
@@ -200,7 +199,7 @@ function createTotalCreditsProgressBar(div) {
 function createStudyTitle(div) {
 
     let studyTitleTitle = document.createElement('h1');
-    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + studentInformations.studyTitle));
+    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + _StudentInformations.studyTitle));
     div.insertBefore(studyTitleTitle, div.firstChild);
 }
 
@@ -210,8 +209,8 @@ function createStudyTitle(div) {
  * A second average is displayed, where the modules with grade F are taken into account.
  */
 function createAverageMarkTitle(div) {
-    let average = Number(totalNumericMark / numberOfNumericMarks).toFixed(2);
-    let averageWithF = Number(totalNumericMarkWithF / numberOfNumericMarksWithF).toFixed(2);
+    let average = Number(_totalNumericMark / _numberOfNumericMarks).toFixed(2);
+    let averageWithF = Number(_totalNumericMarkWithF / _numberOfNumericMarksWithF).toFixed(2);
     Helpers.addTitleToDocument(div, 'Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
@@ -238,26 +237,26 @@ function getExtensionInternalFileUrl(filePath) {
 function calculateStats(modules) {
 
     modules.forEach(parsedModule => {
-        if (parsedModule[GradeKey] != null && parsedModule[GradeKey] != '') {
-            GradesCount[parsedModule[GradeKey]]++;
-            totalGrades++;
+        if (parsedModule[_GradeKey] != null && parsedModule[_GradeKey] != '') {
+            _GradesCount[parsedModule[_GradeKey]]++;
+            _totalGrades++;
         }
         if (parsedModule.passed) {
-            let credits = Number(parsedModule[CreditsKey]);
-            totalCredits += credits;
-            let moduleType = parsedModule[ModuleTypeKey]
-            if (moduleType in CreditsByModuleTypeCount) {
-                CreditsByModuleTypeCount[moduleType].current += credits;
+            let credits = Number(parsedModule[_CreditsKey]);
+            _totalCredits += credits;
+            let moduleType = parsedModule[_ModuleTypeKey]
+            if (moduleType in _CreditsByModuleTypeCount) {
+                _CreditsByModuleTypeCount[moduleType].current += credits;
             }
         }
         // if cell is empty, Number('') returns 0!
-        numericMark = Number(parsedModule[MarkKey])
+        numericMark = Number(parsedModule[_MarkKey])
         if (!isNaN(numericMark) && numericMark != 0) {
-            totalNumericMarkWithF += numericMark;
-            numberOfNumericMarksWithF++;
+            _totalNumericMarkWithF += numericMark;
+            _numberOfNumericMarksWithF++;
             if (parsedModule.passed) {
-                totalNumericMark += numericMark;
-                numberOfNumericMarks++;
+                _totalNumericMark += numericMark;
+                _numberOfNumericMarks++;
             }
         }
     });
@@ -298,8 +297,8 @@ function createChart(div, modules) {
 
     // calculate how many credits were achieved for each semester
     modules.forEach(m => {
-        if (m[GradeKey] != 'F' && m.semester != undefined) {
-            creditsDoneBySemesterCount[m.semester] += Number(m[CreditsKey]);
+        if (m[_GradeKey] != 'F' && m.semester != undefined) {
+            creditsDoneBySemesterCount[m.semester] += Number(m[_CreditsKey]);
         }
     })
 
@@ -334,8 +333,8 @@ function createChart(div, modules) {
             },
             {
                 // reference burndown line to reach 0 remaining credits by the end of 6 or 8 semesters
-                label: 'Ideal remaining credits ' + (studentInformations.isPartTime ? '(part time)' : '(full time)'),
-                data: studentInformations.isPartTime
+                label: 'Ideal remaining credits ' + (_StudentInformations.isPartTime ? '(part time)' : '(full time)'),
+                data: _StudentInformations.isPartTime
                     ? getIdealBurndownDataForNumberOfSemesters(8)
                     : getIdealBurndownDataForNumberOfSemesters(6),
                 backgroundColor: colorRedTransparent,
@@ -426,7 +425,7 @@ async function generateHtml(modules) {
 
 getStudentInformations()
     .then(
-        ModuleParser.generateModuleObjects(studentInformations.studyAcronym)
+        ModuleParser.generateModuleObjects(_StudentInformations.studyAcronym)
             .then(modules => generateHtml(modules))
             .catch(e => {
                 console.log("Booo");

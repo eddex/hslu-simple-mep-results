@@ -1,4 +1,4 @@
-/*
+/**
 * Update the base module type list for other studies than information science.
 *
 * Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
@@ -11,7 +11,7 @@ const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
 
 const ModuleParser = {
 
-    /*
+    /**
     * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
     * detail: [
     *   key: "x",
@@ -28,7 +28,7 @@ const ModuleParser = {
         return '';
     },
 
-    /*
+    /**
      * Check if a module was done in Autumn.
      * Modules are marked with 'H' for 'Herbstsemester' (autumn)
      * or 'F' for 'Frühlingssemester' (spring).
@@ -39,7 +39,7 @@ const ModuleParser = {
         return includesH || includesF ? includesH : undefined;
     },
 
-    /*
+    /**
      * Calculate the semester.
      */
     calculateSemester: (hsluModule, firstModule) => {
@@ -79,7 +79,7 @@ const ModuleParser = {
         return semester;
     },
 
-    /*
+    /**
     * The module name includes the module id.
     * But there are different formats for the module names.
     *
@@ -118,7 +118,7 @@ const ModuleParser = {
         }
     },
 
-    /*
+    /**
     * Generates an array of module objects using the API and the module type mapping json file.
     */
     generateModuleObjects: async (studyAcronym) => {
@@ -155,19 +155,19 @@ const ModuleParser = {
             let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
             parsedModule.passed = passed;
 
-            parsedModule[MarkKey] = item.note === null ? 'n/a' : item.note;
-            parsedModule[GradeKey] = item.grade === null ? 'n/a' : item.grade;
-            parsedModule[NameKey] = item.anlassnumber;
+            parsedModule[_MarkKey] = item.note === null ? 'n/a' : item.note;
+            parsedModule[_GradeKey] = item.grade === null ? 'n/a' : item.grade;
+            parsedModule[_NameKey] = item.anlassnumber;
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
             parsedModule.semester = ModuleParser.calculateSemester(item, firstModule);
 
             let details = item.details;
-            parsedModule[CreditsKey] = ModuleParser.getItemDetailsValueByKey(details, CreditsKey);
+            parsedModule[_CreditsKey] = ModuleParser.getItemDetailsValueByKey(details, _CreditsKey);
 
-            let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule[NameKey]);
-            parsedModule[ModuleTypeKey] = moduleTypeList[moduleId];
+            let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule[_NameKey]);
+            parsedModule[_ModuleTypeKey] = moduleTypeList[moduleId];
 
             modules.push(parsedModule);
         });
