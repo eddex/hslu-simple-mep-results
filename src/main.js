@@ -1,7 +1,7 @@
 // Initialize student object with default values.
 const _Student = {
     isPartTime: false,
-    studyTitle: '',
+    studyTitle: '<span style="color: red;">Fehler! Bitte die Seite neu laden..</span>',
     studyAcronym: '',
     totalCredits: 0,
     totalGrades: 0,
@@ -226,7 +226,7 @@ function createTotalCreditsProgressBar(div) {
 function createStudyTitle(div) {
 
     let studyTitleTitle = document.createElement('h1');
-    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + _Student.studyTitle));
+    studyTitleTitle.innerHTML = 'Studium: ' + _Student.studyTitle;
     div.insertBefore(studyTitleTitle, div.firstChild);
 }
 
