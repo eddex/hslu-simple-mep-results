@@ -18,7 +18,15 @@ Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://gith
 
 Want to add some missing modules, fix a bug or add a new, awesome feature? That's great. But please read [CONTRIBUTING.md](CONTRIBUTING.md) first!
 
+## Features
+
 ![screenshot](screenshot.png)
+
+The browser add-on puts the following features to the page 'Meine Anmeldungen' on 'MyCampus':
+- A simple table with all your modules, credits and grades
+- An overview of how many modules of each type have been done / are still needed.
+- An overview of your grades including grade distribution and average.
+- A burndown chart to visualize your credit progress.
 
 ## Installation
 
@@ -64,7 +72,8 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
 2. Add everthing from `src` to a `.zip` file:
   - `data/` directory
   - `icons/` directory
-  - `components/` directory
+  - `lib/` directory
+  - `templates/` directory
   - `LICENSE` file
   - `main.js` file
   - `manifest.json` file
