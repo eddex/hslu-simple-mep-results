@@ -3,7 +3,6 @@ const _CreditsKey = 'ECTS-Punkte';
 const _MarkKey = 'Bewertung';
 const _GradeKey = 'Grad';
 const _ModuleTypeKey = 'Modul-Typ';
-const _ModuleTableHeaders = [_NameKey, _ModuleTypeKey, _CreditsKey, _MarkKey, _GradeKey]
 const _GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
 const _CreditsByModuleTypeCount = {
@@ -88,37 +87,59 @@ async function getStudentInformations() {
     _Student.studyTitle = getStudyTitle(studentData);
     _Student.studyAcronym = getStudyAcronym(_Student.studyTitle);
 }
-/*
- * Creates one row of the modules table.
+
+/**
+ * Create one cell of the modules table.
+ * @param {string} text to put into the cell.
+ */
+function createModulesTableCell(text) {
+    let td = document.createElement('td');
+    td.appendChild(document.createTextNode(text));
+    return td;
+}
+
+/**
+ * Create one row of the modules table.
  */
 function createModulesTableRow(parsedModule) {
-
     let tr = document.createElement('tr');
-
-    _ModuleTableHeaders.forEach(attributeKey => {
-        let td = document.createElement('td');
-        td.appendChild(document.createTextNode(parsedModule[attributeKey]));
-        tr.appendChild(td);
-    });
-
+    tr.appendChild(createModulesTableCell(parsedModule[_NameKey]));
+    tr.appendChild(createModulesTableCell(parsedModule[_ModuleTypeKey]));
+    tr.appendChild(createModulesTableCell(parsedModule[_CreditsKey]));
+    tr.appendChild(createModulesTableCell(parsedModule[_MarkKey]));
+    tr.appendChild(createModulesTableCell(parsedModule[_GradeKey]));
     return tr;
 }
 
-/*
+/**
+ * Insert a cell into the a row of a table. Text is bold.
+ *
+ * @param {number} index where to place the header cell.
+ * @param {any} row to insert cell.
+ * @param {string} text to write into the cell.
+ */
+function insertTableHeaderCell(index, row, text) {
+    let cell = row.insertCell(index);
+    cell.appendChild(document.createTextNode(text));
+    cell.setAttribute('style', 'font-weight: bold');
+}
+
+/**
  * Dynamically creates a table that contains all modules the student has visited.
  * Shows Module Identifier (Nummer), Credits (ECTS), Module-Type, Numeric Mark (1-6) and Grade (A-F).
+ *
  */
 function createModulesTable(div, modules) {
 
     let table = document.createElement('table');
 
     let header = table.createTHead();
-    let row = header.insertRow(0);
-    for (let i = 0; i < _ModuleTableHeaders.length; i++) {
-        let cell = row.insertCell(i);
-        cell.appendChild(document.createTextNode(_ModuleTableHeaders[i]));
-        cell.setAttribute('style', 'font-weight: bold');
-    }
+    let headerRow = header.insertRow(0);
+    insertTableHeaderCell(0, headerRow, 'Modul-Name');
+    insertTableHeaderCell(1, headerRow, 'Modul-Typ');
+    insertTableHeaderCell(2, headerRow, 'ECTS-Punkte');
+    insertTableHeaderCell(3, headerRow, 'Bewertung');
+    insertTableHeaderCell(4, headerRow, 'Grad');
 
     let tbody = document.createElement('tbody');
 
