@@ -17,6 +17,12 @@ table, th, td {
   border: 1px solid #415e6c;
 }
 
+th {
+  background-color: #415e6c;
+  color: white;
+  font-weight: normal;
+}
+
 table {
   margin-bottom: 1.6rem;
   width: 100%;
@@ -36,10 +42,6 @@ td {
   background-color: #415e6c;
 }
 
-.progress-container>div {
-  background-color: white;
-}
-
 .progress-bar {
   background-color: skyblue;
   display: block;
@@ -48,10 +50,14 @@ td {
 
 .progress-text {
   padding-left: 2px;
+  background-color: white;
 }
 
 .progress-title {
   padding-left: 2px;
+  /* font-weight: bold; */
+  color: white;
+  background-color: #415e6c;
 }
 /* END */
 

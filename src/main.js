@@ -108,10 +108,10 @@ function createModulesTableRow(parsedModule) {
  * @param {any} row to insert cell.
  * @param {string} text to write into the cell.
  */
-function insertTableHeaderCell(index, row, text) {
-    let cell = row.insertCell(index);
-    cell.appendChild(document.createTextNode(text));
-    cell.setAttribute('style', 'font-weight: bold');
+function insertTableHeaderCell(row, text) {
+    const th = document.createElement('th');
+    th.innerText = text;
+    row.appendChild(th);
 }
 
 /**
@@ -125,11 +125,11 @@ function createModulesTable(div, modules) {
 
     let header = table.createTHead();
     let headerRow = header.insertRow(0);
-    insertTableHeaderCell(0, headerRow, 'Modul-Name');
-    insertTableHeaderCell(1, headerRow, 'Modul-Typ');
-    insertTableHeaderCell(2, headerRow, 'ECTS-Punkte');
-    insertTableHeaderCell(3, headerRow, 'Bewertung');
-    insertTableHeaderCell(4, headerRow, 'Grad');
+    insertTableHeaderCell(headerRow, 'Modul-Name');
+    insertTableHeaderCell(headerRow, 'Modul-Typ');
+    insertTableHeaderCell(headerRow, 'ECTS-Punkte');
+    insertTableHeaderCell(headerRow, 'Bewertung');
+    insertTableHeaderCell(headerRow, 'Grad');
 
     let tbody = document.createElement('tbody');
 
