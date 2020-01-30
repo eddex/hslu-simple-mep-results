@@ -2,7 +2,7 @@
 
     "manifest_version": 2,
     "name": "HSLU simple MEP results",
-    "version": "2.0.9",
+    "version": "2.0.10",
 
     "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
 
