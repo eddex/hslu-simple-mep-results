@@ -362,7 +362,7 @@ function createChart(div, modules) {
                 {
                     ticks: {
                         suggestedMin: 0,
-                        suggestedMax: 60
+                        suggestedMax: 180
                     },
                     type: 'linear',
                     display: true,
