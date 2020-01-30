@@ -1,11 +1,3 @@
-const _CreditsByModuleTypeCount = {
-    Kernmodul: { current: 0, min: 66 },
-    Projektmodul: { current: 0, min: 36 },
-    Erweiterungsmodul: { current: 0, min: 42 },
-    Majormodul: { current: 0, min: 24 },
-    Zusatzmodul: { current: 0, min: 9 }
-};
-
 // Initialize student object with default values.
 const _Student = {
     isPartTime: false,
@@ -17,27 +9,31 @@ const _Student = {
     numberOfNumericMarks: 0,
     totalNumericMarkWithF: 0,
     numberOfNumericMarksWithF: 0,
-    gradesCount: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }
-}
-
-// TODO: add more possible titles
-const _StudyTitles = {
-    "bachelor of science in information & cyber security": "ICS",
-    "bachelor of science in information": "I",
-    "bachelor of science in computer science": "I",
-    "bachelor of science in wirtschaftsinformatik": "WI",
-    "bachelor of science in informatik": "I"
+    gradesCount: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 },
+    creditsByModuleTypeCount: {
+        Kernmodul: { current: 0, min: 66 },
+        Projektmodul: { current: 0, min: 36 },
+        Erweiterungsmodul: { current: 0, min: 42 },
+        Majormodul: { current: 0, min: 24 },
+        Zusatzmodul: { current: 0, min: 9 }
+    }
 }
 
 /**
  * Gets the acronym of the students study.
  * @param {String} studyTitle
  * @returns {String} I, ICS or WI
- *
  */
 function getStudyAcronym(studyTitle) {
+    const studyTitles = {
+        "bachelor of science in information & cyber security": "ICS",
+        "bachelor of science in information": "I",
+        "bachelor of science in computer science": "I",
+        "bachelor of science in wirtschaftsinformatik": "WI",
+        "bachelor of science in informatik": "I"
+    }
     studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '').trim();
-    return _StudyTitles[studyTitle];
+    return studyTitles[studyTitle];
 }
 
 /**
@@ -157,15 +153,15 @@ async function createCreditsByModuleTypeTable(div) {
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
 
-    for (let moduleKey in _CreditsByModuleTypeCount) {
+    for (let moduleKey in _Student.creditsByModuleTypeCount) {
         const creditProgressBar = document.getElementById('ECTS-' + moduleKey);
         const creditProgressText = document.getElementById('ECTS-Text-' + moduleKey);
 
         const progress = Helpers.calculateProgress(
-            _CreditsByModuleTypeCount[moduleKey].current,
-            _CreditsByModuleTypeCount[moduleKey].min)
+            _Student.creditsByModuleTypeCount[moduleKey].current,
+            _Student.creditsByModuleTypeCount[moduleKey].min)
         creditProgressText.innerText =
-            _CreditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
+            _Student.creditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
         creditProgressBar.style.width = progress + '%';
     }
 }
@@ -260,7 +256,6 @@ function calculateStats(modules) {
             && parsedModule.grade != null
             && parsedModule.grade != ''
             && parsedModule.grade != 'n/a') {
-            console.log(parsedModule.grade)
             _Student.gradesCount[parsedModule.grade]++;
             _Student.totalGrades++;
         }
@@ -268,8 +263,8 @@ function calculateStats(modules) {
             let credits = Number(parsedModule.credits);
             _Student.totalCredits += credits;
             let moduleType = parsedModule.moduleType;
-            if (moduleType in _CreditsByModuleTypeCount) {
-                _CreditsByModuleTypeCount[moduleType].current += credits;
+            if (moduleType in _Student.creditsByModuleTypeCount) {
+                _Student.creditsByModuleTypeCount[moduleType].current += credits;
             }
         }
         // if cell is empty, Number('') returns 0!
