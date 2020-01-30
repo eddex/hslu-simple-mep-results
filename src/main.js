@@ -14,7 +14,18 @@ const _CreditsByModuleTypeCount = {
     Zusatzmodul: { current: 0, min: 9 }
 };
 
-const _StudentInformations = {}
+// Initialize student object with default values.
+const _Student = {
+    isPartTime: false,
+    studyTitle: '',
+    studyAcronym: '',
+    totalCredits: 0,
+    totalGrades: 0,
+    totalNumericMark: 0,
+    numberOfNumericMarks: 0,
+    totalNumericMarkWithF: 0,
+    numberOfNumericMarksWithF: 0,
+}
 
 // TODO: add more possible titles
 const _StudyTitles = {
@@ -24,13 +35,6 @@ const _StudyTitles = {
     "bachelor of science in wirtschaftsinformatik": "WI",
     "bachelor of science in informatik": "I"
 }
-
-let _totalCredits = 0;
-let _totalGrades = 0;
-let _totalNumericMark = 0;
-let _numberOfNumericMarks = 0;
-let _totalNumericMarkWithF = 0;
-let _numberOfNumericMarksWithF = 0;
 
 /**
  * Gets the acronym of the students study.
@@ -79,10 +83,10 @@ async function getStudentInformations() {
     let studentData = await fetch((URL))
         .then(response => response.text());
 
-    _StudentInformations.isPartTime = isPartTimeStudent(studentData);
+    _Student.isPartTime = isPartTimeStudent(studentData);
 
-    _StudentInformations.studyTitle = getStudyTitle(studentData);
-    _StudentInformations.studyAcronym = getStudyAcronym(_StudentInformations.studyTitle);
+    _Student.studyTitle = getStudyTitle(studentData);
+    _Student.studyAcronym = getStudyAcronym(_Student.studyTitle);
 }
 /*
  * Creates one row of the modules table.
@@ -164,7 +168,7 @@ async function createGradesOverviewTable(div) {
     let gradeOverviewTable = document.createElement('div');
     for (let gradeId in _GradesCount) {
         gradesTableTemplate = String(gradesTableTemplate).replace('count-' + gradeId, _GradesCount[gradeId]);
-        let gradePercentageRounded = Math.round(10000 * _GradesCount[gradeId] / _totalGrades) / 100;
+        let gradePercentageRounded = Math.round(10000 * _GradesCount[gradeId] / _Student.totalGrades) / 100;
         gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
     }
     gradeOverviewTable.innerHTML = gradesTableTemplate;
@@ -175,8 +179,8 @@ async function createGradesOverviewTable(div) {
  * Create a heading that displays the number of achieved credits.
  */
 function createTotalCreditsTitle(div) {
-    const progress = Helpers.calculateProgress(_totalCredits, 180);
-    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + _totalCredits + '/180 (' + progress + '%)');
+    const progress = Helpers.calculateProgress(_Student.totalCredits, 180);
+    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + _Student.totalCredits + '/180 (' + progress + '%)');
 }
 
 /*
@@ -188,7 +192,7 @@ function createTotalCreditsProgressBar(div) {
     container.classList = 'total-progress-container';
 
     const progressBar = document.createElement('div');
-    const progress = Helpers.calculateProgress(_totalCredits, 180);
+    const progress = Helpers.calculateProgress(_Student.totalCredits, 180);
     progressBar.classList = 'total-progress progress';
     progressBar.style.width = progress + '%';
 
@@ -199,7 +203,7 @@ function createTotalCreditsProgressBar(div) {
 function createStudyTitle(div) {
 
     let studyTitleTitle = document.createElement('h1');
-    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + _StudentInformations.studyTitle));
+    studyTitleTitle.appendChild(document.createTextNode('Studium: ' + _Student.studyTitle));
     div.insertBefore(studyTitleTitle, div.firstChild);
 }
 
@@ -209,8 +213,8 @@ function createStudyTitle(div) {
  * A second average is displayed, where the modules with grade F are taken into account.
  */
 function createAverageMarkTitle(div) {
-    let average = Number(_totalNumericMark / _numberOfNumericMarks).toFixed(2);
-    let averageWithF = Number(_totalNumericMarkWithF / _numberOfNumericMarksWithF).toFixed(2);
+    let average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
+    let averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
     Helpers.addTitleToDocument(div, 'Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
@@ -239,11 +243,11 @@ function calculateStats(modules) {
     modules.forEach(parsedModule => {
         if (parsedModule[_GradeKey] != null && parsedModule[_GradeKey] != '') {
             _GradesCount[parsedModule[_GradeKey]]++;
-            _totalGrades++;
+            _Student.totalGrades++;
         }
         if (parsedModule.passed) {
             let credits = Number(parsedModule[_CreditsKey]);
-            _totalCredits += credits;
+            _Student.totalCredits += credits;
             let moduleType = parsedModule[_ModuleTypeKey]
             if (moduleType in _CreditsByModuleTypeCount) {
                 _CreditsByModuleTypeCount[moduleType].current += credits;
@@ -252,11 +256,11 @@ function calculateStats(modules) {
         // if cell is empty, Number('') returns 0!
         numericMark = Number(parsedModule[_MarkKey])
         if (!isNaN(numericMark) && numericMark != 0) {
-            _totalNumericMarkWithF += numericMark;
-            _numberOfNumericMarksWithF++;
+            _Student.totalNumericMarkWithF += numericMark;
+            _Student.numberOfNumericMarksWithF++;
             if (parsedModule.passed) {
-                _totalNumericMark += numericMark;
-                _numberOfNumericMarks++;
+                _Student.totalNumericMark += numericMark;
+                _Student.numberOfNumericMarks++;
             }
         }
     });
@@ -333,8 +337,8 @@ function createChart(div, modules) {
             },
             {
                 // reference burndown line to reach 0 remaining credits by the end of 6 or 8 semesters
-                label: 'Ideal remaining credits ' + (_StudentInformations.isPartTime ? '(part time)' : '(full time)'),
-                data: _StudentInformations.isPartTime
+                label: 'Ideal remaining credits ' + (_Student.isPartTime ? '(part time)' : '(full time)'),
+                data: _Student.isPartTime
                     ? getIdealBurndownDataForNumberOfSemesters(8)
                     : getIdealBurndownDataForNumberOfSemesters(6),
                 backgroundColor: colorRedTransparent,
@@ -425,7 +429,7 @@ async function generateHtml(modules) {
 
 getStudentInformations()
     .then(
-        ModuleParser.generateModuleObjects(_StudentInformations.studyAcronym)
+        ModuleParser.generateModuleObjects(_Student.studyAcronym)
             .then(modules => generateHtml(modules))
             .catch(e => {
                 console.log("Booo");
