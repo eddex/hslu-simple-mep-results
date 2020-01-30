@@ -8,10 +8,13 @@
   "INTROL": "Kernmodul",
   "ISLAB_K": "Kernmodul",
   "ISM": "Kernmodul",
+  "KRYPTO": "Kernmodul",
+  "NETDA": "Kernmodul",
   "NETW1": "Kernmodul",
   "NETW2": "Kernmodul",
   "OSA": "Kernmodul",
   "PRIVACY1": "Kernmodul",
   "SPREN1": "Kernmodul",
+  "SPREN2": "Kernmodul",
   "SPTA": "Kernmodul"
 }
