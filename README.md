@@ -55,7 +55,7 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
 
 ## Create a new release
 
-1. Update the version number in `src/manifest.json`
+1. Update the version number in `src/manifest.json`.
 2. Add everthing from `src` to a `.zip` file:
   - `data/` directory
   - `icons/` directory
@@ -65,10 +65,11 @@ Chrome does not support third party extensions anymore. Maybe we'll publish the 
   - `main.js` file
   - `manifest.json` file
 3. Login to https://addons.mozilla.org/en-US/developers/
-  - HSLU simple MEP results > Edit product page > Upload new version
-  - Download the generated `.xpi` file
-  - Change the end of the filename form `-fx.xpi` to `-firefox.xpi`
-4. Create a new release in this repo and upload the `.xpi` file
-5. Update `updates.json` with the new release.
-  - To get the `update_hash` generate the sha256 hash of the file
-  - e.g. `Get-Filehash hslu_simple_mep_results-2.0.8-firefox.xpi` in PowerShell
+  - HSLU simple MEP results > Edit product page > Upload new version.
+  - Download the generated `.xpi` file.
+  - Change the end of the filename form `-fx.xpi` to `-firefox.xpi`.
+4. Update `updates.json` with the new release.
+  - To get the `update_hash` generate the sha256 hash of the file.
+  - e.g. `Get-FileHash hslu_simple_mep_results-2.0.8-firefox.xpi` in PowerShell.
+5. Push your changes!
+6. Create a new release in this repo and attach the `.xpi` file.
