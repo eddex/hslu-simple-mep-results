@@ -1,5 +1,3 @@
-const _GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
-
 const _CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
     Projektmodul: { current: 0, min: 36 },
@@ -19,6 +17,7 @@ const _Student = {
     numberOfNumericMarks: 0,
     totalNumericMarkWithF: 0,
     numberOfNumericMarksWithF: 0,
+    gradesCount: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }
 }
 
 // TODO: add more possible titles
@@ -182,9 +181,9 @@ async function createGradesOverviewTable(div) {
         .then(response => response.text());
 
     let gradeOverviewTable = document.createElement('div');
-    for (let gradeId in _GradesCount) {
-        gradesTableTemplate = String(gradesTableTemplate).replace('count-' + gradeId, _GradesCount[gradeId]);
-        let gradePercentageRounded = Math.round(10000 * _GradesCount[gradeId] / _Student.totalGrades) / 100;
+    for (let gradeId in _Student.gradesCount) {
+        gradesTableTemplate = String(gradesTableTemplate).replace('count-' + gradeId, _Student.gradesCount[gradeId]);
+        let gradePercentageRounded = Math.round(10000 * _Student.gradesCount[gradeId] / _Student.totalGrades) / 100;
         gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
     }
     gradeOverviewTable.innerHTML = gradesTableTemplate;
@@ -257,8 +256,12 @@ function getExtensionInternalFileUrl(filePath) {
 function calculateStats(modules) {
 
     modules.forEach(parsedModule => {
-        if (parsedModule.grade != null && parsedModule.grade != '') {
-            _GradesCount[parsedModule.garde]++;
+        if (parsedModule.grade
+            && parsedModule.grade != null
+            && parsedModule.grade != ''
+            && parsedModule.grade != 'n/a') {
+            console.log(parsedModule.grade)
+            _Student.gradesCount[parsedModule.grade]++;
             _Student.totalGrades++;
         }
         if (parsedModule.passed) {
