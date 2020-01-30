@@ -133,8 +133,11 @@ function createModulesTable(div, modules) {
 
     let tbody = document.createElement('tbody');
 
-    modules.forEach(parsedModule => {
+    modules.map((parsedModule, index) => {
         let tr = createModulesTableRow(parsedModule);
+        if (index % 2 == 0) {
+            tr.classList.add('colored-row');
+        }
         tbody.appendChild(tr);
     });
 

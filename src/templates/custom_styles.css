@@ -31,6 +31,10 @@ table {
 td {
   padding-left: 2px;
 }
+
+.colored-row {
+  background-color: #dfe2e5;
+}
 /* END */
 
 /* Credits by module type grid layout */
