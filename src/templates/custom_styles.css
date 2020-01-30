@@ -1,3 +1,4 @@
+/* Modules table & grades table */
 table, th, td {
   border: 1px solid #415e6c;
 }
@@ -10,18 +11,12 @@ table {
 td {
   padding-left: 2px;
 }
+/* END */
 
-.td-progress {
-  padding-left: 0px;
-}
-
-.no-margin {
-  margin-bottom: 0rem;
-}
-
+/* Credits by module type grid layout */
 .progress-container {
   display: grid;
-  grid-template-columns: fit-content(100%) 5fr;
+  grid-template-columns: auto auto auto auto auto;
   grid-gap: 1px;
   padding: 1px;
   background-color: #415e6c;
@@ -38,14 +33,15 @@ td {
 }
 
 .progress-text {
-  position: absolute;
-  margin-left: 2px;
+  padding-left: 2px;
 }
 
 .progress-title {
   padding-left: 2px;
 }
+/* END */
 
+/* Total credits progress bar */
 .total-progress-container {
   height: 10px;
   width: 100%;
@@ -57,3 +53,4 @@ td {
   background-color: skyblue;
   height: 100%;
 }
+/* END */

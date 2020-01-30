@@ -142,7 +142,22 @@ function createModulesTable(div, modules) {
     div.insertBefore(table, div.firstChild);
 }
 
-/*
+/**
+ * Add the progress of the credits for a module type to the template.
+ * The template must already be present on the page!
+ *
+ * @param {string} elementId: The id of the html element to add the text to.
+ * @param {any} creditsByModuleType: An object containing the current and min credits of a module type.
+ */
+function addProgressTextToTemplate(elementId, creditsByModuleType) {
+    const modultypeProgressDiv = document.getElementById(elementId);
+    const progress = Helpers.calculateProgress(
+        creditsByModuleType.current,
+        creditsByModuleType.min);
+    modultypeProgressDiv.innerText = creditsByModuleType.current + ' (' + progress + '%)';
+}
+
+/**
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
 async function createCreditsByModuleTypeTable(div) {
@@ -153,17 +168,11 @@ async function createCreditsByModuleTypeTable(div) {
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
 
-    for (let moduleKey in _Student.creditsByModuleTypeCount) {
-        const creditProgressBar = document.getElementById('ECTS-' + moduleKey);
-        const creditProgressText = document.getElementById('ECTS-Text-' + moduleKey);
-
-        const progress = Helpers.calculateProgress(
-            _Student.creditsByModuleTypeCount[moduleKey].current,
-            _Student.creditsByModuleTypeCount[moduleKey].min)
-        creditProgressText.innerText =
-            _Student.creditsByModuleTypeCount[moduleKey].current + ' (' + progress + '%)';
-        creditProgressBar.style.width = progress + '%';
-    }
+    addProgressTextToTemplate('ECTS-Text-Kernmodul', _Student.creditsByModuleTypeCount.Kernmodul);
+    addProgressTextToTemplate('ECTS-Text-Erweiterungsmodul', _Student.creditsByModuleTypeCount.Erweiterungsmodul);
+    addProgressTextToTemplate('ECTS-Text-Majormodul', _Student.creditsByModuleTypeCount.Majormodul);
+    addProgressTextToTemplate('ECTS-Text-Projektmodul', _Student.creditsByModuleTypeCount.Projektmodul);
+    addProgressTextToTemplate('ECTS-Text-Zusatzmodul', _Student.creditsByModuleTypeCount.Zusatzmodul);
 }
 
 /*
