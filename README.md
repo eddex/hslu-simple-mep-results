@@ -1,18 +1,5 @@
 # HSLU simple MEP results
-This browser add-on extends the page ['Meine Andmeldungen'](https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/) on the HSLU MyCampus website with the following features:
-- A simple table to view all your modules. The table shows:
-  - Module name
-  - Module type ('Kernmodul, Erweiterungsmodul, ...)
-  - Credits/ECTS
-  - Grade (F-A & 1-6)
-- The amount of credits you have achieved ordered by type of modules
-  - e.g. 'Kernmodule' 33/66
-- Your average grade
-- A distribution of your grades. Compare the amount of F-A grades.
-
-Under development:
-- A burndown chart that shows your remaining credits and an ideal reference line.
-- A bar chart showing the amount of credits you achieved each semester.
+This browser add-on extends the page ['Meine Andmeldungen'](https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/) on the HSLU MyCampus website.
 
 Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://github.com/eddex)
 
@@ -22,11 +9,11 @@ Want to add some missing modules, fix a bug or add a new, awesome feature? That'
 
 ![screenshot](screenshot.png)
 
-The browser add-on puts the following features to the page 'Meine Anmeldungen' on 'MyCampus':
+The browser add-on extends the page with the following features:
 - A simple table with all your modules, credits and grades
 - An overview of how many modules of each type have been done / are still needed.
 - An overview of your grades including grade distribution and average.
-- A burndown chart to visualize your credit progress.
+- A chart to visualize your credit progress.
 
 ## Installation
 
