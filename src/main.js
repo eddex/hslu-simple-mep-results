@@ -316,8 +316,11 @@ const getIdealBurndownDataForNumberOfSemesters = (numberOfSemesters) => {
  */
 function createChart(div, modules) {
     // the chart is drawn on this canvas
-    const canvas = document.createElement("canvas");
-    div.insertBefore(canvas, div.firstChild);
+    const canvas = document.createElement('canvas');
+    const canvasDiv = document.createElement('div');
+    canvasDiv.classList.add('chart-canvas');
+    canvasDiv.appendChild(canvas);
+    div.insertBefore(canvasDiv, div.firstChild);
 
     // Semester 0 is the start. Will always be 0 credits.
     const creditsDoneBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -420,17 +423,19 @@ async function generateHtml(modules) {
         document.getElementById('intro').remove();
         document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
     } catch (error) {
-        console.log("NOTITLE, DONT CARE")
+        console.log("NOTITLE, DONT CARE");
     }
 
     let div = document.getElementsByClassName('row teaser-section None')[0];
+    div.classList.add('allmighty-container');
+
     if (!modules) {
-        // API call was blocked.
+        // API call was blocked. This has been fixed. See issue #16.
         const p = document.createElement('p');
-        p.innerHTML = 'HSLU Simple MEP Results Extension failed to load. The API \
-            has blocked the request. Please try again later. \
-            More infos on GitHub: <a href="https://github.com/eddex/hslu-simple-mep-results/issues/16" \
-            >Issue #16</a>';
+        p.innerHTML = 'HSLU Simple MEP Results Extension failed to load. \
+            Consider to report the issue on GitHub if this happens regularly: \
+            <a href="https://github.com/eddex/hslu-simple-mep-results/issues/new" \
+            >Create a new issue..</a>';
         div.insertBefore(p, div.firstChild);
         return;
     }
