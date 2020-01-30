@@ -6,8 +6,8 @@ const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
-//const CreditByTermCount = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
-const CreditsBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0];
+// Semester 0 is the start. Will always be 0 credits.
+const CreditsDoneBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 const CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
@@ -267,163 +267,84 @@ function calculateStats(modules) {
 }
 
 const getBurndownValue = (semester) => {
-    if (CreditsBySemesterCount[semester - 1] === 0) {
-        // if no credits were achieved, don't show it in the graph
-        return undefined;
-    }
-
     let burndownValue = 180;
-    for (let index = 0; index < semester; index++) {
-        burndownValue -= CreditsBySemesterCount[index]
+    for (let index = 0; index <= semester; index++) {
+        burndownValue -= CreditsDoneBySemesterCount[index]
     }
     return burndownValue;
 }
 
+const getIdealBurndownDataForNumberOfSemesters = (numberOfSemesters) => {
+    let data = []
+    for (let i = 0; i <= numberOfSemesters; i++) {
+        data.push(180 / numberOfSemesters * (numberOfSemesters-i));
+    }
+    return data;
+}
+
+/**
+ * Create a burndown chart that visualizes the remaining credits
+ *   in comparison with the ideal remaining credits for each semester.
+ * On the same chart is a bar chart that shows how many credits were
+ *   done each semester.
+ *
+ * @param div: The div to place the chart in.
+ * @param modules: A list of all modules of the student.
+ */
 function createChart(div, modules) {
-    canvas = document.createElement("canvas");
+    // the chart is drawn on this canvas
+    const canvas = document.createElement("canvas");
     div.insertBefore(canvas, div.firstChild);
 
-
-    const labels = []
-    modules.forEach(modul => {
-        if (modul[GradeKey] != 'F' && modul.semester != undefined) {
-            CreditsBySemesterCount[modul.semester - 1] += Number(modul[CreditsKey]);
+    // calculate how many credits were achieved for each semester
+    modules.forEach(m => {
+        if (m[GradeKey] != 'F' && m.semester != undefined) {
+            CreditsDoneBySemesterCount[m.semester] += Number(m[CreditsKey]);
         }
     })
 
-    for (let index = 0; index <= CreditsBySemesterCount.length; index++) {
-        labels.push(index)
-    }
+    // chart colors
+    const colorHsluDarkBlueTransparent = 'rgba(65, 94, 108, 0.5)';
+    const colorLightBlueTransparent = 'rgba(135, 206, 235, 0.5)';
+    const colorRedTransparent = 'rgba(255, 206, 235, 0.5)';
 
-    let type = 'line'
+    // chart properties
+    const chartType = 'line'
+    const labels = CreditsDoneBySemesterCount.map((_, i, __) => 'Semester ' + i);
+    const yAxis2 = 'y-axis-2';
+    const yAxis1 = 'y-axis-1';
 
-    let data = {
+    let chartData = {
         labels: labels,
         datasets: [
             {
+                // bars for credits achieved by semester
                 label: 'Total Credits by Semster',
-                data:
-                    [
-                        0,
-                        CreditsBySemesterCount[0],
-                        CreditsBySemesterCount[1],
-                        CreditsBySemesterCount[2],
-                        CreditsBySemesterCount[3],
-                        CreditsBySemesterCount[4],
-                        CreditsBySemesterCount[5],
-                        CreditsBySemesterCount[6],
-                        CreditsBySemesterCount[7]
-                    ],
-
-                backgroundColor: [
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                    'rgba(65, 94, 108, 0.8)',
-                ],
-                // Changes this dataset to become a line
-                type: 'bar',
-                yAxisID: 'y-axis-2'
-
+                data: CreditsDoneBySemesterCount,
+                backgroundColor: colorHsluDarkBlueTransparent,
+                type: 'bar', // only this dataset should be shown as bars
+                yAxisID: yAxis2
             },
             {
+                // burndown line for students remaining cretits
                 label: 'Your remaining credits',
-                data: [
-                    getBurndownValue(0),
-                    getBurndownValue(1),
-                    getBurndownValue(2),
-                    getBurndownValue(3),
-                    getBurndownValue(4),
-                    getBurndownValue(5),
-                    getBurndownValue(6),
-                    getBurndownValue(7),
-                    getBurndownValue(8)
-                ],
-                backgroundColor: [
-                    'rgba(135, 206, 235, 0.5)',
-                ],
-                borderColor: [
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)',
-                    'rgba(135, 206, 235, 1)'
-                ],
-                borderWidth: 2,
-                yAxisID: 'y-axis-1'
-
+                data: CreditsDoneBySemesterCount.map((_, i, __) => getBurndownValue(i)),
+                backgroundColor: colorLightBlueTransparent,
+                yAxisID: yAxis1
+            },
+            {
+                // reference burndown line to reach 0 remaining credits by the end of 6 or 8 semesters
+                label: 'Ideal remaining credits ' + (studentInformations.isPartTime ? '(part time)' : '(full time)'),
+                data: studentInformations.isPartTime
+                    ? getIdealBurndownDataForNumberOfSemesters(8)
+                    : getIdealBurndownDataForNumberOfSemesters(6),
+                backgroundColor: colorRedTransparent,
+                yAxisID: yAxis1
             }
         ]
     }
-    if (studentInformations.isPartTime) {
-        data.datasets.push({
-            label: 'Ideal remaining credits (part time)',
-            data: [
-                180,
-                180 / 8 * 7,
-                180 / 8 * 6,
-                180 / 8 * 5,
-                180 / 8 * 4,
-                180 / 8 * 3,
-                180 / 8 * 2,
-                180 / 8 * 1,
-                0
-            ],
-            backgroundColor: [
-                'rgba(255, 206, 235, 0.5)',
-            ],
-            borderColor: [
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)',
-                'rgba(255, 206, 235, 1)'
-            ],
-            borderWidth: 2
-        })
-    }
-    else {
-        data.datasets.push(
-            {
-                label: 'Ideal remaining credits (full time)',
-                data: [
-                    180,
-                    180 / 6 * 5,
-                    180 / 6 * 4,
-                    180 / 6 * 3,
-                    180 / 6 * 2,
-                    180 / 6 * 1,
-                    0
-                ],
-                backgroundColor: [
-                    'rgba(206, 255, 235, 0.5)',
-                ],
-                borderColor: [
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)',
-                    'rgba(206, 255, 235, 1)'
-                ],
-                borderWidth: 2
-            }
-        )
-    }
 
-    let options = {
+    let chartOptions = {
         scales: {
             yAxes: [
                 {
@@ -434,40 +355,35 @@ function createChart(div, modules) {
                     position: 'left',
                     scaleLabel: {
                         display: true,
-                        labelString: 'Remaining credits'
+                        labelString: 'Total remaining credits'
                     },
-                    id: 'y-axis-1',
-
+                    id: yAxis1
                 },
                 {
                     ticks: {
                         suggestedMin: 0,
-                        suggestedMax: 180
+                        suggestedMax: 60
                     },
-                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                    type: 'linear',
                     display: true,
                     position: 'right',
                     scaleLabel: {
                         display: true,
-                        labelString: 'Credits by semster'
+                        labelString: 'Credits done'
                     },
-                    id: 'y-axis-2',
+                    id: yAxis2,
                 }
             ],
             xAxes: [{
-                display: true,
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Semester'
-                }
+                display: true
             }]
         }
     }
 
     new Chart(canvas, {
-        type: type,
-        data: data,
-        options: options
+        type: chartType,
+        data: chartData,
+        options: chartOptions
     });
 }
 
