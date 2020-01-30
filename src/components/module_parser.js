@@ -155,19 +155,20 @@ const ModuleParser = {
             let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
             parsedModule.passed = passed;
 
-            parsedModule[_MarkKey] = item.note === null ? 'n/a' : item.note;
-            parsedModule[_GradeKey] = item.grade === null ? 'n/a' : item.grade;
-            parsedModule[_NameKey] = item.anlassnumber;
+            parsedModule.mark = item.note === null ? 'n/a' : item.note;
+            parsedModule.grade = item.grade === null ? 'n/a' : item.grade;
+            parsedModule.name = item.anlassnumber;
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
             parsedModule.semester = ModuleParser.calculateSemester(item, firstModule);
 
             let details = item.details;
-            parsedModule[_CreditsKey] = ModuleParser.getItemDetailsValueByKey(details, _CreditsKey);
+            const creditsKey = 'ECTS-Punkte';
+            parsedModule.credits = ModuleParser.getItemDetailsValueByKey(details, creditsKey);
 
-            let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule[_NameKey]);
-            parsedModule[_ModuleTypeKey] = moduleTypeList[moduleId];
+            let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
+            parsedModule.moduleType = moduleTypeList[moduleId];
 
             modules.push(parsedModule);
         });

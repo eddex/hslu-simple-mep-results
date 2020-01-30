@@ -1,8 +1,3 @@
-const _NameKey = 'Modul-Name';
-const _CreditsKey = 'ECTS-Punkte';
-const _MarkKey = 'Bewertung';
-const _GradeKey = 'Grad';
-const _ModuleTypeKey = 'Modul-Typ';
 const _GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
 const _CreditsByModuleTypeCount = {
@@ -103,11 +98,11 @@ function createModulesTableCell(text) {
  */
 function createModulesTableRow(parsedModule) {
     let tr = document.createElement('tr');
-    tr.appendChild(createModulesTableCell(parsedModule[_NameKey]));
-    tr.appendChild(createModulesTableCell(parsedModule[_ModuleTypeKey]));
-    tr.appendChild(createModulesTableCell(parsedModule[_CreditsKey]));
-    tr.appendChild(createModulesTableCell(parsedModule[_MarkKey]));
-    tr.appendChild(createModulesTableCell(parsedModule[_GradeKey]));
+    tr.appendChild(createModulesTableCell(parsedModule.name));
+    tr.appendChild(createModulesTableCell(parsedModule.moduleType));
+    tr.appendChild(createModulesTableCell(parsedModule.credits));
+    tr.appendChild(createModulesTableCell(parsedModule.mark));
+    tr.appendChild(createModulesTableCell(parsedModule.grade));
     return tr;
 }
 
@@ -262,20 +257,20 @@ function getExtensionInternalFileUrl(filePath) {
 function calculateStats(modules) {
 
     modules.forEach(parsedModule => {
-        if (parsedModule[_GradeKey] != null && parsedModule[_GradeKey] != '') {
-            _GradesCount[parsedModule[_GradeKey]]++;
+        if (parsedModule.grade != null && parsedModule.grade != '') {
+            _GradesCount[parsedModule.garde]++;
             _Student.totalGrades++;
         }
         if (parsedModule.passed) {
-            let credits = Number(parsedModule[_CreditsKey]);
+            let credits = Number(parsedModule.credits);
             _Student.totalCredits += credits;
-            let moduleType = parsedModule[_ModuleTypeKey]
+            let moduleType = parsedModule.moduleType;
             if (moduleType in _CreditsByModuleTypeCount) {
                 _CreditsByModuleTypeCount[moduleType].current += credits;
             }
         }
         // if cell is empty, Number('') returns 0!
-        numericMark = Number(parsedModule[_MarkKey])
+        numericMark = Number(parsedModule.mark)
         if (!isNaN(numericMark) && numericMark != 0) {
             _Student.totalNumericMarkWithF += numericMark;
             _Student.numberOfNumericMarksWithF++;
@@ -322,8 +317,8 @@ function createChart(div, modules) {
 
     // calculate how many credits were achieved for each semester
     modules.forEach(m => {
-        if (m[_GradeKey] != 'F' && m.semester != undefined) {
-            creditsDoneBySemesterCount[m.semester] += Number(m[_CreditsKey]);
+        if (m.grade != 'F' && m.semester != undefined) {
+            creditsDoneBySemesterCount[m.semester] += Number(m.credits);
         }
     })
 
