@@ -5,9 +5,13 @@ the type of a module.
 
 It is done in a seperate script to increase the performance of the extension.
 
-To get started download the html file from
+To get started download the html files from
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/
-and save it as 'tools/modulbeschriebe_i.html'.
+and save it as 'tools/modulbeschriebe_i.html
+
+and for the WI modules
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/
+and save it as 'tools/modulbeschriebe_wi.html.
 
 The lxml.html.parse method would also be able to parse a website by url,
 but for this we would need to figure out how to login to mycampus by API call.
@@ -15,6 +19,31 @@ but for this we would need to figure out how to login to mycampus by API call.
 from lxml import etree, html
 import json
 from pathlib import Path
+
+
+def readFileAsJSON(fileName):
+    file_read = open(fileName, 'r')
+    json_modules = json.loads(file_read.read())
+    file_read.close()
+    return json_modules
+
+
+def writeFile(fileName, content):
+    file_write = open(fileName, 'w')
+    file_write.write(content)
+    file_write.close()
+
+
+def mergeJSON(oldJSON, newJSON):
+    oldJSON.update(newJSON)
+    return json.dumps(oldJSON, indent=2, sort_keys=True)
+
+
+def writeModuleFiles(fileName, modules):
+    json_modules = readFileAsJSON(fileName)
+    mergedModules = mergeJSON(json_modules, modules)
+    writeFile(fileName, mergedModules)
+
 
 def parseWebsite():
 
@@ -26,6 +55,10 @@ def parseWebsite():
         'majormoduleerweiterungsmodule',
         'zusatzmodulestudienganginformatik',
         'zusatzmodulestudienganginformatikangebotta'
+        'kernmodule',
+        'projektmodules',
+        'erweiterungsmodule',
+        'zusatzmodule',
     ]
 
     kernmodul = 'Kernmodul'
@@ -41,12 +74,17 @@ def parseWebsite():
         'erweiterungsmodulestudienganginformatik': erweiterungsmodul,
         'majormoduleerweiterungsmodule': majormodul,
         'zusatzmodulestudienganginformatik': zusatzmodul,
-        'zusatzmodulestudienganginformatikangebotta': zusatzmodul
+        'zusatzmodulestudienganginformatikangebotta': zusatzmodul,
+        'kernmodule': kernmodul,
+        'projektmodules':  projektmodul,
+        'erweiterungsmodule': erweiterungsmodul,
+        'zusatzmodule': zusatzmodul
     }
 
     tree = html.parse('./modulbeschriebe_i.html')
     doc = html.fromstring(etree.tostring(tree))
-    sections = doc.find_class('download-content large-20 columns append-bottom')
+    sections = doc.find_class(
+        'download-content large-20 columns append-bottom')
 
     modules_with_type = {}
     ics_modules_with_type = {}
@@ -54,18 +92,41 @@ def parseWebsite():
 
     for section in sections:
         for module_type_html_id in module_type_html_ids:
-            module_type_title = section.get_element_by_id(module_type_html_id, None)
+            module_type_title = section.get_element_by_id(
+                module_type_html_id, None)
             if module_type_title is not None:
-                #print(id_to_type_mapping[module_type_html_id])
-                modules = section.find_class('columns col-collapse small-12 print-12 download-text')
+                modules = section.find_class(
+                    'columns col-collapse small-12 print-12 download-text')
                 for module in modules:
                     module_name = str(etree.tostring(module))
                     if '(Angewandte)' in module_name:
                         # this is needed due to the module "(Angewandte) Mathematik 2 (MAT2) C12/C16"
                         module_name = module_name.split('(Angewandte)')[1]
+                    # print(module_name)
                     module_id = module_name.split('(')[1].split(')')[0]
-                    #print(module_id)
                     modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
+
+    tree = html.parse('./modulbeschriebe_wi.html')
+    doc = html.fromstring(etree.tostring(tree))
+    sections = doc.find_class(
+        'download-content large-20 columns append-bottom')
+
+    for section in sections:
+        for module_type_html_id in module_type_html_ids:
+            module_type_title = section.get_element_by_id(
+                module_type_html_id, None)
+            if module_type_title is not None:
+                modules = section.find_class(
+                    'columns col-collapse small-12 print-12 download-text')
+                for module in modules:
+                    module_name = str(etree.tostring(module))
+                    if '(Angewandte)' in module_name:
+                        # this is needed due to the module "(Angewandte) Mathematik 2 (MAT2) C12/C16"
+                        module_name = module_name.split('(Angewandte)')[1]
+                    if '(' in module_name:
+                        module_id = module_name.split('(')[1].split(')')[0]
+                        # print(module_id)
+                        wi_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
@@ -106,8 +167,11 @@ def parseWebsite():
     ics_modules_with_type['OSA'] = kernmodul
     ics_modules_with_type['ISM'] = kernmodul
 
-    # Corrections for ICS Students
+    # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
+
+    # fixes for WI modules
+    wi_modules_with_type['ENWC'] = erweiterungsmodul
 
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
@@ -119,24 +183,14 @@ def parseWebsite():
     # fixes
     modules_with_type['STAT'] = kernmodul  # the website is not up to date
 
+    filepath_i_modules = '../src/data/modules_i.json'
+    filepath_ics_modules = '../src/data/modules_ics.json'
+    filepath_wi_modules = '../src/data/modules_wi.json'
 
-    for m in modules_with_type:
-        print (m, modules_with_type[m])
+    writeModuleFiles(filepath_i_modules, modules_with_type)
+    writeModuleFiles(filepath_ics_modules, ics_modules_with_type)
+    writeModuleFiles(filepath_wi_modules, wi_modules_with_type)
 
-    j = json.dumps(modules_with_type, indent=2, sort_keys=True)
-    f = open('../src/data/modules_i.json', 'w')
-    f.write(j)
-    f.close()
-
-    j = json.dumps(ics_modules_with_type, indent=2, sort_keys=True)
-    f = open('../src/data/modules_ics.json', 'w')
-    f.write(j)
-    f.close()
-
-    j = json.dumps(wi_modules_with_type, indent=2, sort_keys=True)
-    f = open('../src/data/modules_wi.json', 'w')
-    f.write(j)
-    f.close()
 
 def prequisitesCheck():
     f = Path('./modulbeschriebe_i.html')
@@ -145,9 +199,16 @@ def prequisitesCheck():
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
 and save it as \'tools/modulbeschriebe_i.html\'.')
-        return False
+        check = False
+    f = Path('./modulbeschriebe_wi.html')
+    if not f.is_file():
+        print('ERROR: file \'tools/modulbeschriebe_i.html\' does not exist.')
+        print('To get started download the html file from \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
+and save it as \'tools/modulbeschriebe_i.html\'.')
+        check = False
+        return check
     return True
-
 
 
 if __name__ == "__main__":
