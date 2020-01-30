@@ -6,9 +6,6 @@ const ModuleTypeKey = 'Modul-Typ';
 const ModuleTableHeaders = [NameKey, ModuleTypeKey, CreditsKey, MarkKey, GradeKey]
 const GradesCount = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
 
-// Semester 0 is the start. Will always be 0 credits.
-const CreditsDoneBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-
 const CreditsByModuleTypeCount = {
     Kernmodul: { current: 0, min: 66 },
     Projektmodul: { current: 0, min: 36 },
@@ -266,10 +263,10 @@ function calculateStats(modules) {
     });
 }
 
-const getBurndownValue = (semester) => {
+const getBurndownValue = (creditsDoneBySemesterCount, semester) => {
     let burndownValue = 180;
     for (let index = 0; index <= semester; index++) {
-        burndownValue -= CreditsDoneBySemesterCount[index]
+        burndownValue -= creditsDoneBySemesterCount[index]
     }
     return burndownValue;
 }
@@ -296,10 +293,13 @@ function createChart(div, modules) {
     const canvas = document.createElement("canvas");
     div.insertBefore(canvas, div.firstChild);
 
+    // Semester 0 is the start. Will always be 0 credits.
+    const creditsDoneBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
     // calculate how many credits were achieved for each semester
     modules.forEach(m => {
         if (m[GradeKey] != 'F' && m.semester != undefined) {
-            CreditsDoneBySemesterCount[m.semester] += Number(m[CreditsKey]);
+            creditsDoneBySemesterCount[m.semester] += Number(m[CreditsKey]);
         }
     })
 
@@ -310,7 +310,7 @@ function createChart(div, modules) {
 
     // chart properties
     const chartType = 'line'
-    const labels = CreditsDoneBySemesterCount.map((_, i, __) => 'Semester ' + i);
+    const labels = creditsDoneBySemesterCount.map((_, i, __) => 'Semester ' + i);
     const yAxis2 = 'y-axis-2';
     const yAxis1 = 'y-axis-1';
 
@@ -320,7 +320,7 @@ function createChart(div, modules) {
             {
                 // bars for credits achieved by semester
                 label: 'Total Credits by Semster',
-                data: CreditsDoneBySemesterCount,
+                data: creditsDoneBySemesterCount,
                 backgroundColor: colorHsluDarkBlueTransparent,
                 type: 'bar', // only this dataset should be shown as bars
                 yAxisID: yAxis2
@@ -328,7 +328,7 @@ function createChart(div, modules) {
             {
                 // burndown line for students remaining cretits
                 label: 'Your remaining credits',
-                data: CreditsDoneBySemesterCount.map((_, i, __) => getBurndownValue(i)),
+                data: creditsDoneBySemesterCount.map((_, i, __) => getBurndownValue(creditsDoneBySemesterCount, i)),
                 backgroundColor: colorLightBlueTransparent,
                 yAxisID: yAxis1
             },
