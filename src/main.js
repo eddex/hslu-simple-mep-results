@@ -434,6 +434,7 @@ async function generateHtml(modules) {
     createAverageMarkTitle(div);
 
     await createCreditsByModuleTypeTable(div);
+    Helpers.addTitleToDocument(div, 'Modultypen Übersicht');
     createChart(div, modules);
     createTotalCreditsProgressBar(div);
     createTotalCreditsTitle(div);
