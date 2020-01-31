@@ -459,12 +459,14 @@ async function generateHtml(modules) {
     createStudyTitle(div);
 }
 
-getStudentInformations()
-    .then(
-        ModuleParser.generateModuleObjects(_Student.studyAcronym)
-            .then(modules => generateHtml(modules))
-            .catch(e => {
-                console.log("Booo");
-                console.log(e);
-            })
-    );
+async function Start() {
+    await getStudentInformations();
+    ModuleParser.generateModuleObjects(_Student.studyAcronym)
+        .then(modules => generateHtml(modules))
+        .catch(e => {
+            console.log("Booo");
+            console.log(e);
+        })
+}
+
+Start();
