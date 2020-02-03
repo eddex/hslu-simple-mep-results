@@ -6,28 +6,26 @@ function setItem() {
     console.log("succesfully writen");
 }
 
-function gotItem(item) {
-    console.log("got modul", item);
-    return item
-}
+/**
+ * populates the Modulelist from local Storage
+ */
+async function populateModuleList() {
+    const moduleList = await getModulList();
 
-async function populateModulList() {
-    modules = await getLocalStorage();
     // reset ModulList
-    let selectModulList = document.getElementById("ModulList");;
-    let selectParentNode = selectModulList.parentNode;
-    let modulList = selectModulList.cloneNode(false); // Make a shallow copy
-    selectParentNode.replaceChild(modulList, selectModulList);
+    const selectModulList = document.getElementById("modulList");
+    const selectParentNode = selectModulList.parentNode;
+    let newModulList = selectModulList.cloneNode(false); // Make a shallow copy
+    selectParentNode.replaceChild(newModulList, selectModulList);
 
-    if (!(Object.keys(modules).length === 0) && modules.constructor === Object) {
-        for (let module in modules) {
-            console.log("acronym", modules[module].acronym)
-            modulList.options[modulList.options.length] = new Option(modules[module].acronym);
-            modulList.hidden = false;
+    if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
+        for (let customModule in moduleList) {
+            newModulList.options[newModulList.options.length] = new Option(moduleList[customModule].acronym);
+            newModulList.hidden = false;
         }
     } 
     else {
-        modulList.hidden = true;
+        newModulList.hidden = true;
     }
 }
 
