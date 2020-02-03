@@ -45,8 +45,13 @@ async function getLocalStorage() {
     return await browser.storage.local.get();
 }
 
-async function addItemToLocalStorage(item) {
-    browser.storage.local.set(item).then(setItem, onError);
+/**
+ * Returns the modulList Object from local Storage
+ * @returns {Object} modulList 
+ */
+async function getModulList() {
+    const modulList = await browser.storage.local.get("modulList");
+    return modulList.modulList;
 }
 
 async function removeItemFromLocalStorage(item) {
