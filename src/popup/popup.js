@@ -21,26 +21,29 @@ async function populateModuleList() {
             newModulList.options[newModulList.options.length] = new Option(moduleList[customModule].acronym);
             newModulList.hidden = false;
         }
-    } 
+    }
     else {
         newModulList.hidden = true;
     }
 }
 
+/**
+ * populates the year select
+ */
 function populateYearList() {
-    var year = (new Date()).getFullYear() - 8;
-    var till = (new Date()).getFullYear();
-    var options = "";
-    for (var y = year; y <= till; y++) {
+    const startYear = (new Date()).getFullYear() - 8;
+    const endYear = (new Date()).getFullYear();
+    let options = "";
+
+    for (var y = startYear; y <= endYear; y++) {
         options += "<option>" + y + "</option>";
     }
     document.getElementById("moduleYear").innerHTML = options;
 }
 
-async function clearModules() {
-    await browser.storage.local.clear()
-}
-
+/**
+ * @returns {Object} local storage 
+ */
 async function getLocalStorage() {
     return await browser.storage.local.get();
 }
@@ -54,8 +57,12 @@ async function getModulList() {
     return modulList.modulList;
 }
 
-async function removeItemFromLocalStorage(item) {
-    browser.storage.local.remove(item);
+/**
+ * 
+ * @param {Object} modulList 
+ */
+async function setModulList(modulList) {
+    await browser.storage.local.set({ modulList })
 }
 
 /**
@@ -76,11 +83,14 @@ async function removeCustomModule() {
     }
 }
 
-async function addCustomModul() {
-    let modulAcronym = document.getElementById("modulAcronym").value;
-    let moduleType = document.getElementById("moduleType").value;
-    let modulCredits = document.getElementById("modulCredits").value;
-    let moduleGrade = document.getElementById("moduleGrade").value;
+/**
+ * adds custom module to local storage
+ */
+async function addCustomModule() {
+    const modulAcronym = document.getElementById("modulAcronym").value;
+    const moduleType = document.getElementById("moduleType").value;
+    const modulCredits = document.getElementById("modulCredits").value;
+    const moduleGrade = document.getElementById("moduleGrade").value;
     if (moduleGrade == "-") {
         moduleGrade = 'n/a';
     }
@@ -88,8 +98,8 @@ async function addCustomModul() {
     let modulYearList = document.getElementById("moduleYear")
     let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
 
-    var modulSemesterRadios = document.getElementsByName('moduleImplementation');
-    for (var i = 0, length = modulSemesterRadios.length; i < length; i++) {
+    const modulSemesterRadios = document.getElementsByName('moduleImplementation');
+    for (let i = 0, length = modulSemesterRadios.length; i < length; i++) {
         if (modulSemesterRadios[i].checked) {
             modulSemester = modulSemesterRadios[i].value;
             break;
@@ -101,7 +111,15 @@ async function addCustomModul() {
         moduleMark = 'n/a';
     }
 
-    let modulList = await getLocalStorage();
+    // if you reset the storage
+    const localStorage = await getLocalStorage();
+    if (Object.keys(localStorage).length === 0) {
+        const moduleList = {}
+        await setModulList(moduleList)
+    }
+
+    const modulList = await getModulList();
+
     modulList[modulAcronym] = {
         acronym: modulAcronym,
         type: moduleType,
@@ -111,24 +129,22 @@ async function addCustomModul() {
         year: moduleYear,
         semster: modulSemester
     }
-    console.log("modulList[modulAcronym]", modulList[modulAcronym])
-    addItemToLocalStorage(modulList);
+    await setModulList(modulList)
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
+
+window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
-    submitButton = document.getElementById("submitModul");
-    resetButton = document.getElementById("resetModuls");
-    deleteButton = document.getElementById("removeModule");
-    submitButton.addEventListener('click', addCustomModul);
-    resetButton.addEventListener('click', clearModules);
-    deleteButton.addEventListener('click', removeModule);
+
+    document.getElementById("submitModul").addEventListener('click', addCustomModule);
+    document.getElementById("resetModuls").addEventListener('click', clearLocalStorage);
+    document.getElementById("removeModule").addEventListener('click', removeCustomModule);
 
     //first time
-    populateModulList();
+    populateModuleList();
     populateYearList();
 
     //every time the storage changes(set)
-    browser.storage.onChanged.addListener(populateModulList).then();
+    browser.storage.onChanged.addListener(populateModuleList);
 
 });
