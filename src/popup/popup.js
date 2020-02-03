@@ -57,13 +57,22 @@ async function removeItemFromLocalStorage(item) {
     browser.storage.local.remove(item);
 }
 
-async function removeModule() {
-    modules = await getLocalStorage();
-    modulList = document.getElementById("ModulList")
+/**
+ * deletes the selected module from local storage
+ */
+async function removeCustomModule() {
+    const modulList = await getModulList();
+    const selectModulList = document.getElementById("modulList");
 
-    var selectedIndex = modulList.selectedIndex
-    let modulAcronym = modulList.options[selectedIndex].value;
-    removeItemFromLocalStorage(modulAcronym)
+    const selectedIndex = selectModulList.selectedIndex
+    if (selectedIndex > -1) {
+        const selectedModule = selectModulList.options[selectedIndex].value;
+        delete modulList[selectedModule]
+        await setModulList(modulList)
+    }
+    else {
+        console.warn("select a module")
+    }
 }
 
 async function addCustomModul() {
