@@ -1,10 +1,8 @@
-function onError(error) {
-    console.log(error)
+//only for development
+async function clearLocalStorage() {
+    await browser.storage.local.clear()
 }
 
-function setItem() {
-    console.log("succesfully writen");
-}
 
 /**
  * populates the Modulelist from local Storage
