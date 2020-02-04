@@ -166,6 +166,10 @@ async function addCustomModule() {
     }
     await setModuleList(moduleList)
 }
+
+/**
+ * init function
+ */
 async function start() {
     document.getElementById("submitModule").onclick = addCustomModule;
     document.getElementById("removeModule").onclick = removeCustomModule;
