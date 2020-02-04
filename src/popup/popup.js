@@ -10,6 +10,7 @@ async function populateModuleList() {
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
+    newModuleList.addEventListener('change', showCustomModuleInformation);
 
     if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
         for (let customModule in moduleList) {
@@ -19,6 +20,34 @@ async function populateModuleList() {
     }
     else {
         newModuleList.hidden = true;
+    }
+
+}
+
+async function showCustomModuleInformation() {
+    let modulAcronym = "";
+    const selectModuleList = document.getElementById("moduleList");
+
+    const selectedIndex = selectModuleList.selectedIndex
+    if (selectedIndex > -1) {
+        modulAcronym = selectModuleList.options[selectedIndex].value;
+    }
+
+    const moduleList = await getModuleList();
+    const module = moduleList[modulAcronym];
+
+    document.getElementById("modulCredits").value = module.credits;
+    document.getElementById("moduleGrade").value = module.grade;
+    document.getElementById("moduleMark").value = module.mark;
+    document.getElementById("modulAcronym").value = module.acronym;
+    document.getElementById("moduleYear").value = module.year;
+
+    const moduleSemesterRadios = document.getElementsByName('moduleImplementation');
+    for (let i = 0, length = moduleSemesterRadios.length; i < length; i++) {
+        if (moduleSemesterRadios[i].value == module.semster) {
+            moduleSemesterRadios[i].checked = true;
+            break;
+        }
     }
 }
 
@@ -144,11 +173,9 @@ async function addCustomModule() {
 
 
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed');
-
     document.getElementById("submitModul").addEventListener('click', addCustomModule);
     document.getElementById("removeModule").addEventListener('click', removeCustomModule);
-
+    
     //first time
     populateModuleList();
     populateYearList();
