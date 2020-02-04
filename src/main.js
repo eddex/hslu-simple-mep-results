@@ -223,6 +223,7 @@ function createTotalCreditsProgressBar(div) {
 
     div.insertBefore(container, div.firstChild);
 }
+
 function createStudyTitle(div) {
 
     let studyTitleTitle = document.createElement('h1');
@@ -303,7 +304,7 @@ const getBurndownValue = (creditsDoneBySemesterCount, semester) => {
 const getIdealBurndownDataForNumberOfSemesters = (numberOfSemesters) => {
     let data = []
     for (let i = 0; i <= numberOfSemesters; i++) {
-        data.push(180 / numberOfSemesters * (numberOfSemesters-i));
+        data.push(180 / numberOfSemesters * (numberOfSemesters - i));
     }
     return data;
 }

@@ -33,24 +33,26 @@ const ModuleParser = {
      * Modules are marked with 'H' for 'Herbstsemester' (autumn)
      * or 'F' for 'Frühlingssemester' (spring).
      */
-    isAutumnSemester: (hsluModule) => {
-        const includesH = hsluModule.anlassnumber.split('.')[2].includes('H');
-        const includesF = hsluModule.anlassnumber.split('.')[2].includes('F');
+    isAutumnSemester: (hsluModuleName) => {
+        const includesH = hsluModuleName.split('.')[2].includes('H');
+        const includesF = hsluModuleName.split('.')[2].includes('F');
         return includesH || includesF ? includesH : undefined;
     },
 
     /**
      * Calculate the semester.
+     * 
+     * @param {string} hsluModuleName: is the 'anlassnumber',
+     *  e.g. 'I.BA_BCHAIN.H1901'.
      */
-    calculateSemester: (hsluModule, firstModule) => {
+    calculateSemester: (hsluModuleName, firstModule) => {
 
         const startYear = new Date(firstModule.from).getFullYear();
-        const isStartInAutumn = ModuleParser.isAutumnSemester(firstModule);
+        const isStartInAutumn = ModuleParser.isAutumnSemester(firstModule.anlassnumber);
 
-        // the lastPart of the anlassnumber is something like 'F1901'
-        const lastPart = hsluModule.anlassnumber.split('.')[2];
+        const lastPart = hsluModuleName.split('.')[2];
         const moduleYear = Number('20' + lastPart.substring(1, 3));
-        const isModuleInAutumn = ModuleParser.isAutumnSemester(hsluModule);
+        const isModuleInAutumn = ModuleParser.isAutumnSemester(hsluModuleName);
 
         const yearDifference = (moduleYear - startYear)
 
@@ -146,7 +148,7 @@ const ModuleParser = {
         firstModule = anlasslistApiResponse.items
             .slice()
             .reverse()
-            .find(modul => ModuleParser.isAutumnSemester(modul) != undefined);
+            .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
 
         anlasslistApiResponse.items.forEach(item => {
 
@@ -161,7 +163,7 @@ const ModuleParser = {
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
-            parsedModule.semester = ModuleParser.calculateSemester(item, firstModule);
+            parsedModule.semester = ModuleParser.calculateSemester(item.anlassnumber, firstModule);
 
             let details = item.details;
             const creditsKey = 'ECTS-Punkte';
@@ -173,6 +175,28 @@ const ModuleParser = {
             modules.push(parsedModule);
         });
 
+        //add custom modules from local storage
+        const moduleList = await browser.storage.local.get("moduleList");
+        const customModules = moduleList.moduleList
+        for (const customModuleName in customModules) {
+            if (customModules.hasOwnProperty(customModuleName)) {
+                const customModule = customModules[customModuleName];
+
+                let parsedModule = {};
+                parsedModule.passed = customModule.grade == 'F' ? false : true;
+                parsedModule.mark = customModule.mark;
+                parsedModule.grade = customModule.grade;
+                parsedModule.type = customModule.type;
+                parsedModule.credits = customModule.credits;
+                parsedModule.moduleType = customModule.type;
+
+                //create modul number
+                let moduleName = "M." + customModule.acronym + "." + customModule.semster + customModule.year.slice(customModule.year.length - 2) + "01"
+                parsedModule.name = moduleName;
+                parsedModule.semester = ModuleParser.calculateSemester(moduleName, firstModule);
+                modules.push(parsedModule);
+            }
+        }
         return modules;
     }
 }
