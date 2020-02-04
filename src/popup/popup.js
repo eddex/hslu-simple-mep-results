@@ -1,9 +1,4 @@
 
-//only for development
-async function clearLocalStorage() {
-    await browser.storage.local.clear()
-}
-
 /**
  * populates the Modulelist from local Storage
  */
@@ -152,7 +147,6 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
 
     document.getElementById("submitModul").addEventListener('click', addCustomModule);
-    document.getElementById("resetModuls").addEventListener('click', clearLocalStorage);
     document.getElementById("removeModule").addEventListener('click', removeCustomModule);
 
     //first time
