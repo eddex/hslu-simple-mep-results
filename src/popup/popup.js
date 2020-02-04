@@ -1,29 +1,29 @@
+
 //only for development
 async function clearLocalStorage() {
     await browser.storage.local.clear()
 }
 
-
 /**
  * populates the Modulelist from local Storage
  */
 async function populateModuleList() {
-    const moduleList = await getModulList();
+    const moduleList = await getModuleList();
 
-    // reset ModulList
-    const selectModulList = document.getElementById("modulList");
-    const selectParentNode = selectModulList.parentNode;
-    let newModulList = selectModulList.cloneNode(false); // Make a shallow copy
-    selectParentNode.replaceChild(newModulList, selectModulList);
+    // reset ModuleList
+    const selectModuleList = document.getElementById("moduleList");
+    const selectParentNode = selectModuleList.parentNode;
+    let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
+    selectParentNode.replaceChild(newModuleList, selectModuleList);
 
     if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
         for (let customModule in moduleList) {
-            newModulList.options[newModulList.options.length] = new Option(moduleList[customModule].acronym);
-            newModulList.hidden = false;
+            newModuleList.options[newModuleList.options.length] = new Option(moduleList[customModule].acronym);
+            newModuleList.hidden = false;
         }
     }
     else {
-        newModulList.hidden = true;
+        newModuleList.hidden = true;
     }
 }
 
@@ -49,34 +49,34 @@ async function getLocalStorage() {
 }
 
 /**
- * Returns the modulList Object from local Storage
- * @returns {Object} modulList 
+ * Returns the moduleList Object from local Storage
+ * @returns {Object} moduleList 
  */
-async function getModulList() {
-    const modulList = await browser.storage.local.get("modulList");
-    return modulList.modulList;
+        moduleList = await browser.storage.local.get("moduleList");
+    }
+        moduleList = await chrome.storage.local.get("moduleList");
+    }
+    return moduleList.moduleList;
 }
 
 /**
  * 
- * @param {Object} modulList 
+ * @param {Object} moduleList 
  */
-async function setModulList(modulList) {
-    await browser.storage.local.set({ modulList })
-}
+async function setModuleList(moduleList) {
 
 /**
  * deletes the selected module from local storage
  */
 async function removeCustomModule() {
-    const modulList = await getModulList();
-    const selectModulList = document.getElementById("modulList");
+    const moduleList = await getModuleList();
+    const selectModuleList = document.getElementById("moduleList");
 
-    const selectedIndex = selectModulList.selectedIndex
+    const selectedIndex = selectModuleList.selectedIndex
     if (selectedIndex > -1) {
-        const selectedModule = selectModulList.options[selectedIndex].value;
-        delete modulList[selectedModule]
-        await setModulList(modulList)
+        const selectedModule = selectModuleList.options[selectedIndex].value;
+        delete moduleList[selectedModule]
+        await setModuleList(moduleList)
     }
     else {
         console.warn("select a module")
@@ -98,10 +98,10 @@ async function addCustomModule() {
     let modulYearList = document.getElementById("moduleYear")
     let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
 
-    const modulSemesterRadios = document.getElementsByName('moduleImplementation');
-    for (let i = 0, length = modulSemesterRadios.length; i < length; i++) {
-        if (modulSemesterRadios[i].checked) {
-            modulSemester = modulSemesterRadios[i].value;
+    const moduleSemesterRadios = document.getElementsByName('moduleImplementation');
+    for (let i = 0, length = moduleSemesterRadios.length; i < length; i++) {
+        if (moduleSemesterRadios[i].checked) {
+            moduleSemester = moduleSemesterRadios[i].value;
             break;
         }
     }
@@ -111,25 +111,18 @@ async function addCustomModule() {
         moduleMark = 'n/a';
     }
 
-    // if you reset the storage
-    const localStorage = await getLocalStorage();
-    if (Object.keys(localStorage).length === 0) {
-        const moduleList = {}
-        await setModulList(moduleList)
-    }
+    moduleList = await getModuleList();
 
-    const modulList = await getModulList();
-
-    modulList[modulAcronym] = {
+    moduleList[modulAcronym] = {
         acronym: modulAcronym,
         type: moduleType,
         credits: modulCredits,
         mark: moduleMark,
         grade: moduleGrade,
         year: moduleYear,
-        semster: modulSemester
+        semster: moduleSemester
     }
-    await setModulList(modulList)
+    await setModuleList(moduleList)
 }
 
 
