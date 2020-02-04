@@ -40,8 +40,8 @@ async function showCustomModuleInformation() {
     const customModule = moduleList[moduleAcronym];
 
     document.getElementById("moduleCredits").value = customModule.credits;
-    document.getElementById("moduleGrade").value = customModule.grade;
-    document.getElementById("moduleMark").value = customModule.mark;
+    document.getElementById("moduleGrade").value = customModule.grade != 'n/a' ? customModule.grade : '-';
+    document.getElementById("moduleMark").value = customModule.mark != 'n/a' ? customModule.mark : '0';
     document.getElementById("moduleAcronym").value = customModule.acronym;
     document.getElementById("moduleYear").value = customModule.year;
     document.getElementById("moduleType").value = customModule.type;
