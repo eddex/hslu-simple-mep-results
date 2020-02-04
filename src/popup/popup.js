@@ -45,15 +45,30 @@ function populateYearList() {
  * @returns {Object} local storage 
  */
 async function getLocalStorage() {
-    return await browser.storage.local.get();
+    if (Helpers.isFirefox()) {
+        return await browser.storage.local.get();
+    }
+    return await chrome.storage.local.get();
 }
 
 /**
  * Returns the moduleList Object from local Storage
  * @returns {Object} moduleList 
  */
+async function getModuleList() {
+    let moduleList = {};
+
+    // if you reset the storage
+    const localStorage = await getLocalStorage();
+    if (Object.keys(localStorage).length === 0) {
+        const moduleList = {}
+        await setModuleList(moduleList)
+    }
+
+    if (Helpers.isFirefox()) {
         moduleList = await browser.storage.local.get("moduleList");
     }
+    else {
         moduleList = await chrome.storage.local.get("moduleList");
     }
     return moduleList.moduleList;
@@ -64,6 +79,13 @@ async function getLocalStorage() {
  * @param {Object} moduleList 
  */
 async function setModuleList(moduleList) {
+    if (Helpers.isFirefox()) {
+        await browser.storage.local.set({ moduleList: moduleList })
+    }
+    else {
+        await chrome.storage.local.set({ moduleList: moduleList })
+    }
+}
 
 /**
  * deletes the selected module from local storage
