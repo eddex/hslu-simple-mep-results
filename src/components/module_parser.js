@@ -106,7 +106,7 @@ const ModuleParser = {
                 name = name.split('.')[0];
             }
             return name;
-        } 
+        }
         else if (name.includes('.')) {
 
             // for module names like I.ANRECHINDIVID.F1901
