@@ -173,23 +173,27 @@ const ModuleParser = {
             modules.push(parsedModule);
         });
 
-        let customModules = await browser.storage.local.get();
-        for (const customModule in customModules) {
-            if (customModules.hasOwnProperty(customModule)) {
-                const module = customModules[customModule];
+        //add custom modules from local storage
+        const moduleList = await browser.storage.local.get("moduleList");
+        const customModules = moduleList.moduleList
+        for (const customModuleName in customModules) {
+            if (customModules.hasOwnProperty(customModuleName)) {
+                const customModule = customModules[customModuleName];
+
                 let parsedModule = {};
-                parsedModule.passed = module.grade == 'F' ? false : true;
-                parsedModule[MarkKey] = module.mark;
-                parsedModule[GradeKey] = module.grade;
-                parsedModule[ModuleTypeKey] = module.type;
-                parsedModule[CreditsKey] = module.credits
+                parsedModule.passed = customModule.grade == 'F' ? false : true;
+                parsedModule.mark = customModule.mark;
+                parsedModule.grade = customModule.grade;
+                parsedModule.type = customModule.type;
+                parsedModule.credits = customModule.credits;
+                parsedModule.moduleType = customModule.type;
+
+                console.log(parsedModule)
 
                 //create modul number
-                let moduleName = "M." + module.acronym + "." + module.semster + module.year.slice(module.year.length - 2) + "01"
-                parsedModule[NameKey] = moduleName;
-                console.log(parsedModule);
+                let moduleName = "M." + customModule.acronym + "." + customModule.semster + customModule.year.slice(customModule.year.length - 2) + "01"
+                parsedModule.name = moduleName;
                 modules.push(parsedModule);
-
             }
         }
         return modules;
