@@ -35,7 +35,6 @@ const Helpers = {
     /**
      * Checks if browser is Firefox or Chromium based
      */
-
     isFirefox: () => {
         if (typeof browser !== 'undefined') {
             // firefox
@@ -46,6 +45,7 @@ const Helpers = {
             return false
         }
     },
+
     /**
     * Helper method to read a file that is included in this browser extension.
     * The file needs to be registered in manifest.json!

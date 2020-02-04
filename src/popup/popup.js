@@ -1,6 +1,5 @@
-
 /**
- * populates the Modulelist from local Storage
+ * populates the modulelist from local Storage
  */
 async function populateModuleList() {
     const moduleList = await getModuleList();
@@ -10,7 +9,7 @@ async function populateModuleList() {
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
-    newModuleList.addEventListener('change', showCustomModuleInformation);
+    newModuleList.onchange = showCustomModuleInformation;
 
     if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
         for (let customModule in moduleList) {
@@ -24,27 +23,32 @@ async function populateModuleList() {
 
 }
 
+/**
+ * Gets the information of the selected modul and
+ * updates the forms with the right values.
+ */
 async function showCustomModuleInformation() {
-    let modulAcronym = "";
+    let moduleAcronym = "";
     const selectModuleList = document.getElementById("moduleList");
 
     const selectedIndex = selectModuleList.selectedIndex
     if (selectedIndex > -1) {
-        modulAcronym = selectModuleList.options[selectedIndex].value;
+        moduleAcronym = selectModuleList.options[selectedIndex].value;
     }
 
     const moduleList = await getModuleList();
-    const module = moduleList[modulAcronym];
+    const customModule = moduleList[moduleAcronym];
 
-    document.getElementById("modulCredits").value = module.credits;
-    document.getElementById("moduleGrade").value = module.grade;
-    document.getElementById("moduleMark").value = module.mark;
-    document.getElementById("modulAcronym").value = module.acronym;
-    document.getElementById("moduleYear").value = module.year;
+    document.getElementById("moduleCredits").value = customModule.credits;
+    document.getElementById("moduleGrade").value = customModule.grade;
+    document.getElementById("moduleMark").value = customModule.mark;
+    document.getElementById("moduleAcronym").value = customModule.acronym;
+    document.getElementById("moduleYear").value = customModule.year;
+    document.getElementById("moduleType").value = customModule.type;
 
     const moduleSemesterRadios = document.getElementsByName('moduleImplementation');
     for (let i = 0, length = moduleSemesterRadios.length; i < length; i++) {
-        if (moduleSemesterRadios[i].value == module.semster) {
+        if (moduleSemesterRadios[i].value == customModule.semster) {
             moduleSemesterRadios[i].checked = true;
             break;
         }
@@ -66,7 +70,7 @@ function populateYearList() {
 }
 
 /**
- * @returns {Object} local storage 
+ * @returns {Object} local storage
  */
 async function getLocalStorage() {
     if (Helpers.isFirefox()) {
@@ -77,7 +81,7 @@ async function getLocalStorage() {
 
 /**
  * Returns the moduleList Object from local Storage
- * @returns {Object} moduleList 
+ * @returns {Object} moduleList
  */
 async function getModuleList() {
     let moduleList = {};
@@ -99,8 +103,8 @@ async function getModuleList() {
 }
 
 /**
- * 
- * @param {Object} moduleList 
+ *
+ * @param {Object} moduleList
  */
 async function setModuleList(moduleList) {
     if (Helpers.isFirefox()) {
@@ -133,9 +137,9 @@ async function removeCustomModule() {
  * adds custom module to local storage
  */
 async function addCustomModule() {
-    const modulAcronym = document.getElementById("modulAcronym").value;
+    const moduleAcronym = document.getElementById("moduleAcronym").value;
     const moduleType = document.getElementById("moduleType").value;
-    const modulCredits = document.getElementById("modulCredits").value;
+    const moduleCredits = document.getElementById("moduleCredits").value;
     const moduleGrade = document.getElementById("moduleGrade").value;
     if (moduleGrade == "-") {
         moduleGrade = 'n/a';
@@ -159,10 +163,10 @@ async function addCustomModule() {
 
     moduleList = await getModuleList();
 
-    moduleList[modulAcronym] = {
-        acronym: modulAcronym,
+    moduleList[moduleAcronym] = {
+        acronym: moduleAcronym,
         type: moduleType,
-        credits: modulCredits,
+        credits: moduleCredits,
         mark: moduleMark,
         grade: moduleGrade,
         year: moduleYear,
@@ -172,10 +176,10 @@ async function addCustomModule() {
 }
 
 
-window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById("submitModul").addEventListener('click', addCustomModule);
-    document.getElementById("removeModule").addEventListener('click', removeCustomModule);
-    
+window.onload = function() {
+    document.getElementById("submitModule").onclick = addCustomModule;
+    document.getElementById("removeModule").onclick = removeCustomModule;
+
     //first time
     populateModuleList();
     populateYearList();
@@ -183,4 +187,4 @@ window.addEventListener('DOMContentLoaded', () => {
     //every time the storage changes(set)
     browser.storage.onChanged.addListener(populateModuleList);
 
-});
+};
