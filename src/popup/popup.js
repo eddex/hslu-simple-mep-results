@@ -84,14 +84,6 @@ async function getLocalStorage() {
  * @returns {Object} moduleList
  */
 async function getModuleList() {
-    let moduleList = {};
-
-    // if you reset the storage
-    const localStorage = await getLocalStorage();
-    if (Object.keys(localStorage).length === 0) {
-        const moduleList = {}
-        await setModuleList(moduleList)
-    }
 
     if (Helpers.isFirefox()) {
         moduleList = await browser.storage.local.get("moduleList");
@@ -174,17 +166,23 @@ async function addCustomModule() {
     }
     await setModuleList(moduleList)
 }
-
-
-window.onload = function() {
+async function start() {
     document.getElementById("submitModule").onclick = addCustomModule;
     document.getElementById("removeModule").onclick = removeCustomModule;
 
-    //first time
+    let localStorage = await getLocalStorage();
+    if (!(localStorage.moduleList)) {
+        const moduleList = {};
+        await setModuleList(moduleList)
+    }
+
     populateModuleList();
     populateYearList();
 
-    //every time the storage changes(set)
+    //every time the storage changes(set/remove)
     browser.storage.onChanged.addListener(populateModuleList);
+}
 
+window.onload = function () {
+    start();
 };
