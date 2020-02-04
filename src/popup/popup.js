@@ -132,7 +132,7 @@ async function addCustomModule() {
     const moduleAcronym = document.getElementById("moduleAcronym").value;
     const moduleType = document.getElementById("moduleType").value;
     const moduleCredits = document.getElementById("moduleCredits").value;
-    const moduleGrade = document.getElementById("moduleGrade").value;
+    let moduleGrade = document.getElementById("moduleGrade").value;
     if (moduleGrade == "-") {
         moduleGrade = 'n/a';
     }
