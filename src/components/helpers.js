@@ -33,6 +33,20 @@ const Helpers = {
     },
 
     /**
+     * Checks if browser is Firefox or Chromium based
+     */
+
+    isFirefox: () => {
+        if (typeof browser !== 'undefined') {
+            // firefox
+            return true
+        }
+        else {
+            // chrome
+            return false
+        }
+    },
+    /**
     * Helper method to read a file that is included in this browser extension.
     * The file needs to be registered in manifest.json!
     * Chome and Firefox have different APIs for this.
@@ -45,7 +59,7 @@ const Helpers = {
     getExtensionInternalFileUrl: (filePath) => {
 
         let internal_file;
-        if (typeof browser !== 'undefined') {
+        if (Helpers.isFirefox()) {
             // firefox
             internal_file = browser.runtime.getURL(filePath);
         }
