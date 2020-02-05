@@ -5,7 +5,7 @@ async function populateModuleList() {
     const moduleList = await getModuleList();
 
     // reset ModuleList
-    const selectModuleList = document.getElementById("moduleList");
+    const selectModuleList = document.getElementById("customModulesList");
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
@@ -29,7 +29,7 @@ async function populateModuleList() {
  */
 async function showCustomModuleInformation() {
     let moduleAcronym = "";
-    const selectModuleList = document.getElementById("moduleList");
+    const selectModuleList = document.getElementById("customModulesList");
 
     const selectedIndex = selectModuleList.selectedIndex
     if (selectedIndex > -1) {
@@ -112,7 +112,7 @@ async function setModuleList(moduleList) {
  */
 async function removeCustomModule() {
     const moduleList = await getModuleList();
-    const selectModuleList = document.getElementById("moduleList");
+    const selectModuleList = document.getElementById("customModulesList");
 
     const selectedIndex = selectModuleList.selectedIndex
     if (selectedIndex > -1) {

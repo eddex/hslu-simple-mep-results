@@ -1,28 +1,27 @@
+body {
+  background: white;
+  padding: 3px;
+  font-family: Helvetica,sans-serif;
+}
+
 .grid-container-form {
   display: grid;
   grid-template-columns: auto auto;
-  background-color: black;
-  padding: 1px;
+  background: #415e6c;
 }
 
 .grid-container-buttons {
   display: grid;
-  grid-template-columns: 50% 50%;
-  background-color: white;
-  padding: 1px;
+  grid-template-columns: auto auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .grid-item {
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 5px;
-  font-size: 20px;
+  padding: 6px;
+  font-size: 16px;
   text-align: left;
-}
-
-.custom-select {
-  position: relative;
-  font-family: Arial;
+  color: white;
 }
 
 .comment {
@@ -30,24 +29,53 @@
   margin: 0;
 }
 
-.button {
-	background: #415e6c;
-  border-radius: 5px;
-	border:none;
-  color:#ffffff;
-  font-size: 20px;
-  padding: 10px;
-	width:99%;
-	text-decoration:none;
-  text-align:center;
-  cursor: pointer;
-}
-.button:hover {
-  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
-	background-color:#1e62d0;
+.radio-button {
+  width: auto;
+  margin: 0;
+  padding: 0;
 }
 
-button:active {
-	position:relative;
-  top:1px;
+.radio-text {
+  padding-right: 5px;
+}
+
+.button {
+	background: #a00057;
+  border-radius: 0;
+  border: 0;
+  color: white;
+  font-size: 16px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.button-left {
+  padding-right: 2px;
+}
+
+.button-right {
+  padding-left: 2px;
+}
+
+.button:hover {
+  background: white;
+  color: #690036;
+}
+
+.customModulesList {
+  background: lightgray;
+}
+
+select, input {
+  width: 100%;
+  border: 0;
+}
+
+input {
+  padding-left: 5px;
+}
+
+option {
+  border-bottom: 1px dotted black;
+  padding: 2px;
 }
