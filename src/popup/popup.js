@@ -100,10 +100,10 @@ async function getModuleList() {
  */
 async function setModuleList(moduleList) {
     if (Helpers.isFirefox()) {
-        await browser.storage.local.set({ moduleList: moduleList })
+        await browser.storage.local.set({ moduleList: moduleList });
     }
     else {
-        await chrome.storage.local.set({ moduleList: moduleList })
+        await chrome.storage.local.set({ moduleList: moduleList });
     }
 }
 
@@ -114,14 +114,14 @@ async function removeCustomModule() {
     const moduleList = await getModuleList();
     const selectModuleList = document.getElementById("customModulesList");
 
-    const selectedIndex = selectModuleList.selectedIndex
+    const selectedIndex = selectModuleList.selectedIndex;
     if (selectedIndex > -1) {
         const selectedModule = selectModuleList.options[selectedIndex].value;
-        delete moduleList[selectedModule]
-        await setModuleList(moduleList)
+        delete moduleList[selectedModule];
+        await setModuleList(moduleList);
     }
     else {
-        console.warn("select a module")
+        console.warn("select a module");
     }
 }
 
@@ -137,7 +137,7 @@ async function addCustomModule() {
         moduleGrade = 'n/a';
     }
 
-    let modulYearList = document.getElementById("moduleYear")
+    let modulYearList = document.getElementById("moduleYear");
     let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
 
     const moduleSemesterRadios = document.getElementsByName('moduleImplementation');
@@ -164,7 +164,7 @@ async function addCustomModule() {
         year: moduleYear,
         semster: moduleSemester
     }
-    await setModuleList(moduleList)
+    await setModuleList(moduleList);
 }
 
 /**
@@ -177,7 +177,7 @@ async function start() {
     let localStorage = await getLocalStorage();
     if (!(localStorage.moduleList)) {
         const moduleList = {};
-        await setModuleList(moduleList)
+        await setModuleList(moduleList);
     }
 
     populateModuleList();
@@ -187,6 +187,6 @@ async function start() {
     browser.storage.onChanged.addListener(populateModuleList);
 }
 
-window.onload = function () {
+window.onload = () => {
     start();
 };
