@@ -172,6 +172,10 @@ const ModuleParser = {
             let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
             parsedModule.moduleType = moduleTypeList[moduleId];
 
+            // all modules from SZ (Sprachzentrum) are 'Zusatzmodul'
+            if (parsedModule.name.includes('_SZ') || parsedModule.name.includes('SZ_')) {
+                parsedModule.moduleType = 'Zusatzmodul'
+            }
             modules.push(parsedModule);
         });
 
