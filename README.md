@@ -1,3 +1,18 @@
+<p align="center">
+    <a href="https://github.com/eddex/hslu-simple-mep-results/blob/master/LICENSE" alt="Contributors">
+      <img src="https://img.shields.io/github/license/eddex/hslu-simple-mep-results">
+    </a>
+    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="Release">
+      <img src="https://img.shields.io/github/v/release/eddex/hslu-simple-mep-results">
+    </a>
+    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="TotalDownloads">
+      <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/total">
+    </a>
+    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="CodeSize">
+      <img src="https://img.shields.io/github/languages/code-size/eddex/hslu-simple-mep-results">
+    </a>
+</p>
+
 # HSLU simple MEP results
 This browser add-on extends the page ['Meine Andmeldungen'](https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/) on the HSLU MyCampus website.
 
