@@ -23,3 +23,7 @@ assignees: ''
 
 **Screenshots**
 [ Add screenshots if possible. ]
+
+**Contributing (please choose one)**
+- [ ] I'd like to help implementing this feature!
+- [ ] I don't have the time to work on this.
