@@ -66,6 +66,7 @@ def parseWebsite():
     erweiterungsmodul = 'Erweiterungsmodul'
     majormodul = 'Majormodul'
     zusatzmodul = 'Zusatzmodul'
+    repetitoriummodul = 'Repetitorium'
 
     # parse module types from HTML
     id_to_type_mapping = {
@@ -138,6 +139,7 @@ def parseWebsite():
     modules_with_type['ME+TE'] = zusatzmodul
     modules_with_type['WEBLAB'] = majormodul
     modules_with_type['KOHEB'] = zusatzmodul
+    modules_with_type['MAREP'] = repetitoriummodul
 
     # Other modules (that don't appear on the website)
     # Sometimes they just rename modules but the names don't change on 'Meine Anmeldungen'
