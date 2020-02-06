@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://github.com/eddex/hslu-simple-mep-results/blob/master/LICENSE" alt="Contributors">
+    <a href="https://github.com/eddex/hslu-simple-mep-results/blob/master/LICENSE" alt="License">
       <img src="https://img.shields.io/github/license/eddex/hslu-simple-mep-results">
     </a>
     <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="Release">
@@ -8,8 +8,8 @@
     <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="TotalDownloads">
       <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/total">
     </a>
-    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="CodeSize">
-      <img src="https://img.shields.io/github/languages/code-size/eddex/hslu-simple-mep-results">
+    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="LatestReleaseDownloads">
+      <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/latest/total">
     </a>
 </p>
 
