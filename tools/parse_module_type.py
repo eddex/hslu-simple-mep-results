@@ -172,14 +172,12 @@ def parseWebsite():
     ics_modules_with_type['SPREN2'] = kernmodul
     ics_modules_with_type['KRYPTO'] = kernmodul
     ics_modules_with_type['NETDA'] = kernmodul
-    ics_modules_with_type['PRG'] = kernmodul
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
 
     # fixes for WI modules
     wi_modules_with_type['ENWC'] = erweiterungsmodul
-    wi_modules_with_type['PRG'] = erweiterungsmodul
 
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
