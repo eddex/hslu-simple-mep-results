@@ -151,6 +151,7 @@ def parseWebsite():
     modules_with_type['MC'] = erweiterungsmodul
     modules_with_type['BSCI'] = '-'
     modules_with_type['EINFTA'] = '-'
+    modules_with_type['PRG'] = kernmodul
 
     # ICS modules
     ics_modules_with_type['DB&S'] = kernmodul
@@ -200,19 +201,19 @@ def parseWebsite():
 def prequisitesCheck():
     f = Path('./modulbeschriebe_i.html')
     if not f.is_file():
-        print('ERROR: file \'tools/modulbeschriebe_i.html\' does not exist.')
+        print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
 and save it as \'tools/modulbeschriebe_i.html\'.')
-        check = False
+        return False
+
     f = Path('./modulbeschriebe_wi.html')
     if not f.is_file():
-        print('ERROR: file \'tools/modulbeschriebe_i.html\' does not exist.')
+        print('ERROR: file \'./modulbeschriebe_wi.html\' does not exist.')
         print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
-and save it as \'tools/modulbeschriebe_i.html\'.')
-        check = False
-        return check
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
+and save it as \'tools/modulbeschriebe_wi.html\'.')
+        return False
     return True
 
 
