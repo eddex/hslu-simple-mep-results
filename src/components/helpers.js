@@ -68,5 +68,45 @@ const Helpers = {
             internal_file = chrome.runtime.getURL(filePath);
         }
         return internal_file;
+    },
+    getModuleListFromLocalStorage: () => {
+        if (Helpers.isFirefox()) {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = browser.storage.local.get("moduleList", function (response) {
+                        console.log("getModuleListChrome", response);
+                        resolve(response);
+                    });
+                });
+        }
+        else {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = chrome.storage.local.get("moduleList", function (response) {
+                        console.log("getModuleListChrome", response);
+                        resolve(response);
+                    });
+                });
+        }
+    },
+    getLocalStorage: () => {
+        if (Helpers.isFirefox()) {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = browser.storage.local.get(null, function (response) {
+                        console.log("getModuleListChrome", response);
+                        resolve(response);
+                    });
+                });
+        }
+        else {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = chrome.storage.local.get(null, function (response) {
+                        console.log("getModuleListChrome", response);
+                        resolve(response);
+                    });
+                });
+        }
     }
 }
