@@ -1,0 +1,81 @@
+body {
+  background: white;
+  padding: 3px;
+  font-family: Helvetica,sans-serif;
+}
+
+.grid-container-form {
+  display: grid;
+  grid-template-columns: auto auto;
+  background: #415e6c;
+}
+
+.grid-container-buttons {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.grid-item {
+  padding: 6px;
+  font-size: 16px;
+  text-align: left;
+  color: white;
+}
+
+.comment {
+  font-size: 12;
+  margin: 0;
+}
+
+.radio-button {
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.radio-text {
+  padding-right: 5px;
+}
+
+.button {
+	background: #a00057;
+  border-radius: 0;
+  border: 0;
+  color: white;
+  font-size: 16px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.button-left {
+  padding-right: 2px;
+}
+
+.button-right {
+  padding-left: 2px;
+}
+
+.button:hover {
+  background: white;
+  color: #690036;
+}
+
+.customModulesList {
+  background: lightgray;
+}
+
+select, input {
+  width: 100%;
+  border: 0;
+}
+
+input {
+  padding-left: 5px;
+}
+
+option {
+  border-bottom: 1px dotted black;
+  padding: 2px;
+}

@@ -6,6 +6,36 @@
                     "version": "2.0.7",
                     "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.7/hslu_simple_mep_results-2.0.7-firefox.xpi",
                     "update_hash": "sha256:7C78E6A2BD2DA4A54E7B854FF7EC22EAC4AF145E28CE5A390CFBEA93F4352737"
+                },
+                {
+                    "version": "2.0.8",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.8/hslu_simple_mep_results-2.0.8-firefox.xpi",
+                    "update_hash": "sha256:676FCE4D7B5BBF07886FB55063022BF1309E1EAC204A9820C0DBE520BC5C7173"
+                },
+                {
+                    "version": "2.0.9",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.9/hslu_simple_mep_results-2.0.9-firefox.xpi",
+                    "update_hash": "sha256:55B17308727C0E9A5FE67A29E7B0E9140F8B06156A20A0C0719D155DE5AA0E34"
+                },
+                {
+                    "version": "2.0.10",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.10/hslu_simple_mep_results-2.0.10-firefox.xpi",
+                    "update_hash": "sha256:18E0C8E5FD50946656E080DE7D22166AB80F4C30AC584755AA52FF3F8B95B0DD"
+                },
+                {
+                    "version": "2.0.11",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.11/hslu_simple_mep_results-2.0.11-firefox.xpi",
+                    "update_hash": "sha256:0664DDB98B90B3979480642449CF4BFB0D92C63932AFBDAA94AEFF11ACE35E39"
+                },
+                {
+                    "version": "2.0.12",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.12/hslu_simple_mep_results-2.0.12-firefox.xpi",
+                    "update_hash": "sha256:9A76B6DBD224F48A43568F1238BD01BE043C18D50448353356983AB21C46B948"
+                },
+                {
+                    "version": "2.0.13",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.13/hslu_simple_mep_results-2.0.13-firefox.xpi",
+                    "update_hash": "sha256:8267F7AD4535C2DF865107164FF8240E900E6DE16231827658AE4001E0E5673E"
                 }
             ]
         }
