@@ -12,7 +12,6 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v1
-
       - name: "web-ext build"
         id: web-ext-build
         uses: kewisch/action-web-ext@v1
@@ -20,6 +19,15 @@ jobs:
           cmd: build
           source: src
           target: target 
+      - name: "web-ext sign"
+        id: web-ext-sign
+        uses: kewisch/action-web-ext@v1
+        with:
+          cmd: sign
+          source: ${{ steps.web-ext-build.outputs.target }}
+          channel: unlisted
+          apiKey: ${{ secrets.AMO_SIGN_KEY }}
+          apiSecret: ${{ secrets.AMO_SIGN_SECRET }}
       - name: "Upload Artifact"
         uses: actions/upload-artifact@master
         with:
