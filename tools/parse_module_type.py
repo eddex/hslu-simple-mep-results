@@ -152,6 +152,7 @@ def parseWebsite():
     modules_with_type['BSCI'] = '-'
     modules_with_type['EINFTA'] = '-'
     modules_with_type['PRG'] = kernmodul
+    modules_with_type['TEST'] = kernmodul
 
     # ICS modules
     ics_modules_with_type['DB&S'] = kernmodul
