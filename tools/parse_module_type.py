@@ -175,6 +175,8 @@ def parseWebsite():
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
+    ics_modules_with_type['WEBTEC'] = kernmodul
+    ics_modules_with_type['SPRG'] = kernmodul
 
     # fixes for WI modules
     wi_modules_with_type['ENWC'] = erweiterungsmodul

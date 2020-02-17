@@ -11,8 +11,8 @@ const _Student = {
     numberOfNumericMarksWithF: 0,
     gradesCount: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 },
     creditsByModuleTypeCount: {
-        Kernmodul: { current: 0, min: 66 },
-        Projektmodul: { current: 0, min: 36 },
+        Kernmodul: { current: 0, min: 60 },
+        Projektmodul: { current: 0, min: 42 },
         Erweiterungsmodul: { current: 0, min: 42 },
         Majormodul: { current: 0, min: 24 },
         Zusatzmodul: { current: 0, min: 9 }
