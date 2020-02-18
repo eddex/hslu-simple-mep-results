@@ -186,7 +186,7 @@ def parseWebsite():
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
     modules_with_type['ENICS1'] = zusatzmodul
     modules_with_type['ISA_TML'] = zusatzmodul
-    modules_with_type['BA_GEST'] = zusatzmodul
+    modules_with_type['GEST'] = zusatzmodul # Blockwoche Bildnerisches Gestalten
 
     # fixes
     modules_with_type['STAT'] = kernmodul  # the website is not up to date
