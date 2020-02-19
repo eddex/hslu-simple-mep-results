@@ -2,7 +2,7 @@
  * populates the modulelist from local Storage
  */
 async function populateModuleList() {
-    const moduleList = await getModuleList();
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
 
     // reset ModuleList
     const selectModuleList = document.getElementById("customModulesList");
@@ -36,7 +36,7 @@ async function showCustomModuleInformation() {
         moduleAcronym = selectModuleList.options[selectedIndex].value;
     }
 
-    const moduleList = await getModuleList();
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
     const customModule = moduleList[moduleAcronym];
 
     document.getElementById("moduleCredits").value = customModule.credits;
@@ -73,25 +73,23 @@ function populateYearList() {
  * @returns {Object} local storage
  */
 async function getLocalStorage() {
+    let localStorage;
     if (Helpers.isFirefox()) {
-        return await browser.storage.local.get();
-    }
-    return await chrome.storage.local.get();
-}
-
-/**
- * Returns the moduleList Object from local Storage
- * @returns {Object} moduleList
- */
-async function getModuleList() {
-
-    if (Helpers.isFirefox()) {
-        moduleList = await browser.storage.local.get("moduleList");
+        localStorage = await browser.storage.local.get();
     }
     else {
-        moduleList = await chrome.storage.local.get("moduleList");
+        const getLocalStorageChrome = () => {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = chrome.storage.local.get(null, function (response) {
+                        resolve(response);
+                    });
+                });
+        }
+        localStorage = await getLocalStorageChrome();
+
     }
-    return moduleList.moduleList;
+    return localStorage
 }
 
 /**
@@ -111,7 +109,8 @@ async function setModuleList(moduleList) {
  * deletes the selected module from local storage
  */
 async function removeCustomModule() {
-    const moduleList = await getModuleList();
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
+
     const selectModuleList = document.getElementById("customModulesList");
 
     const selectedIndex = selectModuleList.selectedIndex;
@@ -137,8 +136,8 @@ async function addCustomModule() {
         moduleGrade = 'n/a';
     }
 
-    let modulYearList = document.getElementById("moduleYear");
-    let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
+    const modulYearList = document.getElementById("moduleYear");
+    const moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
 
     const moduleSemesterRadios = document.getElementsByName('moduleImplementation');
     for (let i = 0, length = moduleSemesterRadios.length; i < length; i++) {
@@ -153,7 +152,7 @@ async function addCustomModule() {
         moduleMark = 'n/a';
     }
 
-    moduleList = await getModuleList();
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
 
     moduleList[moduleAcronym] = {
         acronym: moduleAcronym,
@@ -174,17 +173,21 @@ async function start() {
     document.getElementById("submitModule").onclick = addCustomModule;
     document.getElementById("removeModule").onclick = removeCustomModule;
 
-    let localStorage = await getLocalStorage();
+    let localStorage = await Helpers.getLocalStorage();
     if (!(localStorage.moduleList)) {
         const moduleList = {};
         await setModuleList(moduleList);
     }
-
     populateModuleList();
     populateYearList();
 
     //every time the storage changes(set/remove)
-    browser.storage.onChanged.addListener(populateModuleList);
+    if (Helpers.isFirefox()) {
+        browser.storage.onChanged.addListener(populateModuleList);
+    }
+    else {
+        chrome.storage.onChanged.addListener(populateModuleList);
+    }
 }
 
 window.onload = () => {
