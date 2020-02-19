@@ -34,6 +34,8 @@ const Helpers = {
 
     /**
      * Checks if browser is Firefox or Chromium based
+     * 
+     * @returns: true if the used browser is firefox and false if not
      */
     isFirefox: () => {
         if (typeof browser !== 'undefined') {
@@ -106,7 +108,6 @@ const Helpers = {
             return new Promise(
                 (resolve, reject) => {
                     moduleList = browser.storage.local.get(null, function (response) {
-                        console.log("getModuleListChrome", response);
                         resolve(response);
                     });
                 });
@@ -115,7 +116,6 @@ const Helpers = {
             return new Promise(
                 (resolve, reject) => {
                     moduleList = chrome.storage.local.get(null, function (response) {
-                        console.log("getModuleListChrome", response);
                         resolve(response);
                     });
                 });
