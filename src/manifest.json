@@ -1,11 +1,12 @@
 {
   "manifest_version": 2,
   "name": "HSLU simple MEP results",
-  "version": "2.0.13",
-  "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
+  "version": "2.0.14",
+  "description": "Show the results of your exams in a nice way instead of the crappy default layout.",
   "icons": {
     "48": "icons/icon-48.png",
-    "96": "icons/icon-96.png"
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
   },
   "browser_action": {
     "default_icon": "icons/icon-48.png",

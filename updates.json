@@ -36,6 +36,11 @@
                     "version": "2.0.13",
                     "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.13/hslu_simple_mep_results-2.0.13-firefox.xpi",
                     "update_hash": "sha256:8267F7AD4535C2DF865107164FF8240E900E6DE16231827658AE4001E0E5673E"
+                },
+                {
+                    "version": "2.0.14",
+                    "update_link": "https://github.com/eddex/hslu-simple-mep-results/releases/download/2.0.14/hslu_simple_mep_results-2.0.14-firefox.xpi",
+                    "update_hash": "sha256:30C17FC1F3BC39DAC24017C82F6884A14961058B1299929F645FF75AF7E7E8BB"
                 }
             ]
         }
