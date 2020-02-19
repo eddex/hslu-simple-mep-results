@@ -71,38 +71,38 @@ const Helpers = {
         }
         return internal_file;
     },
-    /**
-     * This Helper function returns the moduleList, specific to the used browser
-     * Chome and Firefox have different APIs for this.
-     * 
-     * @returns: moduleList
-     */
-    getModuleListFromLocalStorage: async () => {
-        if (Helpers.isFirefox()) {
-            const getModuleListFromLocalStorageFirefox = async () => {
-                return new Promise(
-                    (resolve, reject) => {
-                        moduleList = browser.storage.local.get("moduleList", function (response) {
-                            resolve(response);
-                        });
-                    });
-            }
-            moduleList = await getModuleListFromLocalStorageFirefox();
+    // /**
+    //  * This Helper function returns the moduleList, specific to the used browser
+    //  * Chome and Firefox have different APIs for this.
+    //  * 
+    //  * @returns: moduleList
+    //  */
+    // getModuleListFromLocalStorage: async () => {
+    //     if (Helpers.isFirefox()) {
+    //         const getModuleListFromLocalStorageFirefox = async () => {
+    //             return new Promise(
+    //                 (resolve, reject) => {
+    //                     moduleList = browser.storage.local.get("moduleList", function (response) {
+    //                         resolve(response);
+    //                     });
+    //                 });
+    //         }
+    //         moduleList = await getModuleListFromLocalStorageFirefox();
 
-        }
-        else {
-            getModuleListFromLocalStorageChrome = async () => {
-                return new Promise(
-                    (resolve, reject) => {
-                        moduleList = chrome.storage.local.get("moduleList", function (response) {
-                            resolve(response);
-                        });
-                    });
-            }
-            moduleList = await getModuleListFromLocalStorageChrome();
-        }
-        return moduleList.moduleList
-    },
+    //     }
+    //     else {
+    //         getModuleListFromLocalStorageChrome = async () => {
+    //             return new Promise(
+    //                 (resolve, reject) => {
+    //                     moduleList = chrome.storage.local.get("moduleList", function (response) {
+    //                         resolve(response);
+    //                     });
+    //                 });
+    //         }
+    //         moduleList = await getModuleListFromLocalStorageChrome();
+    //     }
+    //     return moduleList.moduleList
+    // },
     getLocalStorage: () => {
         if (Helpers.isFirefox()) {
             return new Promise(
@@ -116,6 +116,73 @@ const Helpers = {
             return new Promise(
                 (resolve, reject) => {
                     moduleList = chrome.storage.local.get(null, function (response) {
+                        resolve(response);
+                    });
+                });
+        }
+    },
+
+    /**
+     * This Helper function returns the moduleList, specific to the used browser
+     * Chome and Firefox have different APIs for this.
+     * 
+     * @returns: moduleList
+     */
+    getModuleListFromSyncStorage: async () => {
+        if (Helpers.isFirefox()) {
+            const getModuleListFromSyncStorageFirefox = async () => {
+                return new Promise(
+                    (resolve, reject) => {
+                        moduleList = browser.storage.sync.get("moduleList", function (response) {
+                            resolve(response);
+                        });
+                    });
+            }
+            moduleList = await getModuleListFromSyncStorageFirefox();
+        }
+        else {
+            const getModuleListFromSyncStorageChrome = async () => {
+                return new Promise(
+                    (resolve, reject) => {
+                        moduleList = chrome.storage.sync.get("moduleList", function (response) {
+                            resolve(response);
+                        });
+                    });
+
+            }
+            moduleList = await getModuleListFromSyncStorageChrome();
+        }
+        return moduleList.moduleList
+    },
+
+    getSyncStorage: () => {
+        if (Helpers.isFirefox()) {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = browser.storage.sync.get(null, function (response) {
+                        resolve(response);
+                    });
+                });
+        }
+        else {
+            return new Promise(
+                (resolve, reject) => {
+                    moduleList = chrome.storage.sync.get(null, function (response) {
+                        resolve(response);
+                    });
+                });
+        }
+    },
+
+    setSyncStorage: async (storage) => {
+        if (Helpers.isFirefox()) {
+            browser.storage.sync.set(storage)
+
+        }
+        else {
+            return new Promise(
+                (resolve, reject) => {
+                    chrome.storage.sync.set(storage, function (response) {
                         resolve(response);
                     });
                 });

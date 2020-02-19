@@ -180,7 +180,7 @@ const ModuleParser = {
         });
 
         //add custom modules from local storage
-        let moduleList = await Helpers.getModuleListFromLocalStorage();
+        let moduleList = await Helpers.getModuleListFromSyncStorage();
         for (const customModuleName in moduleList) {
             if (moduleList.hasOwnProperty(customModuleName)) {
                 const customModule = moduleList[customModuleName];

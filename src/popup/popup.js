@@ -1,8 +1,8 @@
 /**
- * populates the modulelist from local Storage
+ * populates the modulelist from sync Storage
  */
 async function populateModuleList() {
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = await Helpers.getModuleListFromSyncStorage();
 
     // reset ModuleList
     const selectModuleList = document.getElementById("customModulesList");
@@ -36,7 +36,7 @@ async function showCustomModuleInformation() {
         moduleAcronym = selectModuleList.options[selectedIndex].value;
     }
 
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = await Helpers.getModuleListFromSyncStorage();
     const customModule = moduleList[moduleAcronym];
 
     document.getElementById("moduleCredits").value = customModule.credits;
@@ -98,18 +98,18 @@ async function getLocalStorage() {
  */
 async function setModuleList(moduleList) {
     if (Helpers.isFirefox()) {
-        await browser.storage.local.set({ moduleList: moduleList });
+        await browser.storage.sync.set({ moduleList: moduleList });
     }
     else {
-        await chrome.storage.local.set({ moduleList: moduleList });
+        await chrome.storage.sync.set({ moduleList: moduleList });
     }
 }
 
 /**
- * deletes the selected module from local storage
+ * deletes the selected module from sync storage
  */
 async function removeCustomModule() {
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = await Helpers.getModuleListFromSyncStorage();
 
     const selectModuleList = document.getElementById("customModulesList");
 
@@ -125,7 +125,7 @@ async function removeCustomModule() {
 }
 
 /**
- * adds custom module to local storage
+ * adds custom module to sync storage
  */
 async function addCustomModule() {
     const moduleAcronym = document.getElementById("moduleAcronym").value;
@@ -152,7 +152,7 @@ async function addCustomModule() {
         moduleMark = 'n/a';
     }
 
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = await Helpers.getModuleListFromSyncStorage();
 
     moduleList[moduleAcronym] = {
         acronym: moduleAcronym,
@@ -173,8 +173,8 @@ async function start() {
     document.getElementById("submitModule").onclick = addCustomModule;
     document.getElementById("removeModule").onclick = removeCustomModule;
 
-    let localStorage = await Helpers.getLocalStorage();
-    if (!(localStorage.moduleList)) {
+    let syncStorage = await Helpers.getSyncStorage();
+    if (!(syncStorage.moduleList)) {
         const moduleList = {};
         await setModuleList(moduleList);
     }
