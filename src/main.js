@@ -461,6 +461,24 @@ async function generateHtml(modules) {
 }
 
 async function start() {
+
+    //Migrate local to sync
+    let localStorage = await Helpers.getLocalStorage();
+    
+    if ((localStorage.moduleList)) {
+        localStorage = await Helpers.getLocalStorage();
+        test = await Helpers.setSyncStorage(localStorage);
+        console.log("localStorage", await Helpers.getSyncStorage)
+        if (Helpers.isFirefox()) {
+            browser.storage.local.clear()
+        }
+        else {
+            chrome.storage.local.clear()
+        }
+    }
+
+
+    ////
     await getStudentInformations();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
