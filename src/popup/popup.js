@@ -2,8 +2,7 @@
  * populates the modulelist from local Storage
  */
 async function populateModuleList() {
-    const moduleListStorageObject = await Helpers.getModuleListFromLocalStorage();
-    const moduleList = moduleListStorageObject.moduleList;
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
 
     // reset ModuleList
     const selectModuleList = document.getElementById("customModulesList");
@@ -37,8 +36,7 @@ async function showCustomModuleInformation() {
         moduleAcronym = selectModuleList.options[selectedIndex].value;
     }
 
-    const moduleListStorageObject = await Helpers.getModuleListFromLocalStorage();
-    const moduleList = moduleListStorageObject.moduleList
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
     const customModule = moduleList[moduleAcronym];
 
     document.getElementById("moduleCredits").value = customModule.credits;
@@ -111,8 +109,7 @@ async function setModuleList(moduleList) {
  * deletes the selected module from local storage
  */
 async function removeCustomModule() {
-    const moduleListStorageObject = await Helpers.getModuleListFromLocalStorage();
-    const customModules = moduleListStorageObject.moduleList;
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
 
     const selectModuleList = document.getElementById("customModulesList");
 
@@ -139,8 +136,8 @@ async function addCustomModule() {
         moduleGrade = 'n/a';
     }
 
-    let modulYearList = document.getElementById("moduleYear");
-    let moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
+    const modulYearList = document.getElementById("moduleYear");
+    const moduleYear = modulYearList.options[modulYearList.selectedIndex].value;
 
     const moduleSemesterRadios = document.getElementsByName('moduleImplementation');
     for (let i = 0, length = moduleSemesterRadios.length; i < length; i++) {
@@ -155,9 +152,7 @@ async function addCustomModule() {
         moduleMark = 'n/a';
     }
 
-    moduleListStorageObject = await Helpers.getModuleListFromLocalStorage();
-    const moduleList = moduleListStorageObject.moduleList;
-
+    const moduleList = await Helpers.getModuleListFromLocalStorage();
 
     moduleList[moduleAcronym] = {
         acronym: moduleAcronym,
@@ -179,7 +174,6 @@ async function start() {
     document.getElementById("removeModule").onclick = removeCustomModule;
 
     let localStorage = await Helpers.getLocalStorage();
-    console.log("localStorage", localStorage)
     if (!(localStorage.moduleList)) {
         const moduleList = {};
         await setModuleList(moduleList);

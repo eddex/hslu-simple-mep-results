@@ -181,10 +181,9 @@ const ModuleParser = {
 
         //add custom modules from local storage
         let moduleList = await Helpers.getModuleListFromLocalStorage();
-        const customModules = moduleList.moduleList;
-        for (const customModuleName in customModules) {
-            if (customModules.hasOwnProperty(customModuleName)) {
-                const customModule = customModules[customModuleName];
+        for (const customModuleName in moduleList) {
+            if (moduleList.hasOwnProperty(customModuleName)) {
+                const customModule = moduleList[customModuleName];
 
                 let parsedModule = {};
                 parsedModule.passed = customModule.grade == 'F' ? false : true;
