@@ -34,8 +34,9 @@ const ModuleParser = {
      * or 'F' for 'Frühlingssemester' (spring).
      */
     isAutumnSemester: (hsluModuleName) => {
-        const includesH = hsluModuleName.split('.')[2].includes('H');
-        const includesF = hsluModuleName.split('.')[2].includes('F');
+        let split_name = hsluModuleName.split('.')[2]
+        const includesH = split_name ? split_name.includes('H') : false;
+        const includesF = split_name ? split_name.includes('F') : false;
         return includesH || includesF ? includesH : undefined;
     },
 
