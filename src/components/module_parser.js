@@ -51,7 +51,7 @@ const ModuleParser = {
         const isStartInAutumn = ModuleParser.isAutumnSemester(firstModule.anlassnumber);
 
         const lastPart = hsluModuleName.split('.')[2];
-        const moduleYear = Number('20' + lastPart.substring(1, 3));
+        const moduleYear = Number('20' + (lastPart != undefined ? lastPart.substring(1, 3) : '00'));
         const isModuleInAutumn = ModuleParser.isAutumnSemester(hsluModuleName);
 
         const yearDifference = (moduleYear - startYear)
