@@ -53,9 +53,11 @@ You only have to install the extension once. After this you'll get automatic upd
 
 ### Chrome
 
-**Releases**
+**Releases** (recommended)
+- Install the extension from the [chrome web store
+](https://chrome.google.com/webstore/detail/hslu-simple-mep-results/bkcgbpgefenaapagldnnabfakilmfihp)
 
-Chrome does not support third party extensions anymore. Maybe we'll publish the extension in the official store at some point in the future. In the mean time, you can use the add-on in developer mode (from sources).
+Google might remove the extension from the store again, so stay tuned.
 
 **From sources**
 
