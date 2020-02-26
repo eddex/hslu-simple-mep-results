@@ -44,6 +44,7 @@
     "data/modules_ics.json",
     "data/modules_wi.json"
   ],
+  "default_locale": "de",
   "browser_specific_settings": {
     "gecko": {
       "id": "{64b1a494-88df-447e-b2aa-45d86fcc3c16}",
