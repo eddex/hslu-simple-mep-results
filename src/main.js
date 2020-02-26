@@ -164,9 +164,16 @@ function addProgressTextToTemplate(elementId, creditsByModuleType) {
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
 async function createCreditsByModuleTypeTable(div) {
-
     let template = await fetch(Helpers.getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
         .then(response => response.text());
+
+    template = template.replace("MAJORMODULEINFORMATION", await i18n.getMessage("majorModuleInformation"))
+    template = template.replace("COREMODULE", await i18n.getMessage("coreModule"))
+    template = template.replace("MAJORMODULE", await i18n.getMessage("majorModule"))
+    template = template.replace("EXTENSIONMODULE", await i18n.getMessage("extensionModule"))
+    template = template.replace("PROJECTMODULE", await i18n.getMessage("projectModule"))
+    template = template.replace("ADDITIONALMODULE", await i18n.getMessage("additionalModule"))
+
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
@@ -194,6 +201,8 @@ async function createGradesOverviewTable(div) {
         let gradePercentageRounded = Math.round(10000 * _Student.gradesCount[gradeId] / _Student.totalGrades) / 100;
         gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
     }
+    gradesTableTemplate = gradesTableTemplate.replace("QUANTITY", await i18n.getMessage("quantity"));
+    gradesTableTemplate = gradesTableTemplate.replace("DISTRIBUTION", await i18n.getMessage("distribution"));
     gradeOverviewTable.innerHTML = gradesTableTemplate;
     div.insertBefore(gradeOverviewTable, div.firstChild);
 }
@@ -201,9 +210,10 @@ async function createGradesOverviewTable(div) {
 /*
  * Create a heading that displays the number of achieved credits.
  */
-function createTotalCreditsTitle(div) {
+async function createTotalCreditsTitle(div) {
     const progress = Helpers.calculateProgress(_Student.totalCredits, 180);
-    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + _Student.totalCredits + '/180 (' + progress + '%)');
+    const titleName = await i18n.getMessage("ectsPoints");
+    Helpers.addTitleToDocument(div, titleName +': ' + _Student.totalCredits + '/180 (' + progress + '%)');
 }
 
 /*
@@ -236,10 +246,11 @@ function createStudyTitle(div) {
  * Modules with grade F are not counted in the average.
  * A second average is displayed, where the modules with grade F are taken into account.
  */
-function createAverageMarkTitle(div) {
-    let average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
-    let averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
-    Helpers.addTitleToDocument(div, 'Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
+async function createAverageMarkTitle(div) {
+    const average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
+    const averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
+    let titleName = await i18n.getMessage("mark");
+    Helpers.addTitleToDocument(div, titleName + ' Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
 /*
@@ -443,19 +454,21 @@ async function generateHtml(modules) {
         div.insertBefore(p, div.firstChild);
         return;
     }
-
     calculateStats(modules);
     createModulesTable(div, modules);
-    Helpers.addTitleToDocument(div, 'Modulübersicht');
+    const titleNameModuleSummary = await i18n.getMessage("moduleSummary")
+    Helpers.addTitleToDocument(div, titleNameModuleSummary);
 
     await createGradesOverviewTable(div);
-    createAverageMarkTitle(div);
+    await createAverageMarkTitle(div);
 
     await createCreditsByModuleTypeTable(div);
-    Helpers.addTitleToDocument(div, 'Modultypen Übersicht');
+    const titleNameModuleTypesSummary = await i18n.getMessage("moduleTypesSummary");
+    Helpers.addTitleToDocument(div, titleNameModuleTypesSummary);
+
     createChart(div, modules);
     createTotalCreditsProgressBar(div);
-    createTotalCreditsTitle(div);
+    await createTotalCreditsTitle(div);
 
     createStudyTitle(div);
 }
