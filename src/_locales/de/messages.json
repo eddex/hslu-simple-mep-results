@@ -1,0 +1,55 @@
+{
+    "ectsPoints": {
+        "message": "ECTS-Punkte"
+    },
+    "moduleTypesSummary": {
+        "message": "Modultypen Übersicht"
+    },
+    "mark": {
+        "message": "Noten"
+    },
+    "moduleSummary": {
+        "message": "Modulübersicht"
+    },
+    "moduleName": {
+        "message": "Modul-Name"
+    },
+    "moduleType": {
+        "message": "Modul-Typ"
+    },
+    "evaluation": {
+        "message": "Bewertung"
+    },
+    "grade": {
+        "message": "Grad"
+    },
+    "quantity": {
+        "message": "Anzahl"
+    },
+    "distribution": {
+        "message": "Verteilung"
+    },
+    "notificationContent": {
+        "message": "You clicked $1.",
+        "description": "Tells the user which link they clicked."
+      },
+      "majorModuleInformation":{
+          "message": "*Majormodule sind spezielle Erweiterungsmodule. Falls alle 24 ECTS eines Majors erreicht wurden, erhält man diesen."
+      },
+
+      "majorModule": {
+        "message": "Majormodul"
+      },
+
+      "coreModule": {
+        "message": "Majormodul"
+      },
+
+      "projectModule": {
+        "message": "Majormodul"
+      },
+
+      "additionalModule": {
+        "message": "Zusatzmodul"
+      }
+}
