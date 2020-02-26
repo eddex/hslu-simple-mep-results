@@ -29,10 +29,7 @@
     "distribution": {
         "message": "Verteilung"
     },
-    "notificationContent": {
-        "message": "You clicked $1.",
-        "description": "Tells the user which link they clicked."
-      },
+
       "majorModuleInformation":{
           "message": "*Majormodule sind spezielle Erweiterungsmodule. Falls alle 24 ECTS eines Majors erreicht wurden, erhält man diesen."
       },
