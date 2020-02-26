@@ -20,9 +20,9 @@
         "*://*.mycampus.hslu.ch/*/stud-i/mein-studium/meine-anmeldungen/*"
       ],
       "js": [
-        "components/i18n.js",
         "components/helpers.js",
         "components/module_parser.js",
+        "components/i18n.js",
         "lib/Chart.bundle.min.js",
         "main.js"
       ],
