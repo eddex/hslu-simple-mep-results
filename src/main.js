@@ -331,7 +331,7 @@ function createChart(div, modules) {
 
     // calculate how many credits were achieved for each semester
     modules.forEach(m => {
-        if (m.grade != 'F' && m.semester != undefined) {
+        if (m.passed && m.semester != undefined) {
             creditsDoneBySemesterCount[m.semester] += Number(m.credits);
         }
     })
