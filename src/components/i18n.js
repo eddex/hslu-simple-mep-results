@@ -5,6 +5,7 @@ const i18n = {
 
     /**
      * Returns the language of MyCampus
+     * @returns {string}
      */
     getLanguage: () => {
         languageLinks = document.getElementsByClassName("languagelink");
@@ -18,13 +19,14 @@ const i18n = {
         // fallback to default locale
         if (Helpers.isFirefox()) {
             return (browser.runtime.getManifest()).default_locale
-        } 
+        }
         else {
             return (chrome.runtime.getManifest()).default_locale
         }
     },
     /**
      * Returns the localized message
+     * @param {string} message wo should be localized
      */
     getMessage: async (message) => {
         const language = i18n.getLanguage();
