@@ -116,7 +116,7 @@ async function createModulesTableRow(parsedModule) {
             tr.appendChild(createModulesTableCell(parsedModule.moduleType))
             break;
     }
-    
+
     tr.appendChild(createModulesTableCell(parsedModule.credits));
     tr.appendChild(createModulesTableCell(parsedModule.mark));
     tr.appendChild(createModulesTableCell(parsedModule.grade));
@@ -126,7 +126,6 @@ async function createModulesTableRow(parsedModule) {
 /**
  * Insert a cell into the a row of a table. Text is bold.
  *
- * @param {number} index where to place the header cell.
  * @param {any} row to insert cell.
  * @param {string} text to write into the cell.
  */
@@ -155,7 +154,7 @@ async function createModulesTable(div, modules) {
 
     let tbody = document.createElement('tbody');
 
-    modules.map(async (parsedModule, index)  =>  {
+    modules.map(async (parsedModule, index) => {
         let tr = await createModulesTableRow(parsedModule);
         if (index % 2 == 0) {
             tr.classList.add('colored-row');
