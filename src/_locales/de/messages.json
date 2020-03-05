@@ -29,27 +29,25 @@
     "distribution": {
         "message": "Verteilung"
     },
-
-      "majorModuleInformation":{
-          "message": "*Majormodule sind spezielle Erweiterungsmodule. Falls alle 24 ECTS eines Majors erreicht wurden, erhält man diesen."
-      },
-
-      "majorModule": {
+    "majorModuleInformation": {
+        "message": "*Majormodule sind spezielle Erweiterungsmodule. Falls alle 24 ECTS eines Majors erreicht wurden, erhält man diesen."
+    },
+    "majorModule": {
         "message": "Majormodul"
-      },
-
-      "coreModule": {
+    },
+    "coreModule": {
         "message": "Kernmodul"
-      },
-
-      "projectModule": {
+    },
+    "projectModule": {
         "message": "Projektmodul"
-      },
-
-      "additionalModule": {
+    },
+    "additionalModule": {
         "message": "Zusatzmodul"
-      },
-      "extensionModule": {
+    },
+    "extensionModule": {
         "message": "Erweiterungsmodul"
-      }
+    },
+    "passed": {
+        "message": "Bestanden"
+    }
 }
