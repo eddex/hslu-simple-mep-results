@@ -166,6 +166,7 @@ const ModuleParser = {
             .slice()
             .reverse()
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
+        const passedMessage = await i18n.getMessage("passed");
 
         anlasslistApiResponse.items.forEach(item => {
 
@@ -179,6 +180,15 @@ const ModuleParser = {
             parsedModule.passed = passed;
 
             parsedModule.mark = item.note === null ? 'n/a' : item.note;
+            if (item.note != null) {
+                parsedModule.mark = item.note;
+            }
+            else if (passed) {
+                parsedModule.mark = passedMessage;
+            }
+            else {
+                parsedModule.mark = 'n/a';
+            }
             parsedModule.grade = item.grade === null ? 'n/a' : item.grade;
             parsedModule.name = item.anlassnumber;
             parsedModule.from = item.from;
