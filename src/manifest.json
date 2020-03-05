@@ -21,8 +21,8 @@
       ],
       "js": [
         "components/helpers.js",
-        "components/module_parser.js",
         "components/i18n.js",
+        "components/module_parser.js",
         "lib/Chart.bundle.min.js",
         "main.js"
       ],
