@@ -125,7 +125,18 @@ const ModuleParser = {
             return null;
         }
     },
-
+    /**
+     *  check if a module is valid
+     *  the modulename should look like this: I.BA_ANLS.F1901
+     */
+    validateModule: (hsluModule) => {
+        const moduleNameRegex = /^(\w+)\.(.+)\.[FH]\d{4}/g;
+        const hasCredits = (ModuleParser.getItemDetailsValueByKey(hsluModule.details, 'ECTS-Punkte'));
+        if (moduleNameRegex.test(hsluModule.anlassnumberd) && hasCredits) {
+            return true
+        }
+        return false
+    },
     /**
     * Generates an array of module objects using the API and the module type mapping json file.
     */
