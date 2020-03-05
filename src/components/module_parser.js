@@ -158,6 +158,10 @@ const ModuleParser = {
 
         anlasslistApiResponse.items.forEach(item => {
 
+            if (!(ModuleParser.validateModule(item))) {
+                console.log("Not valid module: ", item.anlassnumber);
+                return;
+            }
             let parsedModule = {};
 
             let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
