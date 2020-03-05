@@ -41,7 +41,7 @@ const ModuleParser = {
 
     /**
      * Calculate the semester.
-     * 
+     *
      * @param {string} hsluModuleName: is the 'anlassnumber',
      *  e.g. 'I.BA_BCHAIN.H1901'.
      */
@@ -131,8 +131,9 @@ const ModuleParser = {
      */
     validateModule: (hsluModule) => {
         const moduleNameRegex = /^(\w+)\.(.+)\.[FH]\d{4}/g;
-        const hasCredits = (ModuleParser.getItemDetailsValueByKey(hsluModule.details, 'ECTS-Punkte'));
-        if (moduleNameRegex.test(hsluModule.anlassnumberd) && hasCredits) {
+        const creditsKey = 'ECTS-Punkte';
+        const hasCredits = (ModuleParser.getItemDetailsValueByKey(hsluModule.details, creditsKey));
+        if (moduleNameRegex.test(hsluModule.anlassnumber) && hasCredits) {
             return true
         }
         return false
