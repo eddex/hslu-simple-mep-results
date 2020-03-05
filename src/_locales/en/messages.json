@@ -1,0 +1,50 @@
+{
+    "ectsPoints": {
+        "message": "ECTS-Points"
+    },
+    "moduleTypesSummary": {
+        "message": "Module type summary"
+    },
+    "mark": {
+        "message": "Mark"
+    },
+    "moduleSummary": {
+        "message": "Summary of modules"
+    },
+    "moduleName": {
+        "message": "Module name"
+    },
+    "moduleType": {
+        "message": "Module type"
+    },
+    "evaluation": {
+        "message": "Evaluation"
+    },
+    "grade": {
+        "message": "Grade"
+    },
+    "quantity": {
+        "message": "Quantity"
+    },
+    "distribution": {
+        "message": "Distribution"
+    },
+    "majorModuleInformation": {
+        "message": "*Majorsmodules are a kinde of extensionmodules. If you got all 24 ETCS of a major, you get rewarded with a fancy title"
+    },
+    "majorModule": {
+        "message": "Major module"
+    },
+    "coreModule": {
+        "message": "Core module"
+    },
+    "projectModule": {
+        "message": "Project module"
+    },
+    "additionalModule": {
+        "message": "Additional module"
+    },
+    "extensionModule": {
+        "message": "Extension module"
+    }
+}

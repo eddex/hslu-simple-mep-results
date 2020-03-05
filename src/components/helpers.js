@@ -34,7 +34,7 @@ const Helpers = {
 
     /**
      * Checks if browser is Firefox or Chromium based
-     * 
+     *
      * @returns: true if the used browser is firefox and false if not
      */
     isFirefox: () => {
@@ -74,7 +74,7 @@ const Helpers = {
     /**
      * This Helper function returns the moduleList, specific to the used browser
      * Chome and Firefox have different APIs for this.
-     * 
+     *
      * @returns: moduleList
      */
     getModuleListFromLocalStorage: async () => {

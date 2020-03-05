@@ -1,0 +1,43 @@
+/**
+ * Component for localization functions.
+ */
+
+/**
+ * Returns the language of MyCampus
+ * @returns {string}
+ */
+const getMyCampusLanguage = () => {
+    languageLinks = document.getElementsByClassName("languagelink");
+    for (let i = 0; i < languageLinks.length; i++) {
+        const languageLink = languageLinks[i];
+        if (languageLink.classList.contains("active")) {
+            return languageLink.hreflang;
+        }
+    }
+
+    // fallback to default locale
+    if (Helpers.isFirefox()) {
+        return (browser.runtime.getManifest()).default_locale
+    }
+    else {
+        return (chrome.runtime.getManifest()).default_locale
+    }
+}
+
+const i18n = {
+
+    /**
+     * Returns the localized message
+     * @param {string} message wo should be localized
+     */
+    getMessage: async (message) => {
+        const language = getMyCampusLanguage();
+        const messages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + language + '/messages.json'))
+            .then(response => response.json())
+        if (message in messages) {
+            return messages[message].message
+        }
+        return undefined
+    },
+}
+
