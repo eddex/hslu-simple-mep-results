@@ -46,17 +46,23 @@ const ModuleParser = {
      *  e.g. 'I.BA_BCHAIN.H1901'.
      */
     calculateSemester: (hsluModuleName, firstModule) => {
+        let semester = undefined;
 
         const startYear = new Date(firstModule.from).getFullYear();
         const isStartInAutumn = ModuleParser.isAutumnSemester(firstModule.anlassnumber);
 
         const lastPart = hsluModuleName.split('.')[2];
+        if (lastPart === undefined) {
+            // we need this early abort because of entries like 'I.WEIHNACHT_19'
+            // (which is not even a real module!)
+            return semester;
+        }
+
         const moduleYear = Number('20' + lastPart.substring(1, 3));
         const isModuleInAutumn = ModuleParser.isAutumnSemester(hsluModuleName);
 
         const yearDifference = (moduleYear - startYear)
 
-        let semester = undefined;
         if (isModuleInAutumn === undefined) {
             // we need this early abort because of entries like 'I.BA_PTA_b.1618'
             // (which is not even a real module!)
