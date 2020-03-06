@@ -167,7 +167,7 @@ const ModuleParser = {
             .slice()
             .reverse()
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
-        const passedMessage = await i18n.getMessage("passed");
+        const passedMessage = await i18n.getMessage("Bestanden");
 
         anlasslistApiResponse.items.forEach(item => {
 

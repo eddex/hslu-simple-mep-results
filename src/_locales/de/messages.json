@@ -1,53 +1,53 @@
 {
-    "ectsPoints": {
+    "Etcspunkte": {
         "message": "ECTS-Punkte"
     },
-    "moduleTypesSummary": {
+    "Moduletypenubersicht": {
         "message": "Modultypen Übersicht"
     },
-    "mark": {
+    "Noten": {
         "message": "Noten"
     },
-    "moduleSummary": {
+    "Modulubersicht": {
         "message": "Modulübersicht"
     },
-    "moduleName": {
+    "Modulname": {
         "message": "Modul-Name"
     },
-    "moduleType": {
+    "Modultyp": {
         "message": "Modul-Typ"
     },
-    "evaluation": {
+    "Bewertung": {
         "message": "Bewertung"
     },
-    "grade": {
+    "Grad": {
         "message": "Grad"
     },
-    "quantity": {
+    "Anzahl": {
         "message": "Anzahl"
     },
-    "distribution": {
+    "Verteilung": {
         "message": "Verteilung"
     },
-    "majorModuleInformation": {
+    "Majormodulinformation": {
         "message": "*Majormodule sind spezielle Erweiterungsmodule. Falls alle 24 ECTS eines Majors erreicht wurden, erhält man diesen."
     },
-    "majorModule": {
+    "Majormodul": {
         "message": "Majormodul"
     },
-    "coreModule": {
+    "Kernmodul": {
         "message": "Kernmodul"
     },
-    "projectModule": {
+    "Projektmodul": {
         "message": "Projektmodul"
     },
-    "additionalModule": {
+    "Zusatzmodul": {
         "message": "Zusatzmodul"
     },
-    "extensionModule": {
+    "Erweiterungsmodul": {
         "message": "Erweiterungsmodul"
     },
-    "passed": {
+    "Bestanden": {
         "message": "Bestanden"
     }
 }

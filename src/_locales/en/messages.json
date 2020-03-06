@@ -1,53 +1,53 @@
 {
-    "ectsPoints": {
+    "Etcspunkte": {
         "message": "ECTS-Points"
     },
-    "moduleTypesSummary": {
+    "Moduletypenubersicht": {
         "message": "Module type summary"
     },
-    "mark": {
+    "Noten": {
         "message": "Mark"
     },
-    "moduleSummary": {
+    "Modulubersicht": {
         "message": "Summary of modules"
     },
-    "moduleName": {
+    "Modulname": {
         "message": "Module name"
     },
-    "moduleType": {
+    "Modultyp": {
         "message": "Module type"
     },
-    "evaluation": {
+    "Bewertung": {
         "message": "Evaluation"
     },
-    "grade": {
+    "Grad": {
         "message": "Grade"
     },
-    "quantity": {
+    "Anzahl": {
         "message": "Quantity"
     },
-    "distribution": {
+    "Verteilung": {
         "message": "Distribution"
     },
-    "majorModuleInformation": {
+    "Majormodulinformation": {
         "message": "*Majorsmodules are a kinde of extensionmodules. If you got all 24 ETCS of a major, you get rewarded with a fancy title"
     },
-    "majorModule": {
+    "Majormodul": {
         "message": "Major module"
     },
-    "coreModule": {
+    "Kernmodul": {
         "message": "Core module"
     },
-    "projectModule": {
+    "Projektmodul": {
         "message": "Project module"
     },
-    "additionalModule": {
+    "Zusatzmodul": {
         "message": "Additional module"
     },
-    "extensionModule": {
+    "Erweiterungsmodul": {
         "message": "Extension module"
     },
-    "passed": {
+    "Bestanden": {
         "message": "passed"
     }
 }
