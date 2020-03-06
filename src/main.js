@@ -91,26 +91,26 @@ function createModulesTableCell(text) {
 /**
  * Create one row of the modules table.
  */
-async function createModulesTableRow(parsedModule) {
+function createModulesTableRow(parsedModule) {
     let tr = document.createElement('tr');
     tr.appendChild(createModulesTableCell(parsedModule.name));
 
     // get correct localization for the moduletype
     switch (parsedModule.moduleType) {
         case "Kernmodul":
-            tr.appendChild(createModulesTableCell(await i18n.getMessage("coreModule")))
+            tr.appendChild(createModulesTableCell(i18n.getMessage("coreModule")))
             break;
         case "Projektmodul":
-            tr.appendChild(createModulesTableCell(await i18n.getMessage("projectModule")))
+            tr.appendChild(createModulesTableCell(i18n.getMessage("projectModule")))
             break;
         case "Zusatzmodul":
-            tr.appendChild(createModulesTableCell(await i18n.getMessage("additionalModule")))
+            tr.appendChild(createModulesTableCell(i18n.getMessage("additionalModule")))
             break;
         case "Erweiterungsmodul":
-            tr.appendChild(createModulesTableCell(await i18n.getMessage("extensionModule")))
+            tr.appendChild(createModulesTableCell(i18n.getMessage("extensionModule")))
             break;
         case "Majormodul":
-            tr.appendChild(createModulesTableCell(await i18n.getMessage("majorModule")))
+            tr.appendChild(createModulesTableCell(i18n.getMessage("majorModule")))
             break;
         default:
             tr.appendChild(createModulesTableCell(parsedModule.moduleType))
@@ -140,22 +140,22 @@ function insertTableHeaderCell(row, text) {
  * Shows Module Identifier (Nummer), Credits (ECTS), Module-Type, Numeric Mark (1-6) and Grade (A-F).
  *
  */
-async function createModulesTable(div, modules) {
+function createModulesTable(div, modules) {
 
     let table = document.createElement('table');
 
     let header = table.createTHead();
     let headerRow = header.insertRow(0);
-    insertTableHeaderCell(headerRow, await i18n.getMessage("moduleName"));
-    insertTableHeaderCell(headerRow, await i18n.getMessage("moduleType"));
-    insertTableHeaderCell(headerRow, await i18n.getMessage("ectsPoints"));
-    insertTableHeaderCell(headerRow, await i18n.getMessage("evaluation"));
-    insertTableHeaderCell(headerRow, await i18n.getMessage("grade"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("moduleName"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("moduleType"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("ectsPoints"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("evaluation"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("grade"));
 
     let tbody = document.createElement('tbody');
 
-    modules.map(async (parsedModule, index) => {
-        let tr = await createModulesTableRow(parsedModule);
+    modules.map((parsedModule, index) => {
+        let tr = createModulesTableRow(parsedModule);
         if (index % 2 == 0) {
             tr.classList.add('colored-row');
         }
@@ -188,12 +188,12 @@ async function createCreditsByModuleTypeTable(div) {
     let template = await fetch(Helpers.getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
         .then(response => response.text());
 
-    template = template.replace("MAJORMODULEINFORMATION", await i18n.getMessage("majorModuleInformation"))
-    template = template.replace("COREMODULE", await i18n.getMessage("coreModule"))
-    template = template.replace("MAJORMODULE", await i18n.getMessage("majorModule"))
-    template = template.replace("EXTENSIONMODULE", await i18n.getMessage("extensionModule"))
-    template = template.replace("PROJECTMODULE", await i18n.getMessage("projectModule"))
-    template = template.replace("ADDITIONALMODULE", await i18n.getMessage("additionalModule"))
+    template = template.replace("MAJORMODULEINFORMATION", i18n.getMessage("majorModuleInformation"))
+    template = template.replace("COREMODULE", i18n.getMessage("coreModule"))
+    template = template.replace("MAJORMODULE", i18n.getMessage("majorModule"))
+    template = template.replace("EXTENSIONMODULE", i18n.getMessage("extensionModule"))
+    template = template.replace("PROJECTMODULE", i18n.getMessage("projectModule"))
+    template = template.replace("ADDITIONALMODULE", i18n.getMessage("additionalModule"))
 
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
@@ -222,8 +222,8 @@ async function createGradesOverviewTable(div) {
         let gradePercentageRounded = Math.round(10000 * _Student.gradesCount[gradeId] / _Student.totalGrades) / 100;
         gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
     }
-    gradesTableTemplate = gradesTableTemplate.replace("QUANTITY", await i18n.getMessage("quantity"));
-    gradesTableTemplate = gradesTableTemplate.replace("DISTRIBUTION", await i18n.getMessage("distribution"));
+    gradesTableTemplate = gradesTableTemplate.replace("QUANTITY", i18n.getMessage("quantity"));
+    gradesTableTemplate = gradesTableTemplate.replace("DISTRIBUTION", i18n.getMessage("distribution"));
     gradeOverviewTable.innerHTML = gradesTableTemplate;
     div.insertBefore(gradeOverviewTable, div.firstChild);
 }
@@ -231,9 +231,9 @@ async function createGradesOverviewTable(div) {
 /*
  * Create a heading that displays the number of achieved credits.
  */
-async function createTotalCreditsTitle(div) {
+function createTotalCreditsTitle(div) {
     const progress = Helpers.calculateProgress(_Student.totalCredits, 180);
-    const titleName = await i18n.getMessage("ectsPoints");
+    const titleName = i18n.getMessage("ectsPoints");
     Helpers.addTitleToDocument(div, titleName + ': ' + _Student.totalCredits + '/180 (' + progress + '%)');
 }
 
@@ -267,10 +267,10 @@ function createStudyTitle(div) {
  * Modules with grade F are not counted in the average.
  * A second average is displayed, where the modules with grade F are taken into account.
  */
-async function createAverageMarkTitle(div) {
+function createAverageMarkTitle(div) {
     const average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
     const averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
-    let titleName = await i18n.getMessage("mark");
+    let titleName = i18n.getMessage("mark");
     Helpers.addTitleToDocument(div, titleName + ' Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
@@ -476,26 +476,27 @@ async function generateHtml(modules) {
         return;
     }
     calculateStats(modules);
-    await createModulesTable(div, modules);
-    const titleNameModuleSummary = await i18n.getMessage("moduleSummary")
+    createModulesTable(div, modules);
+    const titleNameModuleSummary = i18n.getMessage("moduleSummary")
     Helpers.addTitleToDocument(div, titleNameModuleSummary);
 
     await createGradesOverviewTable(div);
-    await createAverageMarkTitle(div);
+    createAverageMarkTitle(div);
 
     await createCreditsByModuleTypeTable(div);
-    const titleNameModuleTypesSummary = await i18n.getMessage("moduleTypesSummary");
+    const titleNameModuleTypesSummary = i18n.getMessage("moduleTypesSummary");
     Helpers.addTitleToDocument(div, titleNameModuleTypesSummary);
 
     createChart(div, modules);
     createTotalCreditsProgressBar(div);
-    await createTotalCreditsTitle(div);
+    createTotalCreditsTitle(div);
 
     createStudyTitle(div);
 }
 
 async function start() {
     await getStudentInformations();
+    await i18n.init();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
 }
