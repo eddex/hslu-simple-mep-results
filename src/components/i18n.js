@@ -31,8 +31,7 @@ let messages;
 const i18n = {
 
     /**
-     * Populates the MyCampus informations
-     * @param {string} text to put into the cell.
+     * Gets the right language and the corresponding message file
      */
     init: async () => {
 
