@@ -175,20 +175,22 @@ const ModuleParser = {
             .slice()
             .reverse()
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
+
         const passedMessage = await i18n.getMessage("Bestanden");
 
         anlasslistApiResponse.items.forEach(item => {
-
-            if (!(ModuleParser.validateModule(item))) {
-                console.log("Not valid module: ", item.anlassnumber);
-                return;
-            }
             let parsedModule = {};
+            if (ModuleParser.validateModuleName(item.anlassnumber)) {
+                parsedModule.semester = ModuleParser.calculateSemester(item.anlassnumber, firstModule);
+            }
+            else {
+                console.log("Not valid modulename: ", item.anlassnumber);
+                parsedModule.semester = undefined
+            }
 
             let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
             parsedModule.passed = passed;
 
-            parsedModule.mark = item.note === null ? 'n/a' : item.note;
             if (item.note != null) {
                 parsedModule.mark = item.note;
             }
