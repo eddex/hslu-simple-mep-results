@@ -129,11 +129,19 @@ const ModuleParser = {
      *  check if a module is valid
      *  the modulename should look like this: I.BA_ANLS.F1901
      */
-    validateModule: (hsluModule) => {
+    validateModuleName: (moduleName) => {
+        /**
+         * '^'      matches the beginning of the string, or the beginning of a line
+         * '(\w+)'  matches every word characters
+         * '\.'     matches 1x '.' character
+         * '(.+)'   matches every character and following
+         * '[FH]'   matches if 'F' or 'H'
+         * '\d{4}'  matches 4 digit character
+         *
+         * Only if all of them are matching in the right order test() returns true
+         * */
         const moduleNameRegex = /^(\w+)\.(.+)\.[FH]\d{4}/g;
-        const creditsKey = 'ECTS-Punkte';
-        const hasCredits = (ModuleParser.getItemDetailsValueByKey(hsluModule.details, creditsKey));
-        if (moduleNameRegex.test(hsluModule.anlassnumber) && hasCredits) {
+        if (moduleNameRegex.test(moduleName)) {
             return true
         }
         return false
