@@ -205,13 +205,12 @@ const ModuleParser = {
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
-            parsedModule.semester = ModuleParser.calculateSemester(item.anlassnumber, firstModule);
 
-            let details = item.details;
+            const details = item.details;
             const creditsKey = 'ECTS-Punkte';
             parsedModule.credits = ModuleParser.getItemDetailsValueByKey(details, creditsKey);
 
-            let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
+            const moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
             parsedModule.moduleType = moduleTypeList[moduleId];
 
             // all modules from SZ (Sprachzentrum) are 'Zusatzmodul'
