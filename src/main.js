@@ -94,7 +94,7 @@ function createModulesTableCell(text) {
 function createModulesTableRow(parsedModule) {
     let tr = document.createElement('tr');
     tr.appendChild(createModulesTableCell(parsedModule.name));
-    tr.appendChild(createModulesTableCell(parsedModule.moduleType));
+    tr.appendChild(createModulesTableCell(i18n.getMessage(parsedModule.moduleType)))
     tr.appendChild(createModulesTableCell(parsedModule.credits));
     tr.appendChild(createModulesTableCell(parsedModule.mark));
     tr.appendChild(createModulesTableCell(parsedModule.grade));
@@ -104,7 +104,6 @@ function createModulesTableRow(parsedModule) {
 /**
  * Insert a cell into the a row of a table. Text is bold.
  *
- * @param {number} index where to place the header cell.
  * @param {any} row to insert cell.
  * @param {string} text to write into the cell.
  */
@@ -125,11 +124,11 @@ function createModulesTable(div, modules) {
 
     let header = table.createTHead();
     let headerRow = header.insertRow(0);
-    insertTableHeaderCell(headerRow, 'Modul-Name');
-    insertTableHeaderCell(headerRow, 'Modul-Typ');
-    insertTableHeaderCell(headerRow, 'ECTS-Punkte');
-    insertTableHeaderCell(headerRow, 'Bewertung');
-    insertTableHeaderCell(headerRow, 'Grad');
+    insertTableHeaderCell(headerRow, i18n.getMessage("Modulname"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("Modultyp"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("Etcspunkte"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("Bewertung"));
+    insertTableHeaderCell(headerRow, i18n.getMessage("Grad"));
 
     let tbody = document.createElement('tbody');
 
@@ -164,9 +163,16 @@ function addProgressTextToTemplate(elementId, creditsByModuleType) {
  * Create a table that shows how many ECTS for each type of module have been achieved.
  */
 async function createCreditsByModuleTypeTable(div) {
-
     let template = await fetch(Helpers.getExtensionInternalFileUrl('templates/credits_by_module_type_table.html'))
         .then(response => response.text());
+
+    template = template.replace("MAJORMODULEINFORMATION", i18n.getMessage("Majormodulinformation"))
+    template = template.replace("COREMODULE", i18n.getMessage("Kernmodul"))
+    template = template.replace("MAJORMODULE", i18n.getMessage("Majormodul"))
+    template = template.replace("EXTENSIONMODULE", i18n.getMessage("Erweiterungsmodul"))
+    template = template.replace("PROJECTMODULE", i18n.getMessage("Projektmodul"))
+    template = template.replace("ADDITIONALMODULE", i18n.getMessage("Zusatzmodul"))
+
     let creditsByModuleTypeTable = document.createElement('div');
     creditsByModuleTypeTable.innerHTML = template;
     div.insertBefore(creditsByModuleTypeTable, div.firstChild);
@@ -194,6 +200,8 @@ async function createGradesOverviewTable(div) {
         let gradePercentageRounded = Math.round(10000 * _Student.gradesCount[gradeId] / _Student.totalGrades) / 100;
         gradesTableTemplate = gradesTableTemplate.replace('percentage-' + gradeId, gradePercentageRounded + "%");
     }
+    gradesTableTemplate = gradesTableTemplate.replace("QUANTITY", i18n.getMessage("Anzahl"));
+    gradesTableTemplate = gradesTableTemplate.replace("DISTRIBUTION", i18n.getMessage("Verteilung"));
     gradeOverviewTable.innerHTML = gradesTableTemplate;
     div.insertBefore(gradeOverviewTable, div.firstChild);
 }
@@ -203,7 +211,8 @@ async function createGradesOverviewTable(div) {
  */
 function createTotalCreditsTitle(div) {
     const progress = Helpers.calculateProgress(_Student.totalCredits, 180);
-    Helpers.addTitleToDocument(div, 'ECTS-Punkte: ' + _Student.totalCredits + '/180 (' + progress + '%)');
+    const titleName = i18n.getMessage("Etcspunkte");
+    Helpers.addTitleToDocument(div, titleName + ': ' + _Student.totalCredits + '/180 (' + progress + '%)');
 }
 
 /*
@@ -237,9 +246,10 @@ function createStudyTitle(div) {
  * A second average is displayed, where the modules with grade F are taken into account.
  */
 function createAverageMarkTitle(div) {
-    let average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
-    let averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
-    Helpers.addTitleToDocument(div, 'Noten Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
+    const average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
+    const averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
+    let titleName = i18n.getMessage("Noten");
+    Helpers.addTitleToDocument(div, titleName + ' Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
 
 /*
@@ -331,7 +341,7 @@ function createChart(div, modules) {
 
     // calculate how many credits were achieved for each semester
     modules.forEach(m => {
-        if (m.grade != 'F' && m.semester != undefined) {
+        if (m.passed && m.semester != undefined) {
             creditsDoneBySemesterCount[m.semester] += Number(m.credits);
         }
     })
@@ -443,16 +453,18 @@ async function generateHtml(modules) {
         div.insertBefore(p, div.firstChild);
         return;
     }
-
     calculateStats(modules);
     createModulesTable(div, modules);
-    Helpers.addTitleToDocument(div, 'Modulübersicht');
+    const titleNameModuleSummary = i18n.getMessage("Modulubersicht")
+    Helpers.addTitleToDocument(div, titleNameModuleSummary);
 
     await createGradesOverviewTable(div);
     createAverageMarkTitle(div);
 
     await createCreditsByModuleTypeTable(div);
-    Helpers.addTitleToDocument(div, 'Modultypen Übersicht');
+    const titleNameModuleTypesSummary = i18n.getMessage("Moduletypenubersicht");
+    Helpers.addTitleToDocument(div, titleNameModuleTypesSummary);
+
     createChart(div, modules);
     createTotalCreditsProgressBar(div);
     createTotalCreditsTitle(div);
@@ -462,6 +474,7 @@ async function generateHtml(modules) {
 
 async function start() {
     await getStudentInformations();
+    await i18n.init();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
 }
