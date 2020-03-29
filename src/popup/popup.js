@@ -166,10 +166,42 @@ async function addCustomModule() {
     await setModuleList(moduleList);
 }
 
+async function localizePopup() {
+    await i18n.init();
+
+    document.getElementById('textName').innerHTML = i18n.getMessage('Name') + ":"
+    document.getElementById('textModuleType').innerHTML = i18n.getMessage('Modultyp') + ":"
+    document.getElementById('textYear').innerHTML = i18n.getMessage('Jahr') + ":"
+    document.getElementById('textSemester').innerHTML = i18n.getMessage('Semester') + ":"
+    document.getElementById('textMark').innerHTML = i18n.getMessage('Noten')
+    document.getElementById('textGrad').innerHTML = i18n.getMessage('Grad') + ":"
+    document.getElementById('optionAdditionalmodule').innerHTML = i18n.getMessage('Zusatzmodul')
+
+    // grade and mark comments
+    document.getElementById('commentGrade').innerHTML = i18n.getMessage('KommentarGrad')
+    document.getElementById('commentMark').innerHTML = i18n.getMessage('KommentarNote')
+
+    // moduletype options
+    document.getElementById('optionCoremodule').innerHTML = i18n.getMessage('Kernmodul')
+    document.getElementById('optionProjectmodule').innerHTML = i18n.getMessage('Projektmodul')
+    document.getElementById('optionExtensionmodule').innerHTML = i18n.getMessage('Erweiterungsmodul')
+    document.getElementById('optionMajormodule').innerHTML = i18n.getMessage('Majormodul')
+    document.getElementById('optionAdditionalmodule').innerHTML = i18n.getMessage('Zusatzmodul')
+
+    // semester selection
+    document.getElementById('labelAutumn').innerHTML = i18n.getMessage('Herbst')
+    document.getElementById('labelSpring').innerHTML = i18n.getMessage('Fruehling')
+
+
+}
+
 /**
  * init function
  */
 async function start() {
+
+    await localizePopup();
+
     document.getElementById("submitModule").onclick = addCustomModule;
     document.getElementById("removeModule").onclick = removeCustomModule;
 
