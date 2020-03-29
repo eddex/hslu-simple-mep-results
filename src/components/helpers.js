@@ -73,7 +73,7 @@ const Helpers = {
     },
     /**
      * This Helper function returns the moduleList, specific to the used browser
-     * Chome and Firefox have different APIs for this.
+     * Chrome and Firefox have different APIs for this.
      *
      * @returns: moduleList
      */
