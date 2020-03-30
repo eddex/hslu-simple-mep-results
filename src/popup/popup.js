@@ -2,7 +2,7 @@
  * populates the modulelist from local Storage
  */
 async function populateModuleList() {
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
 
     // reset ModuleList
     const selectModuleList = document.getElementById("customModulesList");
@@ -36,7 +36,7 @@ async function showCustomModuleInformation() {
         moduleAcronym = selectModuleList.options[selectedIndex].value;
     }
 
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
     const customModule = moduleList[moduleAcronym];
 
     document.getElementById("moduleCredits").value = customModule.credits;
@@ -109,7 +109,7 @@ async function setModuleList(moduleList) {
  * deletes the selected module from local storage
  */
 async function removeCustomModule() {
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
 
     const selectModuleList = document.getElementById("customModulesList");
 
@@ -152,7 +152,7 @@ async function addCustomModule() {
         moduleMark = 'n/a';
     }
 
-    const moduleList = await Helpers.getModuleListFromLocalStorage();
+    const moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
 
     moduleList[moduleAcronym] = {
         acronym: moduleAcronym,

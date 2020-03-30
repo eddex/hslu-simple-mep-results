@@ -69,16 +69,6 @@ const Helpers = {
         return internal_file;
     },
     /**
-     * This Helper function returns the moduleList, specific to the used browser
-     * Chrome and Firefox have different APIs for this.
-     *
-     * @returns: moduleList
-     */
-    getModuleListFromLocalStorage: async () => {
-        const moduleList = await Helpers.getItemFromLocalStorage("moduleList")
-        return moduleList.moduleList
-    },
-    /**
      * Wrapper function for the storage api
      */
     getItemFromLocalStorage: async (itemID) => {
