@@ -69,7 +69,9 @@ const Helpers = {
         return internal_file;
     },
     /**
-     * Wrapper function for the storage api
+     * Helper function to read from local storage.
+     * It's needed because the chrome and firefox api are diffrent.
+     * Additional the chrome API does not support sync/await, so we fixed that. 
      */
     getItemFromLocalStorage: async (itemID) => {
         if (Helpers.isFirefox()) {

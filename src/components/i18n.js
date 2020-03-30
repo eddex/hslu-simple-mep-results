@@ -16,7 +16,6 @@ async function getLanguage() {
         return (await Helpers.getItemFromLocalStorage("i18nLanguage")).i18nLanguage
     }
 
-
     // fallback to default locale
     if (Helpers.isFirefox()) {
         return (browser.runtime.getManifest()).default_locale
@@ -25,6 +24,10 @@ async function getLanguage() {
         return (chrome.runtime.getManifest()).default_locale
     }
 }
+/**
+ * Saves the language of MyCampus to local storage
+ * @param {String} language 
+ */
 async function setLanguageToLocalStorage(language) {
     if (Helpers.isFirefox()) {
         await browser.storage.local.set({ i18nLanguage: language });
