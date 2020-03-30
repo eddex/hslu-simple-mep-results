@@ -175,7 +175,6 @@ async function localizePopup() {
     document.getElementById('textSemester').innerHTML = i18n.getMessage('Semester') + ":"
     document.getElementById('textMark').innerHTML = i18n.getMessage('Noten')
     document.getElementById('textGrad').innerHTML = i18n.getMessage('Grad') + ":"
-    document.getElementById('optionAdditionalmodule').innerHTML = i18n.getMessage('Zusatzmodul')
 
     // grade and mark comments
     document.getElementById('commentGrade').innerHTML = i18n.getMessage('KommentarGrad')
@@ -186,6 +185,7 @@ async function localizePopup() {
     document.getElementById('optionProjectmodule').innerHTML = i18n.getMessage('Projektmodul')
     document.getElementById('optionExtensionmodule').innerHTML = i18n.getMessage('Erweiterungsmodul')
     document.getElementById('optionMajormodule').innerHTML = i18n.getMessage('Majormodul')
+    document.getElementById('optionAdditionalmodule').innerHTML = i18n.getMessage('Zusatzmodul')
     document.getElementById('optionAdditionalmodule').innerHTML = i18n.getMessage('Zusatzmodul')
 
     // semester selection
