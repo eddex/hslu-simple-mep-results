@@ -468,17 +468,20 @@ function createLoadingIcon() {
         // remove clutter
         document.getElementById('intro').remove();
         document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
-        let div = document.getElementsByClassName('row teaser-section None')[0];
+        const div = document.getElementsByClassName('row teaser-section None')[0];
 
-        let loadingDiv = document.createElement('div');
+        const loadingDiv = document.createElement('div');
         loadingDiv.classList.add('loading-icon', 'columns', 'text-center', 'prepend-top', 'noprint')
         loadingDiv.id = 'hslu_extension_loading-icon'
 
-        let loadingTitle = document.createElement('h1');
-        var loadingText = document.createTextNode("loading extension");
-        loadingTitle.appendChild(loadingText);
+        const loadingTitle = document.createElement('h1');
 
-        let loadingImg = document.createElement('img');
+        console.log("test")
+        const loadingText = i18n.getMessage("LadeExtension");
+        const loadingTextNode = document.createTextNode(loadingText);
+        loadingTitle.appendChild(loadingTextNode);
+
+        const loadingImg = document.createElement('img');
         loadingImg.classList.add('loading-img')
         loadingImg.src = '/Assets/Campus/Common/img/Icons/loading-blue-50x50.gif';
 
@@ -492,9 +495,10 @@ function createLoadingIcon() {
 }
 
 async function start() {
+    await i18n.init();
+
     createLoadingIcon();
     await getStudentInformations();
-    await i18n.init();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
 

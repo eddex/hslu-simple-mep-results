@@ -49,5 +49,8 @@
     },
     "Bestanden": {
         "message": "Bestanden"
+    },
+    "LadeExtension": {
+        "message": "Extension wird geladen"
     }
 }

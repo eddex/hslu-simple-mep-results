@@ -49,5 +49,8 @@
     },
     "Bestanden": {
         "message": "passed"
+    },
+    "LadeExtension": {
+        "message": "loading extension"
     }
 }
