@@ -432,14 +432,6 @@ function createChart(div, modules) {
 
 async function generateHtml(modules) {
 
-    // remove clutter
-    try {
-        document.getElementById('intro').remove();
-        document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
-    } catch (error) {
-        console.log("NOTITLE, DONT CARE");
-    }
-
     let div = document.getElementsByClassName('row teaser-section None')[0];
     div.classList.add('allmighty-container');
 
@@ -471,12 +463,43 @@ async function generateHtml(modules) {
 
     createStudyTitle(div);
 }
+function createLoadingIcon() {
+    try {
+        // remove clutter
+        document.getElementById('intro').remove();
+        document.getElementsByClassName('sidebar medium-7 columns mobile-column')[0].remove();
+        let div = document.getElementsByClassName('row teaser-section None')[0];
+
+        let loadingDiv = document.createElement('div');
+        loadingDiv.classList.add('loading-icon', 'columns', 'text-center', 'prepend-top', 'noprint')
+        loadingDiv.id = 'hslu_extension_loading-icon'
+
+        let loadingTitle = document.createElement('h1');
+        var loadingText = document.createTextNode("loading extension");
+        loadingTitle.appendChild(loadingText);
+
+        let loadingImg = document.createElement('img');
+        loadingImg.classList.add('loading-img')
+        loadingImg.src = '/Assets/Campus/Common/img/Icons/loading-blue-50x50.gif';
+
+        loadingDiv.appendChild(loadingTitle)
+        loadingDiv.appendChild(loadingImg)
+        div.insertBefore(loadingDiv, div.firstChild);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 async function start() {
+    createLoadingIcon();
     await getStudentInformations();
     await i18n.init();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
+
+    //remove loading gif after everything loaded
+    document.getElementById('hslu_extension_loading-icon').remove();
 }
 
 try {
