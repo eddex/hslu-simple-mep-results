@@ -49,5 +49,29 @@
     },
     "Bestanden": {
         "message": "passed"
+    },
+    "Name": {
+        "message": "Name"
+    },
+    "Jahr": {
+        "message": "Year"
+    },
+    "Semester": {
+        "message": "Semester"
+    },
+    "Note": {
+        "message": "Mark"
+    },
+    "KommentarNote": {
+        "message": "[ 0 ] for no evaluation:"
+    },
+    "KommentarGrad": {
+        "message": "[ - ] for no grade"
+    },
+    "Herbst": {
+        "message": "Autumn"
+    },
+    "Fruehling": {
+        "message": "Spring"
     }
 }
