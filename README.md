@@ -84,12 +84,22 @@ Google might remove the extension from the store again, so stay tuned.
   - `LICENSE` file
   - `main.js` file
   - `manifest.json` file
-3. Login to https://addons.mozilla.org/en-US/developers/
+
+3. Update Firefox Release
+  - Login to https://addons.mozilla.org/en-US/developers/
   - HSLU simple MEP results > Edit product page > Upload new version.
   - Download the generated `.xpi` file.
   - Change the end of the filename form `-fx.xpi` to `-firefox.xpi`.
-4. Update `updates.json` with the new release.
-  - To get the `update_hash` generate the sha256 hash of the file.
-  - e.g. `Get-FileHash hslu_simple_mep_results-2.0.8-firefox.xpi` in PowerShell.
-5. Create a branch (e.g. `release/2.0.15`), push your changes and create a pull request.
-6. AFTER(!) the pull request is merged, create a new release in this repo and attach the `.xpi` file.
+  - Update `updates.json` with the new release.
+    - To get the `update_hash` generate the sha256 hash of the file.
+    - e.g. `Get-FileHash hslu_simple_mep_results-2.0.8-firefox.xpi` in PowerShell.
+  - Create a branch (e.g. `release/2.0.15`), push your changes and create a pull request.
+  - AFTER(!) the pull request is merged, create a new release in this repo and attach the `.xpi` file.
+
+4. Update Chrome Release
+- Login to https://chrome.google.com/webstore/devconsole
+- Items > HSLU simple MEP results > Package > Upload new package
+- Update anything that's need updating
+- Save the changes and klick publish
+
+9. Create a new release in this repo and attach the `.xpi` file.
