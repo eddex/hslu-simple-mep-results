@@ -73,10 +73,13 @@ Google might remove the extension from the store again, so stay tuned.
 ## Create a new release
 
 1. Update the version number in `src/manifest.json`.
-2. Add everthing from `src` to a `.zip` file:
+2. Add everthing from `src/` to a `.zip` file:
+  - `_locales/` directory
+  - `components/` directory
   - `data/` directory
   - `icons/` directory
   - `lib/` directory
+  - `popup/` directory
   - `templates/` directory
   - `LICENSE` file
   - `main.js` file
@@ -88,5 +91,5 @@ Google might remove the extension from the store again, so stay tuned.
 4. Update `updates.json` with the new release.
   - To get the `update_hash` generate the sha256 hash of the file.
   - e.g. `Get-FileHash hslu_simple_mep_results-2.0.8-firefox.xpi` in PowerShell.
-5. Push your changes!
-6. Create a new release in this repo and attach the `.xpi` file.
+5. Create a branch (e.g. `release/2.0.15`), push your changes and create a pull request.
+6. AFTER(!) the pull request is merged, create a new release in this repo and attach the `.xpi` file.
