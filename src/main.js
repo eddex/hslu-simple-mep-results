@@ -463,6 +463,9 @@ async function generateHtml(modules) {
 
     createStudyTitle(div);
 }
+/**
+ * Creates a the loading gif from the MyCampus website
+ */
 function createLoadingIcon() {
     try {
         // remove clutter
@@ -476,7 +479,6 @@ function createLoadingIcon() {
 
         const loadingTitle = document.createElement('h1');
 
-        console.log("test")
         const loadingText = i18n.getMessage("LadeExtension");
         const loadingTextNode = document.createTextNode(loadingText);
         loadingTitle.appendChild(loadingTextNode);
@@ -496,8 +498,8 @@ function createLoadingIcon() {
 
 async function start() {
     await i18n.init();
-
     createLoadingIcon();
+    
     await getStudentInformations();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
