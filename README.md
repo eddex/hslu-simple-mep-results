@@ -16,11 +16,56 @@
 # HSLU simple MEP results
 This browser add-on extends the page ['Meine Andmeldungen'](https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/) on the HSLU MyCampus website.
 
-Brought to you by [@Lextum](https://github.com/Lextum) and [@eddex](https://github.com/eddex)
+# Contributors
+
+This project is maintained by [@Lextum](https://github.com/Lextum) and [@eddex](https://github.com/eddex).
+
+<a href="https://github.com/Lextum">
+  <img src="https://avatars1.githubusercontent.com/u/5988613?s=40&v=4" />
+</a>
+<a href="https://github.com/eddex">
+  <img src="https://avatars2.githubusercontent.com/u/5302085?s=40&v=4" />
+</a>
+
+Thanks to everyone who contributed to this project in the form of code or reporting issues!
+
+<a href="https://github.com/dev-jan">
+  <img src="https://avatars3.githubusercontent.com/u/5829661?s=40&v=4" />
+</a>
+<a href="https://github.com/fliiiix">
+  <img src="https://avatars1.githubusercontent.com/u/1682954?s=40&v=4" />
+</a>
+<a href="https://github.com/timofurrer">
+  <img src="https://avatars2.githubusercontent.com/u/1008252?s=40&v=4" />
+</a>
+<a href="https://github.com/Elmeche">
+  <img src="https://avatars0.githubusercontent.com/u/49430274?s=40&v=4" height="40px" />
+</a>
+<a href="https://github.com/janedoekills">
+  <img src="https://avatars0.githubusercontent.com/u/39761062?s=40&v=4" />
+</a>
+<a href="https://github.com/florianbaer">
+  <img src="https://avatars0.githubusercontent.com/u/3041156?s=44&v=4" />
+</a>
+<a href="https://github.com/nerrehmit">
+  <img src="https://avatars2.githubusercontent.com/u/15264624?s=40&v=4" />
+</a>
+<a href="https://github.com/retostadelmann">
+  <img src="https://avatars3.githubusercontent.com/u/10433328?s=40&v=4" />
+</a>
+<a href="https://github.com/vigi86">
+  <img src="https://avatars2.githubusercontent.com/u/8401847?s=40&v=4" />
+</a>
+<a href="https://github.com/TheHuebschi">
+  <img src="https://avatars2.githubusercontent.com/u/33907022?s=40&v=4" />
+</a>
+<a href="https://github.com/wullli">
+  <img src="https://avatars3.githubusercontent.com/u/29056346?s=40&v=4" />
+</a>
 
 Want to add some missing modules, fix a bug or add a new, awesome feature? That's great. But please read [CONTRIBUTING.md](CONTRIBUTING.md) first!
 
-## Features
+# Features
 
 ![screenshot](screenshot.png)
 
@@ -30,11 +75,11 @@ The browser add-on extends the page with the following features:
 - An overview of your grades including grade distribution and average.
 - A chart to visualize your credit progress.
 
-## Installation
+# Installation
 
 You only have to install the extension once. After this you'll get automatic updates!
 
-### Firefox
+## Firefox
 
 **Releases** (recommended)
 
@@ -51,7 +96,7 @@ You only have to install the extension once. After this you'll get automatic upd
 - Select any file in the downloaded folder
 - Open https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/
 
-### Chrome
+## Chrome
 
 **Releases** (recommended)
 - Install the extension from the [chrome web store
