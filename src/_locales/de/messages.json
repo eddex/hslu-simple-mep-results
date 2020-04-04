@@ -52,5 +52,29 @@
     },
     "LadeExtension": {
         "message": "Extension wird geladen"
+    },
+    "Name": {
+        "message": "Name"
+    },
+    "Jahr": {
+        "message": "Jahr"
+    },
+    "Semester": {
+        "message": "Semester"
+    },
+    "Note": {
+        "message": "Note"
+    },
+    "KommentarNote": {
+        "message": "[ 0 ] für keine Bewertung:"
+    },
+    "KommentarGrad": {
+        "message": "[ - ] für keinen Grad"
+    },
+    "Herbst": {
+        "message": "Herbst"
+    },
+    "Fruehling": {
+        "message": "Frühling"
     }
 }
