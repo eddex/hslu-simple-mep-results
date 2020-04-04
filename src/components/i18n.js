@@ -22,9 +22,6 @@ const getLanguage = () => {
 
 }
 
-let messages;
-
-
 /**
  * Component for localization functions.
  */
