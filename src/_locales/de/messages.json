@@ -50,6 +50,9 @@
     "Bestanden": {
         "message": "Bestanden"
     },
+    "LadeExtension": {
+        "message": "Extension wird geladen"
+    },
     "Name": {
         "message": "Name"
     },

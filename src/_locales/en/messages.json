@@ -50,6 +50,9 @@
     "Bestanden": {
         "message": "passed"
     },
+    "LadeExtension": {
+        "message": "loading extension"
+    },
     "Name": {
         "message": "Name"
     },

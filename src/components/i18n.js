@@ -24,6 +24,7 @@ async function getLanguage() {
         return (chrome.runtime.getManifest()).default_locale
     }
 }
+
 /**
  * Saves the language of MyCampus to local storage
  * @param {String} language 
