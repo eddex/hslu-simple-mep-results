@@ -2,14 +2,22 @@
     <a href="https://github.com/eddex/hslu-simple-mep-results/blob/master/LICENSE" alt="License">
       <img src="https://img.shields.io/github/license/eddex/hslu-simple-mep-results">
     </a>
-    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="Release">
-      <img src="https://img.shields.io/github/v/release/eddex/hslu-simple-mep-results">
+  <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="GithubTotalDownloads">
+    <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/total?label=github%20downloads">
     </a>
-    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="TotalDownloads">
-      <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/total">
+  <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="GithubLatestReleaseDownloads">
+    <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/latest/total?label=firefox%20downloads@latest">
     </a>
-    <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="LatestReleaseDownloads">
-      <img src="https://img.shields.io/github/downloads/eddex/hslu-simple-mep-results/latest/total">
+  <a href="https://chrome.google.com/webstore/detail/hslu-simple-mep-results/bkcgbpgefenaapagldnnabfakilmfihp?authuser=0&hl=de" alt="ChromeActiveUsers">
+    <img src="https://img.shields.io/chrome-web-store/users/bkcgbpgefenaapagldnnabfakilmfihp?label=chrome%20users">
+  </a>
+</p>
+<p align="center">
+  <a href="https://github.com/eddex/hslu-simple-mep-results/releases" alt="FirefoxVersion">
+    <img src="https://img.shields.io/github/v/release/eddex/hslu-simple-mep-results?label=firefox%20version">
+  </a>
+  <a href="https://chrome.google.com/webstore/detail/hslu-simple-mep-results/bkcgbpgefenaapagldnnabfakilmfihp?authuser=0&hl=de" alt="FirefoxVersion">
+    <img src="https://img.shields.io/chrome-web-store/v/bkcgbpgefenaapagldnnabfakilmfihp?label=chrome%20version">
     </a>
 </p>
 
