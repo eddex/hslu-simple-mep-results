@@ -116,5 +116,17 @@ const Helpers = {
                     });
                 });
         }
+    },
+    /**
+     *
+     * @param {Object} obj { moduleList: moduleList }
+     */
+    saveObjectInLocalStorage: async (obj) => {
+        if (Helpers.isFirefox()) {
+            await browser.storage.local.set(obj);
+        }
+        else {
+            await chrome.storage.local.set(obj);
+        }
     }
 }
