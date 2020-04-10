@@ -22,7 +22,7 @@
 </p>
 
 # HSLU simple MEP results
-This browser add-on extends the page ['Meine Andmeldungen'](https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/) on the HSLU MyCampus website.
+This browser add-on extends the page ['Meine Anmeldungen'](https://mycampus.hslu.ch/de-ch/stud-i/mein-studium/meine-anmeldungen/) on the HSLU MyCampus website.
 
 # Contributors
 
@@ -97,7 +97,7 @@ You only have to install the extension once. After this you'll get automatic upd
   - Press the gear-button and select *Install Add-on from File...*
   - Select the downloaded `.xpi` file
 
-**From  sources**
+**From sources**
 - Clone / download this repo (and unzip it)
 - Open `about:debugging`
 - On the Add-ons tab click `<Load Temporary Add-on..>`
@@ -126,7 +126,7 @@ Google might remove the extension from the store again, so stay tuned.
 ## Create a new release
 
 1. Update the version number in `src/manifest.json`.
-2. Add everthing from `src/` to a `.zip` file:
+2. Add everything from `src/` to a `.zip` file:
   - `_locales/` directory
   - `components/` directory
   - `data/` directory
