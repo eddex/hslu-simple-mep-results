@@ -275,29 +275,31 @@ function getExtensionInternalFileUrl(filePath) {
 function calculateStats(modules) {
 
     modules.forEach(parsedModule => {
-        if (parsedModule.grade
-            && parsedModule.grade != null
-            && parsedModule.grade != ''
-            && parsedModule.grade != 'n/a') {
-            _Student.gradesCount[parsedModule.grade]++;
-            _Student.totalGrades++;
-        }
-        if (parsedModule.passed) {
-            let credits = Number(parsedModule.credits);
-            _Student.totalCredits += credits;
-            let moduleType = parsedModule.moduleType;
-            if (moduleType in _Student.creditsByModuleTypeCount) {
-                _Student.creditsByModuleTypeCount[moduleType].current += credits;
+        if (parsedModule.UseInStats) {
+            if (parsedModule.grade
+                && parsedModule.grade != null
+                && parsedModule.grade != ''
+                && parsedModule.grade != 'n/a') {
+                _Student.gradesCount[parsedModule.grade]++;
+                _Student.totalGrades++;
             }
-        }
-        // if cell is empty, Number('') returns 0!
-        numericMark = Number(parsedModule.mark)
-        if (!isNaN(numericMark) && numericMark != 0) {
-            _Student.totalNumericMarkWithF += numericMark;
-            _Student.numberOfNumericMarksWithF++;
             if (parsedModule.passed) {
-                _Student.totalNumericMark += numericMark;
-                _Student.numberOfNumericMarks++;
+                let credits = Number(parsedModule.credits);
+                _Student.totalCredits += credits;
+                let moduleType = parsedModule.moduleType;
+                if (moduleType in _Student.creditsByModuleTypeCount) {
+                    _Student.creditsByModuleTypeCount[moduleType].current += credits;
+                }
+            }
+            // if cell is empty, Number('') returns 0!
+            numericMark = Number(parsedModule.mark)
+            if (!isNaN(numericMark) && numericMark != 0) {
+                _Student.totalNumericMarkWithF += numericMark;
+                _Student.numberOfNumericMarksWithF++;
+                if (parsedModule.passed) {
+                    _Student.totalNumericMark += numericMark;
+                    _Student.numberOfNumericMarks++;
+                }
             }
         }
     });
@@ -341,7 +343,7 @@ function createChart(div, modules) {
 
     // calculate how many credits were achieved for each semester
     modules.forEach(m => {
-        if (m.grade != 'F' && m.semester != undefined) {
+        if (m.grade != 'F' && m.semester != undefined && m.UseInStats) {
             creditsDoneBySemesterCount[m.semester] += Number(m.credits);
         }
     })

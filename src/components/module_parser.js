@@ -238,6 +238,7 @@ const ModuleParser = {
                 let moduleName = "M." + customModule.acronym + "." + customModule.semster + customModule.year.slice(customModule.year.length - 2) + "01"
                 parsedModule.name = moduleName;
                 parsedModule.semester = ModuleParser.calculateSemester(moduleName, firstModule);
+                parsedModule.UseInStats = true;
                 modules.push(parsedModule);
             }
         }
