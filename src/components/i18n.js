@@ -40,7 +40,7 @@ const i18n = {
         i18n.messages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + language + '/messages.json'))
             .then(response => response.json())
 
-        await Helpers.setItemToLocalStorage({ i18nLanguage: language })
+        await Helpers.saveObjectInLocalStorage({ i18nLanguage: language })
     },
 
     /**

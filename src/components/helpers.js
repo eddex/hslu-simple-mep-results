@@ -119,14 +119,14 @@ const Helpers = {
     },
     /**
      *
-     * @param {Object} item { moduleList: moduleList }
+     * @param {Object} obj { moduleList: moduleList }
      */
     saveObjectInLocalStorage: async (obj) => {
         if (Helpers.isFirefox()) {
-            await browser.storage.local.set(item);
+            await browser.storage.local.set(obj);
         }
         else {
-            await chrome.storage.local.set(item);
+            await chrome.storage.local.set(obj);
         }
     }
 }

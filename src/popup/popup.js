@@ -104,7 +104,7 @@ async function removeCustomModule() {
     if (selectedIndex > -1) {
         const selectedModule = selectModuleList.options[selectedIndex].value;
         delete moduleList[selectedModule];
-        await Helpers.setItemToLocalStorage({ moduleList: moduleList })
+        await Helpers.saveObjectInLocalStorage({ moduleList: moduleList })
     }
     else {
         console.warn("select a module");
@@ -150,7 +150,7 @@ async function addCustomModule() {
         year: moduleYear,
         semster: moduleSemester
     }
-    await Helpers.setItemToLocalStorage({ moduleList: moduleList })
+    await Helpers.saveObjectInLocalStorage({ moduleList: moduleList })
 }
 
 async function localizePopup() {
@@ -195,7 +195,7 @@ async function start() {
     let localStorage = await Helpers.getLocalStorage();
     if (!(localStorage.moduleList)) {
         const moduleList = {};
-        await Helpers.setItemToLocalStorage({ moduleList: moduleList })
+        await Helpers.saveObjectInLocalStorage({ moduleList: moduleList })
     }
     populateModuleList();
     populateYearList();
