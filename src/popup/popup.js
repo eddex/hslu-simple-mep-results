@@ -93,19 +93,6 @@ async function getLocalStorage() {
 }
 
 /**
- *
- * @param {Object} moduleList
- */
-async function setModuleList(moduleList) {
-    if (Helpers.isFirefox()) {
-        await browser.storage.local.set({ moduleList: moduleList });
-    }
-    else {
-        await chrome.storage.local.set({ moduleList: moduleList });
-    }
-}
-
-/**
  * deletes the selected module from local storage
  */
 async function removeCustomModule() {
@@ -117,7 +104,7 @@ async function removeCustomModule() {
     if (selectedIndex > -1) {
         const selectedModule = selectModuleList.options[selectedIndex].value;
         delete moduleList[selectedModule];
-        await setModuleList(moduleList);
+        await Helpers.setItemToLocalStorage({ moduleList: moduleList })
     }
     else {
         console.warn("select a module");
@@ -163,7 +150,7 @@ async function addCustomModule() {
         year: moduleYear,
         semster: moduleSemester
     }
-    await setModuleList(moduleList);
+    await Helpers.setItemToLocalStorage({ moduleList: moduleList })
 }
 
 async function localizePopup() {
@@ -208,7 +195,7 @@ async function start() {
     let localStorage = await Helpers.getLocalStorage();
     if (!(localStorage.moduleList)) {
         const moduleList = {};
-        await setModuleList(moduleList);
+        await Helpers.setItemToLocalStorage({ moduleList: moduleList })
     }
     populateModuleList();
     populateYearList();
