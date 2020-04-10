@@ -45,6 +45,9 @@
     "data/modules_wi.json",
     "_locales/*"
   ],
+  "options_ui": {
+    "page": "settings/options.html"
+  },
   "default_locale": "de",
   "browser_specific_settings": {
     "gecko": {
