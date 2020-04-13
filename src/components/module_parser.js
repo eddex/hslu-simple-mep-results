@@ -177,7 +177,7 @@ const ModuleParser = {
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
 
         const passedMessage = await i18n.getMessage("Bestanden");
-
+        const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
         anlasslistApiResponse.items.forEach(item => {
             let parsedModule = {};
             if (ModuleParser.validateModuleName(item.anlassnumber)) {
@@ -217,6 +217,13 @@ const ModuleParser = {
             if (parsedModule.name.includes('_SZ') || parsedModule.name.includes('SZ_')) {
                 parsedModule.moduleType = 'Zusatzmodul'
             }
+
+            if (ignoreInStatsModules[parsedModule.name]) {
+                parsedModule.UseInStats = false;
+            } else {
+                parsedModule.UseInStats = true;
+            }
+
             modules.push(parsedModule);
         });
 

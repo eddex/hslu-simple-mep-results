@@ -1,15 +1,11 @@
 /**
  * populates the modulelist from local Storage
  */
-async function populateModuleList() {
-    const moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
-
+async function populateCustomModuleList(selectModuleList, moduleList) {
     // reset ModuleList
-    const selectModuleList = document.getElementById("customModulesList");
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
-    newModuleList.onchange = showCustomModuleInformation;
 
     if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
         for (let customModule in moduleList) {
@@ -20,7 +16,7 @@ async function populateModuleList() {
     else {
         newModuleList.hidden = true;
     }
-
+    return newModuleList;
 }
 
 /**
@@ -86,6 +82,10 @@ async function removeCustomModule() {
     else {
         console.warn("select a module");
     }
+    const customModuleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
+    newModuleList = populateCustomModuleList(selectModuleList, customModuleList);
+    newModuleList.onchange = showCustomModuleInformation;
+
 }
 
 /**
@@ -128,8 +128,45 @@ async function addCustomModule() {
         semster: moduleSemester
     }
     await Helpers.saveObjectInLocalStorage({ moduleList: moduleList })
+    const customModuleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
+    const selectModuleList = document.getElementById("customModulesList");
+    newModuleList = populateCustomModuleList(selectModuleList, customModuleList);
+    newModuleList.onchange = showCustomModuleInformation;
 }
 
+async function addDoNotUseModuleInStats() {
+    const moduleAcronym = document.getElementById("moduleAcronymModuleInStats").value;
+    let ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
+
+
+    let length = (Object.keys(ignoreInStatsModules)).length
+
+    ignoreInStatsModules[moduleAcronym] = {
+        acronym: moduleAcronym,
+        UseInStats: false
+    }
+    await Helpers.saveObjectInLocalStorage({ ignoreInStatsModules: ignoreInStatsModules })
+
+    const selectModuleList = document.getElementById("ignoreInStatsModulesList");
+    ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
+    await populateCustomModuleList(selectModuleList, ignoreInStatsModules)
+}
+async function removeDoNotUseModuleInStats() {
+    const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
+
+    const selectModuleList = document.getElementById("ignoreInStatsModulesList");
+
+    const selectedIndex = selectModuleList.selectedIndex;
+    if (selectedIndex > -1) {
+        const selectedModule = selectModuleList.options[selectedIndex].value;
+        delete ignoreInStatsModules[selectedModule];
+        await Helpers.saveObjectInLocalStorage({ ignoreInStatsModules: ignoreInStatsModules })
+    }
+    else {
+        console.warn("select a module");
+    }
+    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
+}
 async function localizePopup() {
     await i18n.init();
 
@@ -156,29 +193,34 @@ async function localizePopup() {
     document.getElementById('labelAutumn').innerHTML = i18n.getMessage('Herbst')
     document.getElementById('labelSpring').innerHTML = i18n.getMessage('Fruehling')
 
+    // TODO: Add new string from DoNotUseModuleInStatsOption
 
 }
 
+async function showDoNotUseModuleInStatsOption() {
 
-function showDoNotUseModuleInStatsOption() {
-    const optionsMenu = document.getElementById('optionsMenu')
-    const customeModulesOption = document.getElementById('customeModulesOption')
-    const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
-
-    optionsMenu.hidden = true;
-    showModuleInStatsOption.hidden = true;
-    customeModulesOption.hidden = false;
-}
-
-function showCustomeModulesOption() {
-    const optionsMenu = document.getElementById('optionsMenu')
+    //const optionsMenu = document.getElementById('optionsMenu')
     const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
     const customeModulesOption = document.getElementById('customeModulesOption')
+    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
 
-
-    optionsMenu.hidden = true;
+    //optionsMenu.hidden = true;
     customeModulesOption.hidden = true;
     showModuleInStatsOption.hidden = false;
+
+}
+
+async function showCustomeModulesOption() {
+    //const optionsMenu = document.getElementById('optionsMenu')
+    const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
+    const customeModulesOption = document.getElementById('customeModulesOption')
+    const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
+    newModuleList.onchange = showCustomModuleInformation;
+    populateYearList();
+
+    //optionsMenu.hidden = true;
+    customeModulesOption.hidden = false;
+    showModuleInStatsOption.hidden = true;
 }
 /**
  * init function
@@ -192,22 +234,23 @@ async function start() {
 
     document.getElementById("submitCustomModule").onclick = addCustomModule;
     document.getElementById("removeCustomModule").onclick = removeCustomModule;
-    
+
+    document.getElementById('submitModuleInStats').onclick = addDoNotUseModuleInStats;
+    document.getElementById('removeModuleInStats').onclick = removeDoNotUseModuleInStats;
+
+    // set all options to an empty object once.
     let localStorage = await Helpers.getLocalStorage();
     if (!(localStorage.moduleList)) {
         const moduleList = {};
         await Helpers.saveObjectInLocalStorage({ moduleList: moduleList })
     }
-    populateModuleList();
-    populateYearList();
+    if (!(localStorage.ignoreInStatsModules)) {
+        const ignoreInStatsModules = {};
+        await Helpers.saveObjectInLocalStorage({ ignoreInStatsModules: ignoreInStatsModules })
+    }
 
-    //every time the storage changes(set/remove)
-    if (Helpers.isFirefox()) {
-        browser.storage.onChanged.addListener(populateModuleList);
-    }
-    else {
-        chrome.storage.onChanged.addListener(populateModuleList);
-    }
+ 
+
 }
 
 window.onload = () => {
