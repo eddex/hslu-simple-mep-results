@@ -26,18 +26,6 @@ async function getLanguage() {
 }
 
 /**
- * Saves the language of MyCampus to local storage
- * @param {String} language 
- */
-async function setLanguageToLocalStorage(language) {
-    if (Helpers.isFirefox()) {
-        await browser.storage.local.set({ i18nLanguage: language });
-    }
-    else {
-        await chrome.storage.local.set({ i18nLanguage: language });
-    }
-}
-/**
  * Component for localization functions.
  */
 const i18n = {
@@ -52,7 +40,7 @@ const i18n = {
         i18n.messages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + language + '/messages.json'))
             .then(response => response.json())
 
-        await setLanguageToLocalStorage(language);
+        await Helpers.saveObjectInLocalStorage({ i18nLanguage: language })
     },
 
     /**
