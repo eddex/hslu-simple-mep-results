@@ -70,29 +70,6 @@ function populateYearList() {
 }
 
 /**
- * @returns {Object} local storage
- */
-async function getLocalStorage() {
-    let localStorage;
-    if (Helpers.isFirefox()) {
-        localStorage = await browser.storage.local.get();
-    }
-    else {
-        const getLocalStorageChrome = () => {
-            return new Promise(
-                (resolve, reject) => {
-                    moduleList = chrome.storage.local.get(null, function (response) {
-                        resolve(response);
-                    });
-                });
-        }
-        localStorage = await getLocalStorageChrome();
-
-    }
-    return localStorage
-}
-
-/**
  * deletes the selected module from local storage
  */
 async function removeCustomModule() {
@@ -182,6 +159,27 @@ async function localizePopup() {
 
 }
 
+
+function showDoNotUseModuleInStatsOption() {
+    const optionsMenu = document.getElementById('optionsMenu')
+    const customeModulesOption = document.getElementById('customeModulesOption')
+    const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
+
+    optionsMenu.hidden = true;
+    showModuleInStatsOption.hidden = true;
+    customeModulesOption.hidden = false;
+}
+
+function showCustomeModulesOption() {
+    const optionsMenu = document.getElementById('optionsMenu')
+    const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
+    const customeModulesOption = document.getElementById('customeModulesOption')
+
+
+    optionsMenu.hidden = true;
+    customeModulesOption.hidden = true;
+    showModuleInStatsOption.hidden = false;
+}
 /**
  * init function
  */
@@ -189,9 +187,12 @@ async function start() {
 
     await localizePopup();
 
-    document.getElementById("submitModule").onclick = addCustomModule;
-    document.getElementById("removeModule").onclick = removeCustomModule;
+    document.getElementById('buttonShowModuleInStatsOption').onclick = showDoNotUseModuleInStatsOption;
+    document.getElementById('buttonCustomeModulesOption').onclick = showCustomeModulesOption;
 
+    document.getElementById("submitCustomModule").onclick = addCustomModule;
+    document.getElementById("removeCustomModule").onclick = removeCustomModule;
+    
     let localStorage = await Helpers.getLocalStorage();
     if (!(localStorage.moduleList)) {
         const moduleList = {};
