@@ -1,7 +1,7 @@
 /**
  * populates the modulelist from local Storage
  */
-async function populateCustomModuleList(selectModuleList, moduleList) {
+function populateCustomModuleList(selectModuleList, moduleList) {
     // reset ModuleList
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
@@ -19,7 +19,7 @@ async function populateCustomModuleList(selectModuleList, moduleList) {
  * Gets the information of the selected modul and
  * updates the forms with the right values.
  */
-async function showCustomModuleInformation() {
+async function loadCustomModuleInformation() {
     let moduleAcronym = "";
     const selectModuleList = document.getElementById("customModulesList");
 
@@ -79,8 +79,9 @@ async function removeCustomModule() {
         console.warn("select a module");
     }
     const customModuleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
+
     newModuleList = populateCustomModuleList(selectModuleList, customModuleList);
-    newModuleList.onchange = showCustomModuleInformation;
+    newModuleList.onchange = loadCustomModuleInformation;
 
 }
 
@@ -127,15 +128,16 @@ async function addCustomModule() {
     const customModuleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
     const selectModuleList = document.getElementById("customModulesList");
     newModuleList = populateCustomModuleList(selectModuleList, customModuleList);
-    newModuleList.onchange = showCustomModuleInformation;
+    newModuleList.onchange = loadCustomModuleInformation;
 }
 
-async function addDoNotUseModuleInStats() {
+/**
+ * Adds a module to the ignore list
+ * The module won't show up in the Extension stats
+ */
+async function addModuleToIgnoreList() {
     const moduleAcronym = document.getElementById("moduleAcronymModuleInStats").value;
     let ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
-
-
-    let length = (Object.keys(ignoreInStatsModules)).length
 
     ignoreInStatsModules[moduleAcronym] = {
         acronym: moduleAcronym,
@@ -145,9 +147,13 @@ async function addDoNotUseModuleInStats() {
 
     const selectModuleList = document.getElementById("ignoreInStatsModulesList");
     ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
-    await populateCustomModuleList(selectModuleList, ignoreInStatsModules)
+    populateCustomModuleList(selectModuleList, ignoreInStatsModules)
 }
-async function removeDoNotUseModuleInStats() {
+
+/**
+ * Removes a module from the ignore list
+ */
+async function removeModuleFromIgnoreList() {
     const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
 
     const selectModuleList = document.getElementById("ignoreInStatsModulesList");
@@ -163,6 +169,7 @@ async function removeDoNotUseModuleInStats() {
     }
     populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
 }
+
 async function localizePopup() {
     await i18n.init();
 
