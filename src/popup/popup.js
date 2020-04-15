@@ -192,49 +192,35 @@ async function localizePopup() {
     // TODO: Add new string from DoNotUseModuleInStatsOption
 
 }
+/**
+ * Shows the selected Option and hides the active one
+ * @param {*} selectedOption 
+ */
+function showOption(selectedOption) {
+    if (selectedOption.classList.contains('hidden')) {
+        const options = document.getElementsByClassName('option');
+        for (let index = 0; index < options.length; index++) {
+            const option = options[index];
+            if (!(option.classList.contains('hidden'))) {
 
-async function showDoNotUseModuleInStatsOption() {
+                option.classList.add('visuallyhidden');
 
-    const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
-    const customeModulesOption = document.getElementById('customeModulesOption')
+                option.addEventListener('transitionend', function () {
+                    option.classList.add('hidden');
+                    selectedOption.classList.remove('hidden')
+                    option.classList.remove('visuallyhidden');
 
-    if (showModuleInStatsOption.classList.contains('hidden')) {
-
-        customeModulesOption.classList.add('visuallyhidden');
-
-        customeModulesOption.addEventListener('transitionend', function () {
-            customeModulesOption.classList.add('hidden');
-            showModuleInStatsOption.classList.remove('hidden')
-            customeModulesOption.classList.remove('visuallyhidden');
-
-        }, {
-            capture: false,
-            once: true,
-            passive: false
-        });
-    }
-}
-
-async function showCustomeModulesOption() {
-    const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
-    const customeModulesOption = document.getElementById('customeModulesOption')
-
-    if (customeModulesOption.classList.contains('hidden')) {
-        showModuleInStatsOption.classList.add('visuallyhidden');
-
-        showModuleInStatsOption.addEventListener('transitionend', function () {
-            showModuleInStatsOption.classList.add('hidden');
-            customeModulesOption.classList.remove('hidden')
-            showModuleInStatsOption.classList.remove('visuallyhidden');
-
-        }, {
-            capture: false,
-            once: true,
-            passive: false
-        });
+                }, {
+                    capture: false,
+                    once: true,
+                    passive: false
+                });
+            }
+        }
     }
 
 }
+
 /**
  * init function
  */
@@ -245,16 +231,16 @@ async function start() {
 
     populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
     const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
-    newModuleList.onchange = showCustomModuleInformation;
+    newModuleList.onchange = loadCustomModuleInformation;
 
-    document.getElementById('buttonShowModuleInStatsOption').onclick = showDoNotUseModuleInStatsOption;
-    document.getElementById('buttonCustomeModulesOption').onclick = showCustomeModulesOption;
+    document.getElementById('buttonShowModuleInStatsOption').onclick = function () { showOption(document.getElementById('showModuleInStatsOption')) };
+    document.getElementById('buttonCustomeModulesOption').onclick = function () { showOption(document.getElementById('customeModulesOption')) };
 
     document.getElementById("submitCustomModule").onclick = addCustomModule;
     document.getElementById("removeCustomModule").onclick = removeCustomModule;
 
-    document.getElementById('submitModuleInStats').onclick = addDoNotUseModuleInStats;
-    document.getElementById('removeModuleInStats').onclick = removeDoNotUseModuleInStats;
+    document.getElementById('submitModuleInStats').onclick = addModuleToIgnoreList;
+    document.getElementById('removeModuleInStats').onclick = removeModuleFromIgnoreList;
 
     // set all options to an empty object once.
     let localStorage = await Helpers.getLocalStorage();
