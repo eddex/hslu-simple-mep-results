@@ -10,11 +10,11 @@
 
 <body>
   <div class="allmighty-container grid-container-optionsmenu">
-    <div id="optionsMenu">
+    <div class="grid-item" id="optionsMenu">
       <input class="button" id="buttonCustomeModulesOption" type="submit" value="Add Module">
       <input class="button" id="buttonShowModuleInStatsOption" type="submit" value="Remove Module">
     </div>
-    <div class="option" id="customeModulesOption">
+    <div class="grid-item option" id="customeModulesOption">
       <div class="grid-container-option">
         <div id="textName" class="grid-item">Name:</div>
         <div class="grid-item">
@@ -70,12 +70,10 @@
         <div class="button-right"><input class="button" id="removeCustomModule" type="submit" value="Entfernen">
         </div>
       </div>
-      <div>
-        <select class="modulesList" id="customModulesList" name="list_box_name[]" size="number_of_options"
-          multiple="single"></select>
-      </div>
+      <select class="modulesList" id="customModulesList" name="list_box_name[]" size="number_of_options"
+        multiple="single"></select>
     </div>
-    <div class="option hidden" id="showModuleInStatsOption">
+    <div class="grid-item option hidden" id="showModuleInStatsOption">
       <div class="grid-container-option">
         <div id="textName" class="grid-item">Name:</div>
         <div class="grid-item">
