@@ -10,11 +10,7 @@ async function populateCustomModuleList(selectModuleList, moduleList) {
     if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
         for (let customModule in moduleList) {
             newModuleList.options[newModuleList.options.length] = new Option(moduleList[customModule].acronym);
-            newModuleList.hidden = false;
         }
-    }
-    else {
-        newModuleList.hidden = true;
     }
     return newModuleList;
 }
@@ -199,28 +195,45 @@ async function localizePopup() {
 
 async function showDoNotUseModuleInStatsOption() {
 
-    //const optionsMenu = document.getElementById('optionsMenu')
     const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
     const customeModulesOption = document.getElementById('customeModulesOption')
-    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
 
-    //optionsMenu.hidden = true;
-    customeModulesOption.hidden = true;
-    showModuleInStatsOption.hidden = false;
+    if (showModuleInStatsOption.classList.contains('hidden')) {
 
+        customeModulesOption.classList.add('visuallyhidden');
+
+        customeModulesOption.addEventListener('transitionend', function () {
+            customeModulesOption.classList.add('hidden');
+            showModuleInStatsOption.classList.remove('hidden')
+            customeModulesOption.classList.remove('visuallyhidden');
+
+        }, {
+            capture: false,
+            once: true,
+            passive: false
+        });
+    }
 }
 
 async function showCustomeModulesOption() {
-    //const optionsMenu = document.getElementById('optionsMenu')
     const showModuleInStatsOption = document.getElementById('showModuleInStatsOption')
     const customeModulesOption = document.getElementById('customeModulesOption')
-    const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
-    newModuleList.onchange = showCustomModuleInformation;
-    populateYearList();
 
-    //optionsMenu.hidden = true;
-    customeModulesOption.hidden = false;
-    showModuleInStatsOption.hidden = true;
+    if (customeModulesOption.classList.contains('hidden')) {
+        showModuleInStatsOption.classList.add('visuallyhidden');
+
+        showModuleInStatsOption.addEventListener('transitionend', function () {
+            showModuleInStatsOption.classList.add('hidden');
+            customeModulesOption.classList.remove('hidden')
+            showModuleInStatsOption.classList.remove('visuallyhidden');
+
+        }, {
+            capture: false,
+            once: true,
+            passive: false
+        });
+    }
+
 }
 /**
  * init function
@@ -228,6 +241,11 @@ async function showCustomeModulesOption() {
 async function start() {
 
     await localizePopup();
+    populateYearList();
+
+    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
+    const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
+    newModuleList.onchange = showCustomModuleInformation;
 
     document.getElementById('buttonShowModuleInStatsOption').onclick = showDoNotUseModuleInStatsOption;
     document.getElementById('buttonCustomeModulesOption').onclick = showCustomeModulesOption;
@@ -249,7 +267,7 @@ async function start() {
         await Helpers.saveObjectInLocalStorage({ ignoreInStatsModules: ignoreInStatsModules })
     }
 
- 
+
 
 }
 

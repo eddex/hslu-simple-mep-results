@@ -3,11 +3,18 @@ body {
   padding: 3px;
   font-family: Helvetica,sans-serif;
 }
-
-.grid-container-form {
-  display: grid;
-  grid-template-columns: auto auto;
+.allmighty-container {
   background: #415e6c;
+  min-width: 300px;
+  min-height: 400px;
+}
+.grid-container-option {
+  display: grid;
+  grid-template-columns: 40% 60%;
+}
+.grid-container-optionsmenu {
+  display: grid;
+  grid-template-columns: 33% 66%;
 }
 
 .grid-container-buttons {
@@ -16,6 +23,20 @@ body {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.option {
+  transition: all 0.5s linear;
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.visuallyhidden {
+  opacity: 0;
+}
+
 
 .grid-item {
   padding: 6px;
