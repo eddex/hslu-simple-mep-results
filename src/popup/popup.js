@@ -6,10 +6,10 @@ function populateCustomModuleList(selectModuleList, moduleList) {
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
-
     if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
         for (let customModule in moduleList) {
-            newModuleList.options[newModuleList.options.length] = new Option(moduleList[customModule].acronym);
+            console.log(customModule)
+            newModuleList.options[newModuleList.options.length] = new Option(customModule);
         }
     }
     return newModuleList;
@@ -136,9 +136,14 @@ async function addCustomModule() {
  * The module won't show up in the Extension stats
  */
 async function addModuleToIgnoreList() {
-    const moduleAcronym = document.getElementById("moduleAcronymModuleInStats").value;
+    const allHsluModulesList = document.getElementById('allHsluModulesList');
     let ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
 
+    const selectedIndex = allHsluModulesList.selectedIndex
+    if (selectedIndex > -1) {
+        moduleAcronym = allHsluModulesList.options[selectedIndex].value;
+    }
+    console.log(moduleAcronym)
     ignoreInStatsModules[moduleAcronym] = {
         acronym: moduleAcronym,
         UseInStats: false
@@ -199,6 +204,7 @@ async function localizePopup() {
     // TODO: Add new string from DoNotUseModuleInStatsOption
 
 }
+
 /**
  * Shows the selected Option and hides the active one
  * @param {*} selectedOption 
@@ -236,7 +242,15 @@ async function start() {
     await localizePopup();
     populateYearList();
 
-    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
+    // ugly, but works for now 
+    const hsluModules = (await Helpers.getItemFromLocalStorage('hsluModules')).hsluModules;
+    const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
+    for (let ignoreInStatsModule in ignoreInStatsModules) {
+        delete hsluModules[ignoreInStatsModule];
+    }
+    populateCustomModuleList(document.getElementById('allHsluModulesList'), hsluModules);
+
+    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), ignoreInStatsModules);
     const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
     newModuleList.onchange = loadCustomModuleInformation;
 
