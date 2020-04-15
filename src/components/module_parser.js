@@ -227,6 +227,18 @@ const ModuleParser = {
             modules.push(parsedModule);
         });
 
+        // Save modules from MyCampus to local storage for the popup
+        let allHsluModulesListObject = {}
+
+        for (let index = 0; index < modules.length; index++) {
+            const module = modules[index];
+            const moduleAcronym = module.name;
+            allHsluModulesListObject[moduleAcronym] = {
+                acronym: moduleAcronym,
+            }
+        }
+        await Helpers.saveObjectInLocalStorage({hsluModules : allHsluModulesListObject})
+
         //add custom modules from local storage
         let moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
         for (const customModuleName in moduleList) {
