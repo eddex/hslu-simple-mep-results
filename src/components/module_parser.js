@@ -178,6 +178,8 @@ const ModuleParser = {
 
         const passedMessage = await i18n.getMessage("Bestanden");
         const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
+        let allHsluModulesListObject = {}
+
         anlasslistApiResponse.items.forEach(item => {
             let parsedModule = {};
             if (ModuleParser.validateModuleName(item.anlassnumber)) {
@@ -205,7 +207,6 @@ const ModuleParser = {
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
-
             const details = item.details;
             const creditsKey = 'ECTS-Punkte';
             parsedModule.credits = ModuleParser.getItemDetailsValueByKey(details, creditsKey);
@@ -218,26 +219,22 @@ const ModuleParser = {
                 parsedModule.moduleType = 'Zusatzmodul'
             }
 
-            if (ignoreInStatsModules[parsedModule.name]) {
-                parsedModule.UseInStats = false;
-            } else {
-                parsedModule.UseInStats = true;
+            // sets the UseInStats to true by default
+            parsedModule.UseInStats = true;
+            if (ignoreInStatsModules != undefined) {
+                if (ignoreInStatsModules[parsedModule.name]) {
+                    parsedModule.UseInStats = false;
+                }
+            }
+            allHsluModulesListObject[parsedModule.name] = {
+                acronym: parsedModule.name,
             }
 
             modules.push(parsedModule);
         });
-
+        
         // Save modules from MyCampus to local storage for the popup
-        let allHsluModulesListObject = {}
-
-        for (let index = 0; index < modules.length; index++) {
-            const module = modules[index];
-            const moduleAcronym = module.name;
-            allHsluModulesListObject[moduleAcronym] = {
-                acronym: moduleAcronym,
-            }
-        }
-        await Helpers.saveObjectInLocalStorage({hsluModules : allHsluModulesListObject})
+        await Helpers.saveObjectInLocalStorage({ hsluModules: allHsluModulesListObject })
 
         //add custom modules from local storage
         let moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
