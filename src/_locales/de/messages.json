@@ -76,5 +76,17 @@
     },
     "Fruehling": {
         "message": "Frühling"
+    },
+    "ModulHinzufuegen": {
+        "message": "Modul hinzufügen"
+    },
+    "ModulEntfernen": {
+        "message": "Modul entfernen"
+    },
+    "Speichern": {
+        "message": "Speichern"
+    },
+    "Entfernen": {
+        "message": "Entfernen"
     }
 }

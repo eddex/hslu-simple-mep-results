@@ -180,6 +180,12 @@ async function removeModuleFromIgnoreList() {
 async function localizePopup() {
     await i18n.init();
 
+    // Option menu
+    document.getElementById('showCustomeModulesOption').value = i18n.getMessage('ModulHinzufuegen');
+    document.getElementById('showRemoveModuleOption').value = i18n.getMessage('ModulEntfernen');
+
+    // Option: "Add Module"
+    // text fields
     document.getElementById('textName').innerHTML = i18n.getMessage('Name') + ":"
     document.getElementById('textModuleType').innerHTML = i18n.getMessage('Modultyp') + ":"
     document.getElementById('textYear').innerHTML = i18n.getMessage('Jahr') + ":"
@@ -203,8 +209,20 @@ async function localizePopup() {
     document.getElementById('labelAutumn').innerHTML = i18n.getMessage('Herbst')
     document.getElementById('labelSpring').innerHTML = i18n.getMessage('Fruehling')
 
-    // TODO: Add new string from "Remove Module" Option
+    // title
+    document.getElementById('titleAddModule').innerHTML = i18n.getMessage('ModulHinzufuegen');
 
+    // buttons 
+    document.getElementById('addCustomModule').value = i18n.getMessage('Speichern');
+    document.getElementById('removeCustomModule').value = i18n.getMessage('Entfernen');
+
+    // Option: "Remove Module"
+    // buttons
+    document.getElementById('addModuleToIgnoreList').value = i18n.getMessage('Speichern');
+    document.getElementById('removeModuleFromIgnoreList').value = i18n.getMessage('Entfernen');
+
+    // title
+    document.getElementById('titleRemoveModule').innerHTML = i18n.getMessage('ModulEntfernen')<
 }
 
 /**

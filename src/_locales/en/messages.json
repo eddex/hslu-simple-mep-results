@@ -76,5 +76,17 @@
     },
     "Fruehling": {
         "message": "Spring"
+    },    
+    "ModulHinzufuegen": {
+        "message": "Add module"
+    },
+    "ModulEntfernen": {
+        "message": "Remove module"
+    },
+    "Speichern": {
+        "message": "Save"
+    },
+    "Entfernen": {
+        "message": "Remove"
     }
 }
