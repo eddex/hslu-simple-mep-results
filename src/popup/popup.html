@@ -1,100 +1,124 @@
+<!DOCTYPE html>
 <html lang="de">
-<header>
-  <link type="text/css" rel="stylesheet" charset="UTF-8" href="popup_style.css">
-  <script src="../components/i18n.js"></script>
-  <script src="../components/helpers.js"></script>
-  <script src="popup.js"></script>
-
-  <meta charset="UTF-8">
-</header>
-
-<body>
-  <div class="allmighty-container grid-container-optionsmenu">
-    <div class="grid-item" id="optionsMenu">
-      <input class="button button-selected" id="buttonCustomeModulesOption" type="submit" value="Add Module">
-      <input class="button" id="buttonShowModuleInStatsOption" type="submit" value="Remove Module">
-    </div>
-    <!-- Option to add custome modules -->
-    <div class="grid-item option" id="customeModulesOption">
-      <h2>Add Module</h2>
-      <div class="grid-item grid-container-option">
-        <div class="grid-item" id="textName" class="grid-item">Name:</div>
-        <div class="grid-item">
-          <input id="moduleAcronym" type="text" value="" placeholder="Hackathon, Event, ...">
+    <head>
+        <title>Options Menu for hslu-simple-mep-results extension</title>
+        <link type="text/css" rel="stylesheet" href="popup_style.css">
+        <script src="../components/i18n.js"></script>
+        <script src="../components/helpers.js"></script>
+        <script src="popup.js"></script>
+    </head>
+    <body>
+        <div class="allmighty-container grid-container-optionsmenu">
+            <div class="grid-item" id="optionsMenu">
+                <input class="button button-selected"
+                    id="showCustomeModulesOption"
+                    type="submit" value="Add Module">
+                <input class="button" id="showRemoveModuleOption" type="submit"
+                    value="Remove Module">
+            </div>
+            <!-- Option to add custome modules -->
+            <div class="grid-item option" id="customeModuleOption">
+                <h2>Add Module</h2>
+                <div class="grid-item grid-container-option">
+                    <div class="grid-item" id="textName">Name:</div>
+                    <div class="grid-item">
+                        <input id="moduleAcronym" type="text" value=""
+                            placeholder="Hackathon, Event, ...">
+                    </div>
+                    <div id="textModuleType" class="grid-item">Modultyp:</div>
+                    <div class="grid-item">
+                        <select id="moduleType" name="study">
+                            <option id="optionCoremodule" value="Kernmodul">Kernmodul</option>
+                            <option id="optionProjectmodule"
+                                value="Projektmodul">Projektmodul</option>
+                            <option id="optionExtensionmodule"
+                                value="Erweiterungsmodul">Erweiterungsmodul</option>
+                            <option id="optionMajormodule" value="Majormodul">Majormodul</option>
+                            <option id="optionAdditionalmodule"
+                                value="Zusatzmodul">Zusatzmodul</option>
+                        </select>
+                    </div>
+                    <div id="textYear" class="grid-item">Jahr:</div>
+                    <div class="grid-item">
+                        <select id="moduleYear"></select>
+                    </div>
+                    <div id="textSemester" class="grid-item">Semester:</div>
+                    <div class="grid-item radio-container">
+                        <input class="radio-button" type="radio" value="H"
+                            checked="checked"
+                            name="moduleImplementation" />
+                        <label id="labelAutumn" class="radio-text">Herbst</label>
+                        <input class="radio-button" type="radio" value="F"
+                            checked="checked"
+                            name="moduleImplementation" />
+                        <label id="labelSpring" class="radio-text">Frühling</label>
+                    </div>
+                    <div id="textMark" class="grid-item">Note:</div>
+                    <div class="grid-item">
+                        <input type="number" id="moduleMark" name="grade"
+                            step="0.5"
+                            value="5" min="0" max="6">
+                        <p id="commentMark" class="comment">[ 0 ] für keine
+                            Bewertung</p>
+                    </div>
+                    <div id="textGrad" class="grid-item">Grad:</div>
+                    <div class="grid-item">
+                        <select id="moduleGrade">
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                            <option>E</option>
+                            <option>F</option>
+                            <option>-</option>
+                        </select>
+                        <p id="commentGrade" class="comment">[ - ] für keinen
+                            Grad</p>
+                    </div>
+                    <div class="grid-item">Credits:</div>
+                    <div class="grid-item">
+                        <input type="number" id="moduleCredits" name="credits"
+                            value="3"
+                            min="1" max="15" />
+                    </div>
+                </div>
+                <div class="grid-item grid-container-buttons">
+                    <div class="button-left"><input class="button"
+                            id="addCustomModule"
+                            type="submit" value="Speichern">
+                    </div>
+                    <div class="button-right"><input class="button"
+                            id="removeCustomModule"
+                            type="submit" value="Entfernen">
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <select class="modulesList" id="customModulesList"
+                        name="list_box_name[]" size="5"></select>
+                </div>
+            </div>
+            <!-- Option to ignore an MyCampus module -->
+            <div class="grid-item option hidden" id="removeModuleOption">
+                <h2>Remove Module</h2>
+                <div class="grid-item">
+                    <select class="modulesList" id="allHsluModulesList"
+                        name="list_box_name[]" size="5"></select>
+                </div>
+                <div class="grid-item grid-container-buttons">
+                    <div class="button-left"><input class="button"
+                            id="addModuleToIgnoreList" type="submit"
+                            value="Speichern">
+                    </div>
+                    <div class="button-right"><input class="button"
+                            id="removeModuleFromIgnoreList" type="submit"
+                            value="Entfernen">
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <select class="modulesList" id="ignoreInStatsModulesList"
+                        name="list_box_name[]" size="5"></select>
+                </div>
+            </div>
         </div>
-        <div id="textModuleType" class="grid-item">Modultyp:</div>
-        <div class="grid-item">
-          <select id="moduleType" name="study">
-            <option id="optionCoremodule" value="Kernmodul">Kernmodul</option>
-            <option id="optionProjectmodule" value="Projektmodul">Projektmodul</option>
-            <option id="optionExtensionmodule" value="Erweiterungsmodul">Erweiterungsmodul</option>
-            <option id="optionMajormodule" value="Majormodul">Majormodul</option>
-            <option id="optionAdditionalmodule" value="Zusatzmodul">Zusatzmodul</option>
-          </select>
-        </div>
-        <div id="textYear" class="grid-item">Jahr:</div>
-        <div class="grid-item">
-          <select id="moduleYear"></select>
-        </div>
-        <div id="textSemester" class="grid-item">Semester:</div>
-        <div class="grid-item radio-container">
-          <input class="radio-button" type="radio" value="H" checked="checked" name="moduleImplementation" />
-          <label id="labelAutumn" class="radio-text">Herbst</label>
-          <input class="radio-button" type="radio" value="F" checked="checked" name="moduleImplementation" />
-          <label id="labelSpring" class="radio-text">Frühling</label>
-        </div>
-        <div id="textMark" class="grid-item">Note:</div>
-        <div class="grid-item">
-          <input type="number" id="moduleMark" name="grade" step="0.5" value="5" min="0" max="6">
-          <p id="commentMark" class="comment">[ 0 ] für keine Bewertung</p>
-        </div>
-        <div id="textGrad" class="grid-item">Grad:</div>
-        <div class="grid-item">
-          <select id="moduleGrade">
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
-            <option>D</option>
-            <option>E</option>
-            <option>F</option>
-            <option>-</option>
-          </select>
-          <p id="commentGrade" class="comment">[ - ] für keinen Grad</p>
-        </div>
-        <div class="grid-item">Credits:</div>
-        <div class="grid-item">
-          <input type="number" id="moduleCredits" name="credits" value="3" min="1" max="15" />
-        </div>
-      </div>
-      <div class="grid-item grid-container-buttons">
-        <div class="button-left"><input class="button" id="submitCustomModule" type="submit" value="Speichern">
-        </div>
-        <div class="button-right"><input class="button " id="removeCustomModule" type="submit" value="Entfernen">
-        </div>
-      </div>
-      <div class="grid-item">
-        <select class="modulesList" id="customModulesList" name="list_box_name[]" size="number_of_options"
-          multiple="single"></select>
-      </div>
-    </div>
-    <!-- Option to ignore an MyCampus module -->
-    <div class="grid-item option hidden" id="showModuleInStatsOption">
-      <h2>Remove Module</h2>
-      <div class="grid-item">
-        <select class="modulesList" id="allHsluModulesList" name="list_box_name[]" size="number_of_options"
-          multiple="single"></select>
-      </div>
-      <div class="grid-item grid-container-buttons">
-        <div class="button-left"><input class="button" id="submitModuleInStats" type="submit" value="Speichern">
-        </div>
-        <div class="button-right"><input class="button" id="removeModuleInStats" type="submit" value="Entfernen">
-        </div>
-      </div>
-      <div class="grid-item">
-        <select class="modulesList" id="ignoreInStatsModulesList" name="list_box_name[]" size="number_of_options"
-          multiple="single"></select>
-      </div>
-    </div>
-</body>
-
+    </body>
 </html>
