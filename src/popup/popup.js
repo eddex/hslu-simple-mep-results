@@ -222,7 +222,7 @@ async function localizePopup() {
     document.getElementById('removeModuleFromIgnoreList').value = i18n.getMessage('Entfernen');
 
     // title
-    document.getElementById('titleRemoveModule').innerHTML = i18n.getMessage('ModulEntfernen')<
+    document.getElementById('titleRemoveModule').innerHTML = i18n.getMessage('ModulEntfernen');
 }
 
 /**
