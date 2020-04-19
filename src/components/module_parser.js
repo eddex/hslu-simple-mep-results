@@ -178,7 +178,7 @@ const ModuleParser = {
 
         const passedMessage = await i18n.getMessage("Bestanden");
         const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
-        let allHsluModulesListObject = {}
+        let myCampusModulesList = {}
 
         anlasslistApiResponse.items.forEach(item => {
             let parsedModule = {};
@@ -226,15 +226,14 @@ const ModuleParser = {
                     parsedModule.UseInStats = false;
                 }
             }
-            allHsluModulesListObject[parsedModule.name] = {
+            myCampusModulesList[parsedModule.name] = {
                 acronym: parsedModule.name,
             }
 
             modules.push(parsedModule);
         });
-        
         // Save modules from MyCampus to local storage for the popup
-        await Helpers.saveObjectInLocalStorage({ hsluModules: allHsluModulesListObject })
+        await Helpers.saveObjectInLocalStorage({ hsluModules: myCampusModulesList })
 
         //add custom modules from local storage
         let moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList

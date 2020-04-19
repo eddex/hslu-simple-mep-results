@@ -1,6 +1,6 @@
 
 /**
- * returns the default locale from the manifest
+ * Returns the default locale from the manifest
  * @returns {string}
  */
 function getDefaultLocale() {
@@ -26,7 +26,7 @@ async function getLanguage() {
             }
         }
     }
-    // needed the popup
+    // needed for the popup
     else {
         const i18nLanguage = (await Helpers.getItemFromLocalStorage("i18nLanguage")).i18nLanguage
         if (i18nLanguage === undefined) {
@@ -36,6 +36,11 @@ async function getLanguage() {
     }
 }
 
+/**
+ * 
+ * @param {*} language 
+ * @returns a object with all i18n strings for the given language
+ */
 async function getMessages(language) {
     let messsages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + language + '/messages.json'))
         .then(response => response.json())

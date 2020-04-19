@@ -1,9 +1,8 @@
 /**
- * populates the modulelist from local Storage
+ * Populates the modulelist from local Storage
  */
 function populateCustomModuleList(selectModuleList, moduleList) {
     // reset ModuleList
-
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
@@ -14,7 +13,6 @@ function populateCustomModuleList(selectModuleList, moduleList) {
             }
         }
     }
-
     return newModuleList;
 }
 
@@ -51,7 +49,7 @@ async function loadCustomModuleInformation() {
 }
 
 /**
- * populates the year select
+ * Populates the year select
  */
 function populateYearList() {
     const startYear = (new Date()).getFullYear() - 8;
@@ -65,7 +63,7 @@ function populateYearList() {
 }
 
 /**
- * deletes the selected module from local storage
+ * Deletes the selected module from local storage
  */
 async function removeCustomModule() {
     const moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
@@ -155,7 +153,8 @@ async function addModuleToIgnoreList() {
 
     const selectModuleList = document.getElementById("ignoreInStatsModulesList");
     ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules
-    populateCustomModuleList(selectModuleList, ignoreInStatsModules)
+    //populateCustomModuleList(selectModuleList, ignoreInStatsModules)
+    updateRemoveModuleLists()
 }
 
 /**
@@ -175,7 +174,7 @@ async function removeModuleFromIgnoreList() {
     else {
         console.warn("select a module");
     }
-    populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules);
+    updateRemoveModuleLists();
 }
 
 async function localizePopup() {
@@ -204,7 +203,7 @@ async function localizePopup() {
     document.getElementById('labelAutumn').innerHTML = i18n.getMessage('Herbst')
     document.getElementById('labelSpring').innerHTML = i18n.getMessage('Fruehling')
 
-    // TODO: Add new string from DoNotUseModuleInStatsOption
+    // TODO: Add new string from "Remove Module" Option
 
 }
 
@@ -250,14 +249,9 @@ function showOption(clickedButton, selectedOption) {
 }
 
 /**
- * init function
+ * Updates the two lists for the "Remove Module" option
  */
-async function start() {
-
-    await localizePopup();
-    populateYearList();
-
-    // ugly, but works for now 
+async function updateRemoveModuleLists() {
     const hsluModules = (await Helpers.getItemFromLocalStorage('hsluModules')).hsluModules;
     const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
     for (let ignoreInStatsModule in ignoreInStatsModules) {
@@ -265,18 +259,29 @@ async function start() {
     }
     populateCustomModuleList(document.getElementById('allHsluModulesList'), hsluModules);
     populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), ignoreInStatsModules);
+}
 
-    const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
-    newModuleList.onchange = loadCustomModuleInformation;
+/**
+ * init function
+ */
+async function start() {
 
-    document.getElementById('buttonShowModuleInStatsOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('showModuleInStatsOption')) };
-    document.getElementById('buttonCustomeModulesOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('customeModulesOption')) };
+    await localizePopup();
+    populateYearList();
 
-    document.getElementById("submitCustomModule").onclick = addCustomModule;
+    updateRemoveModuleLists();
+
+    const customModulesList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
+    customModulesList.onchange = loadCustomModuleInformation;
+
+    document.getElementById('showCustomeModulesOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('customeModuleOption')) };
+    document.getElementById('showRemoveModuleOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('removeModuleOption')) };
+
+    document.getElementById("addCustomModule").onclick = addCustomModule;
     document.getElementById("removeCustomModule").onclick = removeCustomModule;
 
-    document.getElementById('submitModuleInStats').onclick = addModuleToIgnoreList;
-    document.getElementById('removeModuleInStats').onclick = removeModuleFromIgnoreList;
+    document.getElementById('addModuleToIgnoreList').onclick = addModuleToIgnoreList;
+    document.getElementById('removeModuleFromIgnoreList').onclick = removeModuleFromIgnoreList;
 
     // set all options to an empty object once.
     let localStorage = await Helpers.getLocalStorage();
@@ -288,9 +293,6 @@ async function start() {
         const ignoreInStatsModules = {};
         await Helpers.saveObjectInLocalStorage({ ignoreInStatsModules: ignoreInStatsModules })
     }
-
-
-
 }
 
 window.onload = () => {

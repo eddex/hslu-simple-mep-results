@@ -45,7 +45,6 @@
     "data/modules_wi.json",
     "_locales/*"
   ],
-
   "default_locale": "de",
   "browser_specific_settings": {
     "gecko": {
