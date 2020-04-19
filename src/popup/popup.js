@@ -209,7 +209,18 @@ async function localizePopup() {
  * Shows the selected Option and hides the active one
  * @param {*} selectedOption 
  */
-function showOption(selectedOption) {
+function showOption(clickedButton, selectedOption) {
+
+    // marks the associated option button as "active"
+    const buttons = document.getElementsByClassName('button');
+    for (let index = 0; index < buttons.length; index++) {
+        const button = buttons[index];
+        if (button.classList.contains('button-selected')) {
+            button.classList.remove('button-selected');
+        }
+    }
+    clickedButton.classList.add('button-selected');
+
     if (selectedOption.classList.contains('hidden')) {
         const options = document.getElementsByClassName('option');
         for (let index = 0; index < options.length; index++) {
@@ -221,6 +232,7 @@ function showOption(selectedOption) {
                 option.addEventListener('transitionend', function () {
                     option.classList.add('hidden');
                     selectedOption.classList.remove('hidden')
+
                     option.classList.remove('visuallyhidden');
 
                 }, {
@@ -249,13 +261,14 @@ async function start() {
         delete hsluModules[ignoreInStatsModule];
     }
     populateCustomModuleList(document.getElementById('allHsluModulesList'), hsluModules);
-
     populateCustomModuleList(document.getElementById("ignoreInStatsModulesList"), ignoreInStatsModules);
+
     const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
     newModuleList.onchange = loadCustomModuleInformation;
 
-    document.getElementById('buttonShowModuleInStatsOption').onclick = function () { showOption(document.getElementById('showModuleInStatsOption')) };
-    document.getElementById('buttonCustomeModulesOption').onclick = function () { showOption(document.getElementById('customeModulesOption')) };
+
+    document.getElementById('buttonShowModuleInStatsOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('showModuleInStatsOption')) };
+    document.getElementById('buttonCustomeModulesOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('customeModulesOption')) };
 
     document.getElementById("submitCustomModule").onclick = addCustomModule;
     document.getElementById("removeCustomModule").onclick = removeCustomModule;
