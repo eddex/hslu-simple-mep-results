@@ -1,3 +1,17 @@
+
+/**
+ * returns the default locale from the manifest
+ * @returns {string}
+ */
+function getDefaultLocale() {
+    if (Helpers.isFirefox()) {
+        return (browser.runtime.getManifest()).default_locale
+    }
+    else {
+        return (chrome.runtime.getManifest()).default_locale
+    }
+}
+
 /**
  * Returns the language of MyCampus
  * @returns {string}
@@ -12,17 +26,24 @@ async function getLanguage() {
             }
         }
     }
+    // needed the popup
     else {
-        return (await Helpers.getItemFromLocalStorage("i18nLanguage")).i18nLanguage
+        const i18nLanguage = (await Helpers.getItemFromLocalStorage("i18nLanguage")).i18nLanguage
+        if (i18nLanguage === undefined) {
+            return getDefaultLocale();
+        }
+        return i18nLanguage
     }
+}
 
-    // fallback to default locale
-    if (Helpers.isFirefox()) {
-        return (browser.runtime.getManifest()).default_locale
+async function getMessages(language) {
+    let messsages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + language + '/messages.json'))
+        .then(response => response.json())
+    if (messsages === undefined) {
+        messsages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + getDefaultLocale() + '/messages.json'))
+            .then(response => response.json())
     }
-    else {
-        return (chrome.runtime.getManifest()).default_locale
-    }
+    return messsages;
 }
 
 /**
@@ -37,9 +58,7 @@ const i18n = {
     init: async () => {
 
         const language = await getLanguage();
-        i18n.messages = await fetch(Helpers.getExtensionInternalFileUrl('_locales/' + language + '/messages.json'))
-            .then(response => response.json())
-
+        i18n.messages = await getMessages(language);
         await Helpers.saveObjectInLocalStorage({ i18nLanguage: language })
     },
 

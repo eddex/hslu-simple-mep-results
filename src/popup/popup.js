@@ -269,7 +269,6 @@ async function start() {
     const newModuleList = populateCustomModuleList(document.getElementById("customModulesList"), (await Helpers.getItemFromLocalStorage("moduleList")).moduleList);
     newModuleList.onchange = loadCustomModuleInformation;
 
-
     document.getElementById('buttonShowModuleInStatsOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('showModuleInStatsOption')) };
     document.getElementById('buttonCustomeModulesOption').onclick = function (clickEvent) { showOption(clickEvent.target, document.getElementById('customeModulesOption')) };
 
