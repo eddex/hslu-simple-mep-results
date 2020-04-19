@@ -3,15 +3,18 @@
  */
 function populateCustomModuleList(selectModuleList, moduleList) {
     // reset ModuleList
+
     const selectParentNode = selectModuleList.parentNode;
     let newModuleList = selectModuleList.cloneNode(false); // Make a shallow copy
     selectParentNode.replaceChild(newModuleList, selectModuleList);
-    if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
-        for (let customModule in moduleList) {
-            console.log(customModule)
-            newModuleList.options[newModuleList.options.length] = new Option(customModule);
+    if (moduleList != undefined) {
+        if (!(Object.keys(moduleList).length === 0) && moduleList.constructor === Object) {
+            for (let customModule in moduleList) {
+                newModuleList.options[newModuleList.options.length] = new Option(customModule);
+            }
         }
     }
+
     return newModuleList;
 }
 
