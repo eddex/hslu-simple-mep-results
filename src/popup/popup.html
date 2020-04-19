@@ -11,12 +11,14 @@
 <body>
   <div class="allmighty-container grid-container-optionsmenu">
     <div class="grid-item" id="optionsMenu">
-      <input class="button" id="buttonCustomeModulesOption" type="submit" value="Add Module">
+      <input class="button button-selected" id="buttonCustomeModulesOption" type="submit" value="Add Module">
       <input class="button" id="buttonShowModuleInStatsOption" type="submit" value="Remove Module">
     </div>
+    <!-- Option to add custome modules -->
     <div class="grid-item option" id="customeModulesOption">
-      <div class="grid-container-option">
-        <div id="textName" class="grid-item">Name:</div>
+      <h2>Add Module</h2>
+      <div class="grid-item grid-container-option">
+        <div class="grid-item" id="textName" class="grid-item">Name:</div>
         <div class="grid-item">
           <input id="moduleAcronym" type="text" value="" placeholder="Hackathon, Event, ...">
         </div>
@@ -64,27 +66,25 @@
           <input type="number" id="moduleCredits" name="credits" value="3" min="1" max="15" />
         </div>
       </div>
-      <div class="grid-container-buttons">
+      <div class="grid-item grid-container-buttons">
         <div class="button-left"><input class="button" id="submitCustomModule" type="submit" value="Speichern">
         </div>
-        <div class="button-right"><input class="button" id="removeCustomModule" type="submit" value="Entfernen">
+        <div class="button-right"><input class="button " id="removeCustomModule" type="submit" value="Entfernen">
         </div>
       </div>
-      <select class="modulesList" id="customModulesList" name="list_box_name[]" size="number_of_options"
-        multiple="single"></select>
+      <div class="grid-item">
+        <select class="modulesList" id="customModulesList" name="list_box_name[]" size="number_of_options"
+          multiple="single"></select>
+      </div>
     </div>
+    <!-- Option to ignore an MyCampus module -->
     <div class="grid-item option hidden" id="showModuleInStatsOption">
-      <div class="grid-container-option">
-        <div id="textName" class="grid-item">Name:</div>
-        <div class="grid-item">
-          <input id="moduleAcronymModuleInStats" type="text" value="" placeholder="Hackathon, Event, ...">
-        </div>
-      </div>
+      <h2>Remove Module</h2>
       <div class="grid-item">
         <select class="modulesList" id="allHsluModulesList" name="list_box_name[]" size="number_of_options"
           multiple="single"></select>
       </div>
-      <div class="grid-container-buttons">
+      <div class="grid-item grid-container-buttons">
         <div class="button-left"><input class="button" id="submitModuleInStats" type="submit" value="Speichern">
         </div>
         <div class="button-right"><input class="button" id="removeModuleInStats" type="submit" value="Entfernen">

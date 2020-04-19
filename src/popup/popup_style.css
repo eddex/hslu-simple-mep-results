@@ -1,7 +1,7 @@
 body {
   background: white;
   padding: 3px;
-  font-family: Helvetica,sans-serif;
+  font-family:"FS Albert Web Light",Helvetica,sans-serif;
 }
 .allmighty-container {
   background: #415e6c;
@@ -20,8 +20,22 @@ body {
 .grid-container-buttons {
   display: grid;
   grid-template-columns: auto auto;
+}
+
+.grid-item:first-child {
   margin-top: 5px;
+  font-size: 16px;
+  text-align: left;
+  color: white;
+}
+
+.grid-item {
   margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 16px;
+  text-align: left;
+  color: white;
 }
 
 .option {
@@ -35,14 +49,6 @@ body {
 
 .visuallyhidden {
   opacity: 0;
-}
-
-
-.grid-item {
-  padding: 6px;
-  font-size: 16px;
-  text-align: left;
-  color: white;
 }
 
 .comment {
@@ -68,6 +74,7 @@ body {
   font-size: 16px;
   padding: 5px;
   cursor: pointer;
+  margin-bottom: 5px;
 }
 
 .button-left {
@@ -79,6 +86,11 @@ body {
 }
 
 .button:hover {
+  background: white;
+  color: #690036;
+}
+
+.button-selected {
   background: white;
   color: #690036;
 }
@@ -99,4 +111,14 @@ input {
 option {
   border-bottom: 1px dotted black;
   padding: 2px;
+}
+
+h2 {
+  font-size-adjust:.48;
+  font-size:2em;
+  font-weight:inherit;
+  margin-top:0;
+  margin-bottom:.33333em;
+  line-height:1.33333;
+  text-align: center;
 }
