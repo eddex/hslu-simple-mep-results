@@ -221,10 +221,8 @@ const ModuleParser = {
 
             // sets the UseInStats to true by default
             parsedModule.UseInStats = true;
-            if (ignoreInStatsModules != undefined) {
-                if (ignoreInStatsModules[parsedModule.name]) {
+            if (ignoreInStatsModules != undefined && ignoreInStatsModules[parsedModule.name]) {
                     parsedModule.UseInStats = false;
-                }
             }
             myCampusModulesList[parsedModule.name] = {
                 acronym: parsedModule.name,
