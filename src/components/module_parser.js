@@ -177,6 +177,8 @@ const ModuleParser = {
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
 
         const passedMessage = await i18n.getMessage("Bestanden");
+        const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
+        let myCampusModulesList = {}
 
         anlasslistApiResponse.items.forEach(item => {
             let parsedModule = {};
@@ -205,7 +207,6 @@ const ModuleParser = {
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
-
             const details = item.details;
             const creditsKey = 'ECTS-Punkte';
             parsedModule.credits = ModuleParser.getItemDetailsValueByKey(details, creditsKey);
@@ -217,8 +218,20 @@ const ModuleParser = {
             if (parsedModule.name.includes('_SZ') || parsedModule.name.includes('SZ_')) {
                 parsedModule.moduleType = 'Zusatzmodul'
             }
+
+            // sets the UseInStats to true by default
+            parsedModule.UseInStats = true;
+            if (ignoreInStatsModules != undefined && ignoreInStatsModules[parsedModule.name]) {
+                    parsedModule.UseInStats = false;
+            }
+            myCampusModulesList[parsedModule.name] = {
+                acronym: parsedModule.name,
+            }
+
             modules.push(parsedModule);
         });
+        // Save modules from MyCampus to local storage for the popup
+        await Helpers.saveObjectInLocalStorage({ hsluModules: myCampusModulesList })
 
         //add custom modules from local storage
         let moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
@@ -238,6 +251,7 @@ const ModuleParser = {
                 let moduleName = "M." + customModule.acronym + "." + customModule.semster + customModule.year.slice(customModule.year.length - 2) + "01"
                 parsedModule.name = moduleName;
                 parsedModule.semester = ModuleParser.calculateSemester(moduleName, firstModule);
+                parsedModule.UseInStats = true;
                 modules.push(parsedModule);
             }
         }
