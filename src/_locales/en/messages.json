@@ -1,0 +1,80 @@
+{
+    "Etcspunkte": {
+        "message": "ECTS-Points"
+    },
+    "Moduletypenubersicht": {
+        "message": "Module type summary"
+    },
+    "Noten": {
+        "message": "Mark"
+    },
+    "Modulubersicht": {
+        "message": "Summary of modules"
+    },
+    "Modulname": {
+        "message": "Module name"
+    },
+    "Modultyp": {
+        "message": "Module type"
+    },
+    "Bewertung": {
+        "message": "Evaluation"
+    },
+    "Grad": {
+        "message": "Grade"
+    },
+    "Anzahl": {
+        "message": "Quantity"
+    },
+    "Verteilung": {
+        "message": "Distribution"
+    },
+    "Majormodulinformation": {
+        "message": "*Majorsmodules are a kinde of extensionmodules. If you got all 24 ETCS of a major, you get rewarded with a fancy title"
+    },
+    "Majormodul": {
+        "message": "Major module"
+    },
+    "Kernmodul": {
+        "message": "Core module"
+    },
+    "Projektmodul": {
+        "message": "Project module"
+    },
+    "Zusatzmodul": {
+        "message": "Additional module"
+    },
+    "Erweiterungsmodul": {
+        "message": "Extension module"
+    },
+    "Bestanden": {
+        "message": "passed"
+    },
+    "LadeExtension": {
+        "message": "loading extension"
+    },
+    "Name": {
+        "message": "Name"
+    },
+    "Jahr": {
+        "message": "Year"
+    },
+    "Semester": {
+        "message": "Semester"
+    },
+    "Note": {
+        "message": "Mark"
+    },
+    "KommentarNote": {
+        "message": "[ 0 ] for no evaluation:"
+    },
+    "KommentarGrad": {
+        "message": "[ - ] for no grade"
+    },
+    "Herbst": {
+        "message": "Autumn"
+    },
+    "Fruehling": {
+        "message": "Spring"
+    }
+}

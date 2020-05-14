@@ -18,7 +18,6 @@ const Helpers = {
         }
         return progress;
     },
-
     /**
      * Add an h2 title as the first child of the given DOM element.
      *
@@ -31,10 +30,9 @@ const Helpers = {
         title.appendChild(document.createTextNode(text));
         element.insertBefore(title, element.firstChild);
     },
-
     /**
      * Checks if browser is Firefox or Chromium based
-     * 
+     *
      * @returns: true if the used browser is firefox and false if not
      */
     isFirefox: () => {
@@ -47,7 +45,6 @@ const Helpers = {
             return false
         }
     },
-
     /**
     * Helper method to read a file that is included in this browser extension.
     * The file needs to be registered in manifest.json!
@@ -123,36 +120,36 @@ const Helpers = {
     },
 
     /**
-     * This Helper function returns the moduleList, specific to the used browser
-     * Chome and Firefox have different APIs for this.
-     * 
-     * @returns: moduleList
+     * Helper function to read from local storage.
+     * It's needed because the chrome and firefox api are diffrent.
+     * Additional the chrome API does not support sync/await, so we fixed that. 
      */
-    getModuleListFromSyncStorage: async () => {
+    getItemFromLocalStorage: async (itemID) => {
         if (Helpers.isFirefox()) {
-            const getModuleListFromSyncStorageFirefox = async () => {
+            const getItemFromLocalStorageFirefox = async () => {
                 return new Promise(
                     (resolve, reject) => {
-                        moduleList = browser.storage.sync.get("moduleList", function (response) {
+                        moduleList = browser.storage.local.get(itemID, function (response) {
                             resolve(response);
                         });
                     });
             }
-            moduleList = await getModuleListFromSyncStorageFirefox();
+            localStorageItem = await getItemFromLocalStorageFirefox();
+
         }
         else {
-            const getModuleListFromSyncStorageChrome = async () => {
+            getItemFromLocalStorageChrome = async () => {
                 return new Promise(
                     (resolve, reject) => {
-                        moduleList = chrome.storage.sync.get("moduleList", function (response) {
+                        moduleList = chrome.storage.local.get(itemID, function (response) {
                             resolve(response);
                         });
                     });
 
             }
-            moduleList = await getModuleListFromSyncStorageChrome();
+            localStorageItem = await getItemFromLocalStorageChrome();
         }
-        return moduleList.moduleList
+        return localStorageItem
     },
 
     getSyncStorage: () => {
@@ -186,6 +183,18 @@ const Helpers = {
                         resolve(response);
                     });
                 });
+        }
+    },
+    /**
+     *
+     * @param {Object} obj { moduleList: moduleList }
+     */
+    saveObjectInLocalStorage: async (obj) => {
+        if (Helpers.isFirefox()) {
+            await browser.storage.local.set(obj);
+        }
+        else {
+            await chrome.storage.local.set(obj);
         }
     }
 }

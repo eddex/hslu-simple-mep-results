@@ -5,16 +5,7 @@ the type of a module.
 
 It is done in a seperate script to increase the performance of the extension.
 
-To get started download the html files from
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/
-and save it as 'tools/modulbeschriebe_i.html
-
-and for the WI modules
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/
-and save it as 'tools/modulbeschriebe_wi.html.
-
-The lxml.html.parse method would also be able to parse a website by url,
-but for this we would need to figure out how to login to mycampus by API call.
+For further information please read: https://github.com/eddex/hslu-simple-mep-results/blob/master/CONTRIBUTING.md
 '''
 from lxml import etree, html
 import json
@@ -185,7 +176,7 @@ def parseWebsite():
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
     modules_with_type['ENICS1'] = zusatzmodul
-    modules_with_type['ISA_TML'] = zusatzmodul
+    modules_with_type['TML'] = zusatzmodul
     modules_with_type['GEST'] = zusatzmodul # Blockwoche Bildnerisches Gestalten
 
     # fixes

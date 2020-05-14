@@ -41,22 +41,28 @@ const ModuleParser = {
 
     /**
      * Calculate the semester.
-     * 
+     *
      * @param {string} hsluModuleName: is the 'anlassnumber',
      *  e.g. 'I.BA_BCHAIN.H1901'.
      */
     calculateSemester: (hsluModuleName, firstModule) => {
+        let semester = undefined;
 
         const startYear = new Date(firstModule.from).getFullYear();
         const isStartInAutumn = ModuleParser.isAutumnSemester(firstModule.anlassnumber);
 
         const lastPart = hsluModuleName.split('.')[2];
+        if (lastPart === undefined) {
+            // we need this early abort because of entries like 'I.WEIHNACHT_19'
+            // (which is not even a real module!)
+            return semester;
+        }
+
         const moduleYear = Number('20' + lastPart.substring(1, 3));
         const isModuleInAutumn = ModuleParser.isAutumnSemester(hsluModuleName);
 
         const yearDifference = (moduleYear - startYear)
 
-        let semester = undefined;
         if (isModuleInAutumn === undefined) {
             // we need this early abort because of entries like 'I.BA_PTA_b.1618'
             // (which is not even a real module!)
@@ -119,7 +125,27 @@ const ModuleParser = {
             return null;
         }
     },
-
+    /**
+     *  check if a module is valid
+     *  the modulename should look like this: I.BA_ANLS.F1901
+     */
+    validateModuleName: (moduleName) => {
+        /**
+         * '^'      matches the beginning of the string, or the beginning of a line
+         * '(\w+)'  matches every word characters
+         * '\.'     matches 1x '.' character
+         * '(.+)'   matches every character and following
+         * '[FH]'   matches if 'F' or 'H'
+         * '\d{4}'  matches 4 digit character
+         *
+         * Only if all of them are matching in the right order test() returns true
+         * */
+        const moduleNameRegex = /^(\w+)\.(.+)\.[FH]\d{4}/g;
+        if (moduleNameRegex.test(moduleName)) {
+            return true
+        }
+        return false
+    },
     /**
     * Generates an array of module objects using the API and the module type mapping json file.
     */
@@ -150,26 +176,41 @@ const ModuleParser = {
             .reverse()
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
 
-        anlasslistApiResponse.items.forEach(item => {
+        const passedMessage = await i18n.getMessage("Bestanden");
 
+        anlasslistApiResponse.items.forEach(item => {
             let parsedModule = {};
+            if (ModuleParser.validateModuleName(item.anlassnumber)) {
+                parsedModule.semester = ModuleParser.calculateSemester(item.anlassnumber, firstModule);
+            }
+            else {
+                console.log("Not valid modulename: ", item.anlassnumber);
+                parsedModule.semester = undefined
+            }
 
             let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
             parsedModule.passed = passed;
 
-            parsedModule.mark = item.note === null ? 'n/a' : item.note;
+            if (item.note != null) {
+                parsedModule.mark = item.note;
+            }
+            else if (passed) {
+                parsedModule.mark = passedMessage;
+            }
+            else {
+                parsedModule.mark = 'n/a';
+            }
             parsedModule.grade = item.grade === null ? 'n/a' : item.grade;
             parsedModule.name = item.anlassnumber;
             parsedModule.from = item.from;
             parsedModule.to = item.to;
 
-            parsedModule.semester = ModuleParser.calculateSemester(item.anlassnumber, firstModule);
 
-            let details = item.details;
+            const details = item.details;
             const creditsKey = 'ECTS-Punkte';
             parsedModule.credits = ModuleParser.getItemDetailsValueByKey(details, creditsKey);
 
-            let moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
+            const moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
             parsedModule.moduleType = moduleTypeList[moduleId];
 
             // all modules from SZ (Sprachzentrum) are 'Zusatzmodul'
@@ -180,7 +221,7 @@ const ModuleParser = {
         });
 
         //add custom modules from local storage
-        let moduleList = await Helpers.getModuleListFromSyncStorage();
+        let moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
         for (const customModuleName in moduleList) {
             if (moduleList.hasOwnProperty(customModuleName)) {
                 const customModule = moduleList[customModuleName];

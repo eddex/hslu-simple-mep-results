@@ -1,11 +1,12 @@
 {
   "manifest_version": 2,
   "name": "HSLU simple MEP results",
-  "version": "2.0.13",
-  "description": "Show the results of your exams in a simple list instead of the crappy default layout.",
+  "version": "2.0.15",
+  "description": "Show the results of your exams in a nice way instead of the crappy default layout.",
   "icons": {
     "48": "icons/icon-48.png",
-    "96": "icons/icon-96.png"
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
   },
   "browser_action": {
     "default_icon": "icons/icon-48.png",
@@ -20,6 +21,7 @@
       ],
       "js": [
         "components/helpers.js",
+        "components/i18n.js",
         "components/module_parser.js",
         "lib/Chart.bundle.min.js",
         "main.js"
@@ -40,8 +42,10 @@
     "templates/custom_styles.css",
     "data/modules_i.json",
     "data/modules_ics.json",
-    "data/modules_wi.json"
+    "data/modules_wi.json",
+    "_locales/*"
   ],
+  "default_locale": "de",
   "browser_specific_settings": {
     "gecko": {
       "id": "{64b1a494-88df-447e-b2aa-45d86fcc3c16}",
