@@ -16,7 +16,8 @@ const _Student = {
         Erweiterungsmodul: { current: 0, min: 42 },
         Majormodul: { current: 0, min: 24 },
         Zusatzmodul: { current: 0, min: 9 }
-    }
+    },
+    useSyncStorage = false
 }
 
 /**
@@ -496,10 +497,20 @@ function createLoadingIcon() {
     }
 }
 
+async function migrationToSyncStorage() {
+    localStorage = await Helpers.getLocalStorage();
+    Helpers.setSyncStorage(localStorage);
+    _Student.useSyncStorage = true;
+    console.log('Migration completet, set useSyncStorage to ', _Student.useSyncStorage)
+}
+
 async function start() {
     await i18n.init();
     createLoadingIcon();
-    
+    if (_Student.useSyncStorage) {
+        await migrationToSyncStorage();
+    }
+
     await getStudentInformations();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);

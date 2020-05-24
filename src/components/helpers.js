@@ -68,38 +68,6 @@ const Helpers = {
         }
         return internal_file;
     },
-    // /**
-    //  * This Helper function returns the moduleList, specific to the used browser
-    //  * Chome and Firefox have different APIs for this.
-    //  * 
-    //  * @returns: moduleList
-    //  */
-    // getModuleListFromLocalStorage: async () => {
-    //     if (Helpers.isFirefox()) {
-    //         const getModuleListFromLocalStorageFirefox = async () => {
-    //             return new Promise(
-    //                 (resolve, reject) => {
-    //                     moduleList = browser.storage.local.get("moduleList", function (response) {
-    //                         resolve(response);
-    //                     });
-    //                 });
-    //         }
-    //         moduleList = await getModuleListFromLocalStorageFirefox();
-
-    //     }
-    //     else {
-    //         getModuleListFromLocalStorageChrome = async () => {
-    //             return new Promise(
-    //                 (resolve, reject) => {
-    //                     moduleList = chrome.storage.local.get("moduleList", function (response) {
-    //                         resolve(response);
-    //                     });
-    //                 });
-    //         }
-    //         moduleList = await getModuleListFromLocalStorageChrome();
-    //     }
-    //     return moduleList.moduleList
-    // },
     getLocalStorage: () => {
         if (Helpers.isFirefox()) {
             return new Promise(
@@ -185,16 +153,23 @@ const Helpers = {
                 });
         }
     },
-    /**
-     *
-     * @param {Object} obj { moduleList: moduleList }
-     */
-    saveObjectInLocalStorage: async (obj) => {
-        if (Helpers.isFirefox()) {
-            await browser.storage.local.set(obj);
+    saveObjectInStorage: async (obj, useSyncStorage) => {
+
+        if (useSyncStorage) {
+            if (Helpers.isFirefox()) {
+                await browser.storage.local.set(obj);
+            }
+            else {
+                await chrome.storage.local.set(obj);
+            }
         }
         else {
-            await chrome.storage.local.set(obj);
+            if (Helpers.isFirefox()) {
+                await browser.storage.local.set(obj);
+            }
+            else {
+                await chrome.storage.local.set(obj);
+            }
         }
     }
 }
