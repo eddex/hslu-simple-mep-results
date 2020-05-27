@@ -166,6 +166,8 @@ def parseWebsite():
     ics_modules_with_type['SPREN2'] = kernmodul
     ics_modules_with_type['KRYPTO'] = kernmodul
     ics_modules_with_type['NETDA'] = kernmodul
+    ics_modules_with_type['STA1'] = kernmodul
+
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
