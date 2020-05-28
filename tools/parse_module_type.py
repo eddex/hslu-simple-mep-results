@@ -181,7 +181,7 @@ def parseWebsite():
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
     modules_with_type['ENICS1'] = zusatzmodul
-    modules_with_type['TML'] = zusatzmodul 
+    modules_with_type['TML'] = zusatzmodul
     modules_with_type['GEST'] = zusatzmodul # Blockwoche Bildnerisches Gestalten
 
     # fixes
