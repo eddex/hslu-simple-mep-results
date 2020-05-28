@@ -45,9 +45,10 @@ def parseWebsite():
         'erweiterungsmodulestudienganginformatik',
         'majormoduleerweiterungsmodule',
         'zusatzmodulestudienganginformatik',
-        'zusatzmodulestudienganginformatikangebotta'
+        'zusatzmodulestudienganginformatikangebotta',
         'kernmodule',
         'projektmodules',
+        'projektmodule',
         'erweiterungsmodule',
         'zusatzmodule',
     ]
@@ -69,6 +70,7 @@ def parseWebsite():
         'zusatzmodulestudienganginformatikangebotta': zusatzmodul,
         'kernmodule': kernmodul,
         'projektmodules':  projektmodul,
+        'projektmodule': projektmodul,
         'erweiterungsmodule': erweiterungsmodul,
         'zusatzmodule': zusatzmodul
     }
@@ -98,6 +100,7 @@ def parseWebsite():
                     module_id = module_name.split('(')[1].split(')')[0]
                     modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
+    # parse wi modules
     tree = html.parse('./modulbeschriebe_wi.html')
     doc = html.fromstring(etree.tostring(tree))
     sections = doc.find_class(
@@ -163,6 +166,8 @@ def parseWebsite():
     ics_modules_with_type['SPREN2'] = kernmodul
     ics_modules_with_type['KRYPTO'] = kernmodul
     ics_modules_with_type['NETDA'] = kernmodul
+    ics_modules_with_type['STA1'] = kernmodul
+
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
