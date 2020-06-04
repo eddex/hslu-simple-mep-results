@@ -248,9 +248,9 @@ const ModuleParser = {
                 const customModule = moduleList[customModuleName];
 
                 let parsedModule = {};
-                parsedModule.passed = customModule.grade == 'F' ? false : true;
                 parsedModule.mark = customModule.mark;
-                parsedModule.grade = customModule.grade;
+                parsedModule.grade = parsedModule.mark < 4 ? 'F' : customModule.grade;
+                parsedModule.passed = parsedModule.grade == 'F' ? false : true;
                 parsedModule.type = customModule.type;
                 parsedModule.credits = customModule.credits;
                 parsedModule.moduleType = customModule.type;
