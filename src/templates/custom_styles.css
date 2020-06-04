@@ -81,3 +81,7 @@ td {
 #hslu_extension_loading-icon {
   margin-bottom: 1rem
 }
+
+.failed-module {
+  text-decoration: line-through;
+}
