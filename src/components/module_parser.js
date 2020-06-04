@@ -189,14 +189,22 @@ const ModuleParser = {
                 console.log("Not valid modulename: ", item.anlassnumber);
                 parsedModule.semester = undefined
             }
+            const state = item.prop1[0].text
+            if (state == 'Erfolgreich teilgenommen') {
+                parsedModule.passed = true;
 
-            let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
-            parsedModule.passed = passed;
+            } 
+            else if (state == 'Angemeldet'|| state == 'Testat erfüllt') {
+                parsedModule.passed = undefined;
+            }
+            else {
+                parsedModule.passed = false;
+            }
 
             if (item.note != null) {
                 parsedModule.mark = item.note;
             }
-            else if (passed) {
+            else if (parsedModule.passed) {
                 parsedModule.mark = passedMessage;
             }
             else {

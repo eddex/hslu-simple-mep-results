@@ -137,6 +137,10 @@ function createModulesTable(div, modules) {
         if (index % 2 == 0) {
             tr.classList.add('colored-row');
         }
+        if (parsedModule.passed == false) {
+            tr.classList.add('failed-module');
+        }
+        console.log(parsedModule)
         tbody.appendChild(tr);
     });
 
