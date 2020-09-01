@@ -146,6 +146,10 @@ def parseWebsite():
     modules_with_type['BSCI'] = '-'
     modules_with_type['EINFTA'] = '-'
     modules_with_type['PRG'] = kernmodul
+    modules_with_type['CG'] = majormodul
+
+    modules_with_type['IPEUS'] = projektmodul
+    modules_with_type['PIPE'] = projektmodul
 
     # ICS modules
     ics_modules_with_type['DB&S'] = kernmodul
@@ -176,6 +180,12 @@ def parseWebsite():
 
     # fixes for WI modules
     wi_modules_with_type['ENWC'] = erweiterungsmodul
+    wi_modules_with_type['STA1'] = kernmodul
+    wi_modules_with_type['GPOR'] = kernmodul
+    wi_modules_with_type['WEBT'] = kernmodul
+    wi_modules_with_type['TUNE'] = zusatzmodul
+    wi_modules_with_type['STO'] = zusatzmodul
+    wi_modules_with_type['FV'] = zusatzmodul
 
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
@@ -201,7 +211,7 @@ def prequisitesCheck():
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
         print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
 and save it as \'tools/modulbeschriebe_i.html\'.')
         return False
 
@@ -209,7 +219,7 @@ and save it as \'tools/modulbeschriebe_i.html\'.')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_wi.html\' does not exist.')
         print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
 and save it as \'tools/modulbeschriebe_wi.html\'.')
         return False
     return True
