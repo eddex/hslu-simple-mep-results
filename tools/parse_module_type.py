@@ -201,7 +201,7 @@ def prequisitesCheck():
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
         print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
 and save it as \'tools/modulbeschriebe_i.html\'.')
         return False
 
@@ -209,7 +209,7 @@ and save it as \'tools/modulbeschriebe_i.html\'.')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_wi.html\' does not exist.')
         print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
 and save it as \'tools/modulbeschriebe_wi.html\'.')
         return False
     return True
