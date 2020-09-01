@@ -146,6 +146,10 @@ def parseWebsite():
     modules_with_type['BSCI'] = '-'
     modules_with_type['EINFTA'] = '-'
     modules_with_type['PRG'] = kernmodul
+    modules_with_type['CG'] = majormodul
+
+    modules_with_type['IPEUS'] = projektmodul
+    modules_with_type['PIPE'] = projektmodul
 
     # ICS modules
     ics_modules_with_type['DB&S'] = kernmodul
@@ -176,6 +180,12 @@ def parseWebsite():
 
     # fixes for WI modules
     wi_modules_with_type['ENWC'] = erweiterungsmodul
+    wi_modules_with_type['STA1'] = kernmodul
+    wi_modules_with_type['GPOR'] = kernmodul
+    wi_modules_with_type['WEBT'] = kernmodul
+    wi_modules_with_type['TUNE'] = zusatzmodul
+    wi_modules_with_type['STO'] = zusatzmodul
+    wi_modules_with_type['FV'] = zusatzmodul
 
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
