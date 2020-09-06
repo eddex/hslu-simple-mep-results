@@ -1,87 +1,115 @@
 /* Container */
+
 .allmighty-container {
-  padding-left: 5px;
-  padding-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
+
+
 /* END */
 
+
 /* Chart */
+
 .chart-canvas {
-  width: 90%;
-  margin: auto;
-  margin-bottom: 1.5rem;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 1.5rem;
 }
 
+
 /* Modules table & grades table */
+
 table, th, td {
-  border: 1px solid #415e6c;
+    border: 1px solid #415e6c;
 }
 
 th {
-  background-color: #415e6c;
-  color: white;
-  font-weight: normal;
+    background-color: #415e6c;
+    color: white;
+    font-weight: normal;
 }
 
 table {
-  margin-bottom: 1.6rem;
-  width: 100%;
+    margin-bottom: 1.6rem;
+    width: 100%;
 }
 
 td {
-  padding-left: 2px;
+    padding-left: 2px;
+    position: relative;
+}
+
+tr.failed-module td:before {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    border-bottom: 2px solid #111;
+    width: 100%;
+}
+
+tr.failed-module td:after {
+    content: "\00B7";
 }
 
 .colored-row {
-  background-color: #dfe2e5;
+    background-color: #dfe2e5;
 }
+
+
 /* END */
 
+
 /* Credits by module type grid layout */
+
 .progress-container {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 1px;
-  padding: 1px;
-  background-color: #415e6c;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-gap: 1px;
+    padding: 1px;
+    background-color: #415e6c;
 }
 
 .progress-bar {
-  background-color: skyblue;
-  display: block;
-  height: 100%;
+    background-color: skyblue;
+    display: block;
+    height: 100%;
 }
 
 .progress-text {
-  padding-left: 2px;
-  background-color: white;
+    padding-left: 2px;
+    background-color: white;
 }
 
 .progress-title {
-  padding-left: 2px;
-  /* font-weight: bold; */
-  color: white;
-  background-color: #415e6c;
+    padding-left: 2px;
+    /* font-weight: bold; */
+    color: white;
+    background-color: #415e6c;
 }
+
+
 /* END */
 
+
 /* Total credits progress bar */
+
 .total-progress-container {
-  height: 10px;
-  width: 100%;
-  border: 1px solid #415e6c;
-  margin-bottom: 0.4rem;
+    height: 10px;
+    width: 100%;
+    border: 1px solid #415e6c;
+    margin-bottom: 0.4rem;
 }
 
 .total-progress {
-  background-color: skyblue;
-  height: 100%;
-}
-/* END */
-#hslu_extension_loading-icon {
-  margin-bottom: 1rem
+    background-color: skyblue;
+    height: 100%;
 }
 
-.failed-module {
-  text-decoration: line-through;
+
+/* END */
+
+#hslu_extension_loading-icon {
+    margin-bottom: 1rem
 }
