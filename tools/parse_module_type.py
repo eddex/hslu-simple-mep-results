@@ -134,6 +134,7 @@ def parseWebsite():
     modules_with_type['WEBLAB'] = majormodul
     modules_with_type['KOHEB'] = zusatzmodul
     modules_with_type['MAREP'] = repetitoriummodul
+    modules_with_type['NATCYSEC'] = erweiterungsmodul
 
     # Other modules (that don't appear on the website)
     # Sometimes they just rename modules but the names don't change on 'Meine Anmeldungen'
@@ -171,12 +172,19 @@ def parseWebsite():
     ics_modules_with_type['KRYPTO'] = kernmodul
     ics_modules_with_type['NETDA'] = kernmodul
     ics_modules_with_type['STA1'] = kernmodul
-
+    ics_modules_with_type['SYSSEC'] = kernmodul
+    ics_modules_with_type['CCNA1&2ZERT'] = kernmodul
+    ics_modules_with_type['IOT'] = kernmodul
+    ics_modules_with_type['SIOT'] = kernmodul
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
     ics_modules_with_type['WEBTEC'] = kernmodul
     ics_modules_with_type['SPRG'] = kernmodul
+    ics_modules_with_type['BCHAIN'] = erweiterungsmodul
+    ics_modules_with_type['DL4G'] = erweiterungsmodul
+    ics_modules_with_type['GAMEDEV'] = erweiterungsmodul
+
 
     # fixes for WI modules
     wi_modules_with_type['ENWC'] = erweiterungsmodul
