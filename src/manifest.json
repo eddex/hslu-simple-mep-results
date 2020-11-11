@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "HSLU simple MEP results",
-  "version": "2.0.15",
+  "version": "2.1.0",
   "description": "Show the results of your exams in a nice way instead of the crappy default layout.",
   "icons": {
     "48": "icons/icon-48.png",
@@ -43,6 +43,7 @@
     "data/modules_i.json",
     "data/modules_ics.json",
     "data/modules_wi.json",
+    "data/modules_ai.json",
     "_locales/*"
   ],
   "default_locale": "de",
