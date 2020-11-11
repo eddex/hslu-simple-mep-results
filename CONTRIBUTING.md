@@ -8,8 +8,9 @@ We're open to new feature ideas. Please create an issue to describe your idea *b
 - All changes to the module files in `src/data/` have to be done in the `tools/parse_module_types.py` python script.
 - Always run the script inside of the `tools/` folder. Otherwise the paths are not correct.
 - To get started download the html files from
-  - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/) and save it as `tools/modulbeschriebe_i.html`
-  - and [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/einschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/) and save it as `tools/modulbeschriebe_wi.html`.
+  - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/) and save it as `tools/modulbeschriebe_ai.html`
+  - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/) and save it as `tools/modulbeschriebe_i.html`
+  - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/) and save it as `tools/modulbeschriebe_wi.html`.
 
 - Install the required python libraries with `pip3 install -r requirements.txt`.
 - Make your changes in the script and then run the script to update the files in `src/data/`.
