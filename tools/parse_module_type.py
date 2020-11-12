@@ -139,15 +139,10 @@ def parseWebsite():
                     'columns col-collapse small-12 print-12 download-text')
                 for module in modules:
                     module_name = str(etree.tostring(module))
-                    #print(module_name)
-                    if '(Angewandte)' in module_name:
-                        # this is needed due to the module "(Angewandte) Mathematik 2 (MAT2) C12/C16"
-                        module_name = module_name.split('(Angewandte)')[1]
                     if '(' in module_name:
                         module_id = module_name.split('(')[1].split(')')[0]
                         #print(module_id)
                         ai_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
-                        #print(ai_modules_with_type[module_id])
 
     # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
