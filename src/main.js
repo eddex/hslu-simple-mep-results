@@ -22,7 +22,7 @@ const _Student = {
 /**
  * Gets the acronym of the students study.
  * @param {String} studyTitle
- * @returns {String} I, ICS or WI
+ * @returns {String} AI, I, ICS or WI
  */
 function getStudyAcronym(studyTitle) {
     const studyTitles = {
@@ -30,7 +30,8 @@ function getStudyAcronym(studyTitle) {
         "bachelor of science in information": "I",
         "bachelor of science in computer science": "I",
         "bachelor of science in wirtschaftsinformatik": "WI",
-        "bachelor of science in informatik": "I"
+        "bachelor of science in informatik": "I",
+        "bachelor of science in artificial intelligence & machine learning": "AI"
     }
     studyTitle = studyTitle.toLowerCase().replace(/[0-9]/g, '').trim();
     return studyTitles[studyTitle];
@@ -501,7 +502,7 @@ function createLoadingIcon() {
 async function start() {
     await i18n.init();
     createLoadingIcon();
-    
+
     await getStudentInformations();
     const modules = await ModuleParser.generateModuleObjects(_Student.studyAcronym);
     generateHtml(modules);
