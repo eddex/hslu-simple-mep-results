@@ -245,14 +245,13 @@ and save it as \'tools/modulbeschriebe_i.html\'.')
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
 and save it as \'tools/modulbeschriebe_wi.html\'.')
         return False
-    return True
 
     f = Path('./modulbeschriebe_ai.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_ai.html\' does not exist.')
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/ \
-and save it as \'tools/modulbeschriebe_wi.html\'.')
+and save it as \'tools/modulbeschriebe_ai.html\'.')
         return False
     return True
 
