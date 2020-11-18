@@ -83,6 +83,7 @@ def parseWebsite():
     modules_with_type = {}
     ics_modules_with_type = {}
     wi_modules_with_type = {}
+    ai_modules_with_type = {}
 
     for section in sections:
         for module_type_html_id in module_type_html_ids:
@@ -122,6 +123,26 @@ def parseWebsite():
                         module_id = module_name.split('(')[1].split(')')[0]
                         # print(module_id)
                         wi_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
+
+    # parse ai modules
+    tree = html.parse('./modulbeschriebe_ai.html')
+    doc = html.fromstring(etree.tostring(tree))
+    sections = doc.find_class(
+        'download-content large-20 columns append-bottom')
+
+    for section in sections:
+        for module_type_html_id in module_type_html_ids:
+            module_type_title = section.get_element_by_id(
+                module_type_html_id, None)
+            if module_type_title is not None:
+                modules = section.find_class(
+                    'columns col-collapse small-12 print-12 download-text')
+                for module in modules:
+                    module_name = str(etree.tostring(module))
+                    if '(' in module_name:
+                        module_id = module_name.split('(')[1].split(')')[0]
+                        #print(module_id)
+                        ai_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
@@ -200,10 +221,12 @@ def parseWebsite():
     filepath_i_modules = '../src/data/modules_i.json'
     filepath_ics_modules = '../src/data/modules_ics.json'
     filepath_wi_modules = '../src/data/modules_wi.json'
+    filepath_ai_modules = '../src/data/modules_ai.json'
 
     writeModuleFiles(filepath_i_modules, modules_with_type)
     writeModuleFiles(filepath_ics_modules, ics_modules_with_type)
     writeModuleFiles(filepath_wi_modules, wi_modules_with_type)
+    writeModuleFiles(filepath_ai_modules, ai_modules_with_type)
 
 
 def prequisitesCheck():
@@ -221,6 +244,14 @@ and save it as \'tools/modulbeschriebe_i.html\'.')
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
 and save it as \'tools/modulbeschriebe_wi.html\'.')
+        return False
+
+    f = Path('./modulbeschriebe_ai.html')
+    if not f.is_file():
+        print('ERROR: file \'./modulbeschriebe_ai.html\' does not exist.')
+        print('To get started download the html file from \
+https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/ \
+and save it as \'tools/modulbeschriebe_ai.html\'.')
         return False
     return True
 
