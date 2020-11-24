@@ -123,6 +123,12 @@ Google might remove the extension from the store again, so stay tuned.
 
 # Development
 
+:warning: **For maintainers only** :warning:
+
+Creating new releases is done *exclusively* by the maintainers of this repository.
+Contributors must not change the version number and can't publish a new release as
+described below.
+
 ## Create a new release
 
 1. Update the version number in `src/manifest.json`.

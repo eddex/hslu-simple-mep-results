@@ -2,6 +2,11 @@
 
 We're open to new feature ideas. Please create an issue to describe your idea *before* you implement your idea so we can dicuss about it.
 
+# Creating a new release
+
+Only the maintainers of this repository allowed to change the version number
+and create a new release. Please don't do this yourself.
+
 # Adding or changing modules
 
 - Do not edit the files in `src/data/` by hand!
