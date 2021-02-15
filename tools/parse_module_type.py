@@ -7,9 +7,59 @@ It is done in a seperate script to increase the performance of the extension.
 
 For further information please read: https://github.com/eddex/hslu-simple-mep-results/blob/master/CONTRIBUTING.md
 '''
-from lxml import etree, html
 import json
+from os import error
 from pathlib import Path
+
+import requests
+from lxml import etree, html
+
+from getpass import getpass, getuser
+
+
+def login(username, password):
+    session = requests.Session()
+    loginpage_url = 'https://mycampus.hslu.ch/de-ch/service-sites/login/?item=%2fde-ch%2fstud-i%2f'
+
+    try:
+        loginpage = session.get(loginpage_url)
+    except Exception as error:
+        print("\nPlease check your internet connection or check the url")
+        print("url: " + loginpage_url + '\n')
+        print("Exception: " + repr(error))
+        return False
+
+    parsed_loginpage = html.fromstring(loginpage.text)
+
+    # xpaths for the login event validation
+    viewstategenerator_xpath = '//*[@id="__VIEWSTATEGENERATOR"]/@value'
+    eventvalidation_xpath = '//*[@id="__EVENTVALIDATION"]/@value'
+    viewstate_xpath = '//*[@id="__VIEWSTATE"]/@value'
+
+    viewstate = parsed_loginpage.xpath(viewstate_xpath)[0]
+    viewstategenerator = parsed_loginpage.xpath(viewstategenerator_xpath)[0]
+    eventvalidation = parsed_loginpage.xpath(eventvalidation_xpath)[0]
+
+    # create post data
+    login_post_data = {
+        "ph_campus_template_content_0$txtUserName": username,
+        "ph_campus_template_content_0$txtPassword": password,
+        "ph_campus_template_content_0$btnLogin": "Anmelden",
+        "__VIEWSTATE": viewstate,
+        "__VIEWSTATEGENERATOR": viewstategenerator,
+        "__EVENTVALIDATION": eventvalidation
+    }
+    try:
+        session.post(loginpage_url, data=login_post_data)
+        session.cookies.get_dict()['.ASPXAUTH']
+    except KeyError as error:
+        print('Something went wrong with the login, maybe you misstyped your password or username?')
+        exit(0)
+    except Exception as error:
+        print(repr(error))
+        exit(0)
+
+    return session
 
 
 def readFileAsJSON(fileName):
@@ -75,8 +125,17 @@ def parseWebsite():
         'zusatzmodule': zusatzmodul
     }
 
-    tree = html.parse('./modulbeschriebe_i.html')
-    doc = html.fromstring(etree.tostring(tree))
+    mycampus_username = input('Please enter your mycampus username: ')
+    mycampus_password = getpass('Please enter your mycampus password: ')
+    session = login(username=mycampus_username, password=mycampus_password)
+
+
+    modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
+    modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
+    modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
+
+    modulbeschriebe_i = session.get(url=modulbeschriebe_i_url)
+    doc = html.fromstring(modulbeschriebe_i.text)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -102,8 +161,8 @@ def parseWebsite():
                     modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # parse wi modules
-    tree = html.parse('./modulbeschriebe_wi.html')
-    doc = html.fromstring(etree.tostring(tree))
+    modulbeschriebe_wi = session.get(url=modulbeschriebe_wi_url)
+    doc = html.fromstring(modulbeschriebe_wi.text)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -125,8 +184,8 @@ def parseWebsite():
                         wi_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # parse ai modules
-    tree = html.parse('./modulbeschriebe_ai.html')
-    doc = html.fromstring(etree.tostring(tree))
+    modulbeschriebe_wi = session.get(url=modulbeschriebe_ai_url)
+    doc = html.fromstring(modulbeschriebe_wi.text)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -141,7 +200,7 @@ def parseWebsite():
                     module_name = str(etree.tostring(module))
                     if '(' in module_name:
                         module_id = module_name.split('(')[1].split(')')[0]
-                        #print(module_id)
+                        # print(module_id)
                         ai_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # block-weeks are of different types. have to be hardcoded.
@@ -193,7 +252,6 @@ def parseWebsite():
     ics_modules_with_type['NETDA'] = kernmodul
     ics_modules_with_type['STA1'] = kernmodul
 
-
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
     ics_modules_with_type['WEBTEC'] = kernmodul
@@ -213,7 +271,8 @@ def parseWebsite():
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
     modules_with_type['ENICS1'] = zusatzmodul
     modules_with_type['TML'] = zusatzmodul
-    modules_with_type['GEST'] = zusatzmodul # Blockwoche Bildnerisches Gestalten
+    # Blockwoche Bildnerisches Gestalten
+    modules_with_type['GEST'] = zusatzmodul
 
     # fixes
     modules_with_type['STAT'] = kernmodul  # the website is not up to date
@@ -257,5 +316,5 @@ and save it as \'tools/modulbeschriebe_ai.html\'.')
 
 
 if __name__ == "__main__":
-    if prequisitesCheck():
-        parseWebsite()
+    # if prequisitesCheck():
+    parseWebsite()
