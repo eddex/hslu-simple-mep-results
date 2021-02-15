@@ -86,7 +86,7 @@ def writeModuleFiles(fileName, modules):
     writeFile(fileName, mergedModules)
 
 
-def parseWebsite():
+def parseWebsite(autoDownload=True):
 
     # wahlkernmodulec12 ignored, just duplicates / obsolete modules
     module_type_html_ids = [
@@ -124,18 +124,25 @@ def parseWebsite():
         'erweiterungsmodule': erweiterungsmodul,
         'zusatzmodule': zusatzmodul
     }
+    if autoDownload:
+        mycampus_username = input('Please enter your mycampus username: ')
+        mycampus_password = getpass('Please enter your mycampus password: ')
+        session = login(username=mycampus_username, password=mycampus_password)
 
-    mycampus_username = input('Please enter your mycampus username: ')
-    mycampus_password = getpass('Please enter your mycampus password: ')
-    session = login(username=mycampus_username, password=mycampus_password)
+        modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
+        modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
+        modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
 
+        modulbeschriebe_i = session.get(url=modulbeschriebe_i_url).text
+        modulbeschriebe_wi = session.get(url=modulbeschriebe_wi_url).text
+        modulbeschriebe_ai = session.get(url=modulbeschriebe_ai_url).text
 
-    modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
-    modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
-    modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
+    else:
+        modulbeschriebe_i = etree.tostring(html.parse('./modulbeschriebe_i.html'))
+        modulbeschriebe_wi = etree.tostring(html.parse('./modulbeschriebe_wi.html'))
+        modulbeschriebe_ai = etree.tostring(html.parse('./modulbeschriebe_ai.html'))
 
-    modulbeschriebe_i = session.get(url=modulbeschriebe_i_url)
-    doc = html.fromstring(modulbeschriebe_i.text)
+    doc = html.fromstring(modulbeschriebe_i)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -161,8 +168,7 @@ def parseWebsite():
                     modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # parse wi modules
-    modulbeschriebe_wi = session.get(url=modulbeschriebe_wi_url)
-    doc = html.fromstring(modulbeschriebe_wi.text)
+    doc = html.fromstring(modulbeschriebe_wi)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -184,8 +190,7 @@ def parseWebsite():
                         wi_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # parse ai modules
-    modulbeschriebe_wi = session.get(url=modulbeschriebe_ai_url)
-    doc = html.fromstring(modulbeschriebe_wi.text)
+    doc = html.fromstring(modulbeschriebe_ai)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -289,13 +294,14 @@ def parseWebsite():
 
 
 def prequisitesCheck():
+    checkFile = True
     f = Path('./modulbeschriebe_i.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
 and save it as \'tools/modulbeschriebe_i.html\'.')
-        return False
+        checkFile = False
 
     f = Path('./modulbeschriebe_wi.html')
     if not f.is_file():
@@ -303,7 +309,7 @@ and save it as \'tools/modulbeschriebe_i.html\'.')
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
 and save it as \'tools/modulbeschriebe_wi.html\'.')
-        return False
+        checkFile =  False
 
     f = Path('./modulbeschriebe_ai.html')
     if not f.is_file():
@@ -311,10 +317,15 @@ and save it as \'tools/modulbeschriebe_wi.html\'.')
         print('To get started download the html file from \
 https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/ \
 and save it as \'tools/modulbeschriebe_ai.html\'.')
-        return False
-    return True
+        checkFile =  False
+    return checkFile
 
 
 if __name__ == "__main__":
+    answer = input("You you like to login to MyCampus with the script and get the module type automatically? (y/n) ")
     # if prequisitesCheck():
-    parseWebsite()
+    if answer == 'y':
+        parseWebsite(autoDownload=True)
+    else:
+        if prequisitesCheck():
+            parseWebsite(autoDownload=False)
