@@ -256,6 +256,14 @@ def parseWebsite(autoDownload=True):
     ics_modules_with_type['KRYPTO'] = kernmodul
     ics_modules_with_type['NETDA'] = kernmodul
     ics_modules_with_type['STA1'] = kernmodul
+    ics_modules_with_type['REVE1'] = majormodul
+    ics_modules_with_type['REVE2'] = majormodul
+    ics_modules_with_type['KRINF'] = majormodul
+    ics_modules_with_type['KRINFLAB'] = majormodul
+    ics_modules_with_type['SOC'] = majormodul
+
+
+
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
