@@ -358,7 +358,7 @@ def prequisitesCheck():
         checkFile =  False
     return checkFile
 
-    f = Path('./modulbeschriebe_i.html')
+    f = Path('./modulbeschriebe_ics.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_ics.html\' does not exist.')
         print('To get started download the html file from', modulbeschriebe_ics_url, \
