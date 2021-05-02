@@ -325,28 +325,32 @@ def prequisitesCheck():
     f = Path('./modulbeschriebe_i.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
-        print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
-and save it as \'tools/modulbeschriebe_i.html\'.')
+        print('To get started download the html file from', modulbeschriebe_i_url, \
+'and save it as \'tools/modulbeschriebe_i.html\'.')
         checkFile = False
 
     f = Path('./modulbeschriebe_wi.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_wi.html\' does not exist.')
-        print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
-and save it as \'tools/modulbeschriebe_wi.html\'.')
+        print('To get started download the html file from', modulbeschriebe_wi_url, \
+'and save it as \'tools/modulbeschriebe_wi.html\'.')
         checkFile =  False
 
     f = Path('./modulbeschriebe_ai.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_ai.html\' does not exist.')
-        print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/ \
-and save it as \'tools/modulbeschriebe_ai.html\'.')
+        print('To get started download the html file from', modulbeschriebe_ai_url, \
+'and save it as \'tools/modulbeschriebe_ai.html\'.')
         checkFile =  False
     return checkFile
 
+    f = Path('./modulbeschriebe_i.html')
+    if not f.is_file():
+        print('ERROR: file \'./modulbeschriebe_ics.html\' does not exist.')
+        print('To get started download the html file from', modulbeschriebe_ics_url, \
+'and save it as \'tools/modulbeschriebe_ai.html\'.')
+        checkFile =  False
+    return checkFile
 
 if __name__ == "__main__":
     answer = input("You you like to login to MyCampus with the script and get the module type automatically? (y/n) ")
