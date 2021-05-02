@@ -130,15 +130,18 @@ def parseWebsite(autoDownload=True):
         session = login(username=mycampus_username, password=mycampus_password)
 
         modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
+        modulbeschriebe_ics_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/'
         modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
         modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
 
         modulbeschriebe_i = session.get(url=modulbeschriebe_i_url).text
+        modulbeschriebe_ics = session.get(url=modulbeschriebe_ics_url).text
         modulbeschriebe_wi = session.get(url=modulbeschriebe_wi_url).text
         modulbeschriebe_ai = session.get(url=modulbeschriebe_ai_url).text
 
     else:
         modulbeschriebe_i = etree.tostring(html.parse('./modulbeschriebe_i.html'))
+        modulbeschriebe_ics = etree.tostring(html.parse('./modulbeschriebe_ics.html'))
         modulbeschriebe_wi = etree.tostring(html.parse('./modulbeschriebe_wi.html'))
         modulbeschriebe_ai = etree.tostring(html.parse('./modulbeschriebe_ai.html'))
 
@@ -208,6 +211,28 @@ def parseWebsite(autoDownload=True):
                         # print(module_id)
                         ai_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
+
+    # Parse ics modules
+    # ICS modules are not seperated on the page :(
+    # Just add them to the list to categorize them manually
+    doc = html.fromstring(modulbeschriebe_ics)
+    sections = doc.find_class(
+        'download-content large-20 columns append-bottom')
+
+    for section in sections:
+        module_type_title = 'manually tag in parser'
+        modules = section.find_class(
+            'columns col-collapse small-12 print-12 download-text')
+        for module in modules:
+            module_name = str(etree.tostring(module))
+            if '(Angewandte)' in module_name:
+                # this is needed due to the module "(Angewandte) Mathematik 2 (MAT2) C12/C16"
+                module_name = module_name.split('(Angewandte)')[1]
+            # print(module_name)
+            module_id = module_name.split('(')[1].split(')')[0]
+            if module_id not in modules_with_type:
+                ics_modules_with_type[module_id] = module_type_title
+
     # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
     modules_with_type['IAVR'] = majormodul
@@ -261,8 +286,6 @@ def parseWebsite(autoDownload=True):
     ics_modules_with_type['KRINF'] = majormodul
     ics_modules_with_type['KRINFLAB'] = majormodul
     ics_modules_with_type['SOC'] = majormodul
-
-
 
 
     # fixes for ICS modules
