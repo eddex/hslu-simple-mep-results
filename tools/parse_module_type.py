@@ -224,7 +224,7 @@ def parseWebsite(autoDownload=True):
         'columns col-collapse small-12 print-12 download-text')
     for module in modules:
         module_name = str(etree.tostring(module))
-        module_id = module_name.rsplit('(',1)[1].rsplit(')')[0]
+        module_id = module_name.rsplit('(',1)[1].rsplit(')')[0].replace('&amp;', '&')
         if module_id not in modules_with_type:
             ics_modules_with_type[module_id] = module_type_placeholder
 
