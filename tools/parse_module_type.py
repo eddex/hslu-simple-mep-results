@@ -199,8 +199,7 @@ def parseWebsite(autoDownload=True):
 
     for section in sections:
         for module_type_html_id in module_type_html_ids:
-            module_type_title = section.get_element_by_id(
-                module_type_html_id, None)
+            module_type_title = section.get_element_by_id( module_type_html_id, None)
             if module_type_title is not None:
                 modules = section.find_class(
                     'columns col-collapse small-12 print-12 download-text')
@@ -215,23 +214,20 @@ def parseWebsite(autoDownload=True):
     # Parse ics modules
     # ICS modules are not seperated on the page :(
     # Just add them to the list to categorize them manually
+    module_type_placeholder = 'manually tag in parser'
     doc = html.fromstring(modulbeschriebe_ics)
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
-    for section in sections:
-        module_type_title = 'manually tag in parser'
-        modules = section.find_class(
-            'columns col-collapse small-12 print-12 download-text')
-        for module in modules:
-            module_name = str(etree.tostring(module))
-            if '(Angewandte)' in module_name:
-                # this is needed due to the module "(Angewandte) Mathematik 2 (MAT2) C12/C16"
-                module_name = module_name.split('(Angewandte)')[1]
-            # print(module_name)
-            module_id = module_name.split('(')[1].split(')')[0]
-            if module_id not in modules_with_type:
-                ics_modules_with_type[module_id] = module_type_title
+    # ics only has "Modulbeschreibungen" --> no loop required for sections
+    modules = sections[0].find_class(
+        'columns col-collapse small-12 print-12 download-text')
+    for module in modules:
+        module_name = str(etree.tostring(module))
+        module_id = module_name.rsplit('(',1)[1].rsplit(')')[0]
+        if module_id not in modules_with_type:
+            ics_modules_with_type[module_id] = module_type_placeholder
+
 
     # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
