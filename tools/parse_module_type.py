@@ -130,15 +130,18 @@ def parseWebsite(autoDownload=True):
         session = login(username=mycampus_username, password=mycampus_password)
 
         modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
+        modulbeschriebe_ics_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/'
         modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
         modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
 
         modulbeschriebe_i = session.get(url=modulbeschriebe_i_url).text
+        modulbeschriebe_ics = session.get(url=modulbeschriebe_ics_url).text
         modulbeschriebe_wi = session.get(url=modulbeschriebe_wi_url).text
         modulbeschriebe_ai = session.get(url=modulbeschriebe_ai_url).text
 
     else:
         modulbeschriebe_i = etree.tostring(html.parse('./modulbeschriebe_i.html'))
+        modulbeschriebe_ics = etree.tostring(html.parse('./modulbeschriebe_ics.html'))
         modulbeschriebe_wi = etree.tostring(html.parse('./modulbeschriebe_wi.html'))
         modulbeschriebe_ai = etree.tostring(html.parse('./modulbeschriebe_ai.html'))
 
@@ -196,8 +199,7 @@ def parseWebsite(autoDownload=True):
 
     for section in sections:
         for module_type_html_id in module_type_html_ids:
-            module_type_title = section.get_element_by_id(
-                module_type_html_id, None)
+            module_type_title = section.get_element_by_id( module_type_html_id, None)
             if module_type_title is not None:
                 modules = section.find_class(
                     'columns col-collapse small-12 print-12 download-text')
@@ -207,6 +209,25 @@ def parseWebsite(autoDownload=True):
                         module_id = module_name.split('(')[1].split(')')[0]
                         # print(module_id)
                         ai_modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
+
+
+    # Parse ics modules
+    # ICS modules are not seperated on the page :(
+    # Just add them to the list to categorize them manually
+    module_type_placeholder = 'manually tag in parser'
+    doc = html.fromstring(modulbeschriebe_ics)
+    sections = doc.find_class(
+        'download-content large-20 columns append-bottom')
+
+    # ics only has "Modulbeschreibungen" --> no loop required for sections
+    modules = sections[0].find_class(
+        'columns col-collapse small-12 print-12 download-text')
+    for module in modules:
+        module_name = str(etree.tostring(module))
+        module_id = module_name.rsplit('(',1)[1].rsplit(')')[0].replace('&amp;', '&')
+        if module_id not in modules_with_type:
+            ics_modules_with_type[module_id] = module_type_placeholder
+
 
     # block-weeks are of different types. have to be hardcoded.
     modules_with_type['IOTHACK'] = erweiterungsmodul
@@ -237,33 +258,45 @@ def parseWebsite(autoDownload=True):
     modules_with_type['PIPE'] = projektmodul
 
     # ICS modules
-    ics_modules_with_type['DB&S'] = kernmodul
-    ics_modules_with_type['NETW1'] = kernmodul
-    ics_modules_with_type['NETW2'] = kernmodul
+    ics_modules_with_type['ADRM'] = kernmodul
     ics_modules_with_type['ADS'] = kernmodul
-    ics_modules_with_type['INTROL'] = kernmodul
-    ics_modules_with_type['SPTA'] = kernmodul
-    ics_modules_with_type['SPREN1'] = kernmodul
-    ics_modules_with_type['ISLAB_K'] = kernmodul
     ics_modules_with_type['ANLS'] = kernmodul
-    ics_modules_with_type['SPTA'] = kernmodul
+    ics_modules_with_type['CISO ISSUES'] = majormodul
     ics_modules_with_type['CRS'] = erweiterungsmodul
+    ics_modules_with_type['DB&S'] = kernmodul
     ics_modules_with_type['DSO'] = kernmodul
-    ics_modules_with_type['PRIVACY1'] = kernmodul
-    ics_modules_with_type['OSA'] = kernmodul
+    ics_modules_with_type['ENGPRA'] = zusatzmodul
+    ics_modules_with_type['HOA'] = majormodul
+    ics_modules_with_type['IAM'] = majormodul
+    ics_modules_with_type['INTROL'] = kernmodul
+    ics_modules_with_type['IRFORENSIC'] = erweiterungsmodul # as well as kernmodul
+    ics_modules_with_type['IRSECPOL'] = erweiterungsmodul
+    ics_modules_with_type['ISLAB_K'] = kernmodul
     ics_modules_with_type['ISM'] = kernmodul
-    ics_modules_with_type['SPREN2'] = kernmodul
-    ics_modules_with_type['KRYPTO'] = kernmodul
-    ics_modules_with_type['NETDA'] = kernmodul
-    ics_modules_with_type['STA1'] = kernmodul
-    ics_modules_with_type['REVE1'] = majormodul
-    ics_modules_with_type['REVE2'] = majormodul
     ics_modules_with_type['KRINF'] = majormodul
     ics_modules_with_type['KRINFLAB'] = majormodul
+    ics_modules_with_type['KRYPTO'] = kernmodul
+    ics_modules_with_type['NETDA'] = kernmodul
+    ics_modules_with_type['NETW1'] = kernmodul
+    ics_modules_with_type['NETW2'] = kernmodul
+    ics_modules_with_type['NETW3'] = erweiterungsmodul
+    ics_modules_with_type['OSA'] = kernmodul
+    ics_modules_with_type['OSSEC'] = majormodul
+    ics_modules_with_type['PRIVACY'] = kernmodul
+    ics_modules_with_type['PRIVACY1'] = kernmodul
+    ics_modules_with_type['REVE1'] = majormodul
+    ics_modules_with_type['REVE2'] = majormodul
+    ics_modules_with_type['SECPROJ'] = projektmodul
+    ics_modules_with_type['SGC'] = majormodul
+    ics_modules_with_type['SIOT'] = majormodul
     ics_modules_with_type['SOC'] = majormodul
-
-
-
+    ics_modules_with_type['SPREN1'] = kernmodul
+    ics_modules_with_type['SPREN2'] = kernmodul
+    ics_modules_with_type['SPTA'] = kernmodul
+    ics_modules_with_type['SPTA'] = kernmodul
+    ics_modules_with_type['SQAS'] = erweiterungsmodul
+    ics_modules_with_type['STA1'] = kernmodul
+    ics_modules_with_type['SYSSEC'] = erweiterungsmodul
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
@@ -306,28 +339,32 @@ def prequisitesCheck():
     f = Path('./modulbeschriebe_i.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
-        print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/ \
-and save it as \'tools/modulbeschriebe_i.html\'.')
+        print('To get started download the html file from', modulbeschriebe_i_url, \
+'and save it as \'tools/modulbeschriebe_i.html\'.')
         checkFile = False
 
     f = Path('./modulbeschriebe_wi.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_wi.html\' does not exist.')
-        print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/ \
-and save it as \'tools/modulbeschriebe_wi.html\'.')
+        print('To get started download the html file from', modulbeschriebe_wi_url, \
+'and save it as \'tools/modulbeschriebe_wi.html\'.')
         checkFile =  False
 
     f = Path('./modulbeschriebe_ai.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_ai.html\' does not exist.')
-        print('To get started download the html file from \
-https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/ \
-and save it as \'tools/modulbeschriebe_ai.html\'.')
+        print('To get started download the html file from', modulbeschriebe_ai_url, \
+'and save it as \'tools/modulbeschriebe_ai.html\'.')
         checkFile =  False
     return checkFile
 
+    f = Path('./modulbeschriebe_ics.html')
+    if not f.is_file():
+        print('ERROR: file \'./modulbeschriebe_ics.html\' does not exist.')
+        print('To get started download the html file from', modulbeschriebe_ics_url, \
+'and save it as \'tools/modulbeschriebe_ai.html\'.')
+        checkFile =  False
+    return checkFile
 
 if __name__ == "__main__":
     answer = input("You you like to login to MyCampus with the script and get the module type automatically? (y/n) ")

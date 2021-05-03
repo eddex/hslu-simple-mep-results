@@ -16,6 +16,7 @@ and create a new release. Please don't do this yourself.
   - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/) and save it as `tools/modulbeschriebe_ai.html`
   - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/) and save it as `tools/modulbeschriebe_i.html`
   - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/) and save it as `tools/modulbeschriebe_wi.html`.
+  - [here](https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/) and save it as `tools/modulbeschriebe_ics.html`
 
 - Install the required python libraries with `pip3 install -r requirements.txt`.
 - Make your changes in the script and then run the script to update the files in `src/data/`.
@@ -31,3 +32,8 @@ and create a new release. Please don't do this yourself.
   #fixes for ics modules
   ics_modules_with_type['db&s'] = kernmodul
   ```
+
+  Note: Since ICS modules are not categorized on the page, one has to do it
+  manually :see_no_evil:. The `./tools/parse_module_type.py` script will add a
+  placeholder text (`manually tag in parser`) in the `src/data/modules_ics.json`
+  file, to easily spot the ones which are missing.
