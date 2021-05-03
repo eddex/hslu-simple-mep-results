@@ -37,6 +37,7 @@ This project is maintained by [@Lextum](https://github.com/Lextum) and [@eddex](
 
 Thanks to everyone who contributed to this project in the form of code or reporting issues!
 
+
 <a href="https://github.com/dev-jan">
   <img src="https://avatars3.githubusercontent.com/u/5829661?s=40&v=4" />
 </a>
@@ -69,6 +70,9 @@ Thanks to everyone who contributed to this project in the form of code or report
 </a>
 <a href="https://github.com/wullli">
   <img src="https://avatars3.githubusercontent.com/u/29056346?s=40&v=4" />
+</a>
+<a href="https://github.com/Sirius-A">
+  <img src="https://avatars3.githubusercontent.com/u/11653812?s=40&v=4" />
 </a>
 
 Want to add some missing modules, fix a bug or add a new, awesome feature? That's great. But please read [CONTRIBUTING.md](CONTRIBUTING.md) first!
