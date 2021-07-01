@@ -221,7 +221,7 @@ def parseWebsite(autoDownload=True):
 
     # ics only has "Modulbeschreibungen" --> no loop required for sections
     modules = sections[0].find_class(
-        'columns col-collapse small-12 print-12 download-text')
+        'columns medium-12 maincontent mobile-column print-full-width')
     for module in modules:
         module_name = str(etree.tostring(module))
         module_id = module_name.rsplit('(',1)[1].rsplit(')')[0].replace('&amp;', '&')
