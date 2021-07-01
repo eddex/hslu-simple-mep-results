@@ -221,7 +221,7 @@ def parseWebsite(autoDownload=True):
 
     # ics only has "Modulbeschreibungen" --> no loop required for sections
     modules = sections[0].find_class(
-        'columns col-collapse small-12 print-12 download-text')
+        'columns medium-12 maincontent mobile-column print-full-width')
     for module in modules:
         module_name = str(etree.tostring(module))
         module_id = module_name.rsplit('(',1)[1].rsplit(')')[0].replace('&amp;', '&')
@@ -240,6 +240,8 @@ def parseWebsite(autoDownload=True):
     modules_with_type['WEBLAB'] = majormodul
     modules_with_type['KOHEB'] = zusatzmodul
     modules_with_type['MAREP'] = repetitoriummodul
+    modules_with_type['REVE1'] = erweiterungsmodul
+    modules_with_type['REVE2'] = erweiterungsmodul
 
     # Other modules (that don't appear on the website)
     # Sometimes they just rename modules but the names don't change on 'Meine Anmeldungen'
@@ -315,6 +317,8 @@ def parseWebsite(autoDownload=True):
     # ISA modules
     modules_with_type['RCCR'] = zusatzmodul  # Relax, Concentrate & Create
     modules_with_type['NA'] = zusatzmodul  # Blockwoche Nachhaltigkeit
+    modules_with_type['IDEA'] = zusatzmodul
+    modules_with_type['MKK'] = zusatzmodul
     modules_with_type['ENICS1'] = zusatzmodul
     modules_with_type['TML'] = zusatzmodul
     # Blockwoche Bildnerisches Gestalten
