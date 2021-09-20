@@ -220,11 +220,16 @@ def parseWebsite(autoDownload=True):
         'download-content large-20 columns append-bottom')
 
     # ics only has "Modulbeschreibungen" --> no loop required for sections
-    modules = sections[0].find_class(
+    modules = sections[1].find_class(
         'columns col-collapse small-12 print-12 download-text')
     for module in modules:
         module_name = str(etree.tostring(module))
-        module_id = module_name.rsplit('(',1)[1].rsplit(')')[0].replace('&amp;', '&')
+        try:
+            module_id = module_name.rsplit('(',1)[1].rsplit(')')[0].replace('&amp;', '&')
+        except:
+            print("Something went wrong with extracting the module name: " + module_name)
+            print("Please open a issue here: https://github.com/eddex/hslu-simple-mep-results/issues")
+
         if module_id not in modules_with_type:
             ics_modules_with_type[module_id] = module_type_placeholder
 
@@ -296,7 +301,18 @@ def parseWebsite(autoDownload=True):
     ics_modules_with_type['SPTA'] = kernmodul
     ics_modules_with_type['SQAS'] = erweiterungsmodul
     ics_modules_with_type['STA1'] = kernmodul
+    ics_modules_with_type['ABIZ'] = erweiterungsmodul
     ics_modules_with_type['SYSSEC'] = erweiterungsmodul
+    ics_modules_with_type['CCNA'] = erweiterungsmodul
+    ics_modules_with_type['CLOUDSEC'] = kernmodul
+    ics_modules_with_type['HTCLAW'] = majormodul
+    ics_modules_with_type['IIP1'] = projektmodul
+    ics_modules_with_type['IOT'] = majormodul
+    ics_modules_with_type['IPREN1'] = projektmodul
+    ics_modules_with_type['IPREN2'] = projektmodul
+    ics_modules_with_type['KRKO'] = erweiterungsmodul
+    ics_modules_with_type['KRYPTOB'] = majormodul
+    ics_modules_with_type['PROG'] = erweiterungsmodul
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
