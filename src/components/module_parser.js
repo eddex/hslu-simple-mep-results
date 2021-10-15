@@ -12,23 +12,6 @@ const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
 const ModuleParser = {
 
     /**
-    * Gets the value ("y") of a specified key ("x") in a 'detail' element of the API response.
-    * detail: [
-    *   key: "x",
-    *   val: "y"
-    * ]
-    */
-    getItemDetailsValueByKey: (details, key) => {
-
-        for (detail of details) {
-            if (key == detail.key) {
-                return detail.val;
-            }
-        }
-        return '';
-    },
-
-    /**
      * Check if a module was done in Autumn.
      * Modules are marked with 'H' for 'Herbstsemester' (autumn)
      * or 'F' for 'Frühlingssemester' (spring).
