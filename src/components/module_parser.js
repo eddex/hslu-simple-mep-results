@@ -206,10 +206,7 @@ const ModuleParser = {
             parsedModule.name = item.anlassnumber;
             parsedModule.from = item.from;
             parsedModule.to = item.to;
-
-            const details = item.details;
-            const creditsKey = 'ECTS-Punkte';
-            parsedModule.credits = ModuleParser.getItemDetailsValueByKey(details, creditsKey);
+            parsedModule.credits = item.ects;
 
             const moduleId = ModuleParser.getModuleIdFromModuleName(parsedModule.name);
             parsedModule.moduleType = moduleTypeList[moduleId];
