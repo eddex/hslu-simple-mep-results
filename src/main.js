@@ -343,8 +343,10 @@ function createChart(div, modules) {
     const creditsDoneBySemesterCount = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     // calculate how many credits were achieved for each semester
+    // Only show the modules that are passed or are from the active semester
+    const activeSemester = Math.max.apply(Math, modules.map(function(o) { return o.semester; }))
     modules.forEach(m => {
-        if (m.grade != 'F' && m.semester != undefined && m.UseInStats) {
+        if ((m.passed && m.semester != undefined && m.UseInStats) || m.semester == activeSemester) {
             creditsDoneBySemesterCount[m.semester] += Number(m.credits);
         }
     })
