@@ -315,6 +315,15 @@ def parseWebsite(autoDownload=True):
     ics_modules_with_type['KRKO'] = erweiterungsmodul
     ics_modules_with_type['KRYPTOB'] = majormodul
     ics_modules_with_type['PROG'] = erweiterungsmodul
+    ics_modules_with_type['ADPENTEST'] = majormodul
+    ics_modules_with_type['ASACPH'] = zusatzmodul
+    ics_modules_with_type['CYBER2'] = majormodul
+    ics_modules_with_type['FORDIN'] = majormodul
+    ics_modules_with_type['ITAU'] = erweiterungsmodul
+    ics_modules_with_type['MALWLAB'] = majormodul
+    ics_modules_with_type['PYTHON'] = erweiterungsmodul
+    ics_modules_with_type['SYSECO'] = kernmodul
+    ics_modules_with_type['UKOM'] = erweiterungsmodul
 
     # fixes for ICS modules
     ics_modules_with_type['ETHIK'] = kernmodul
