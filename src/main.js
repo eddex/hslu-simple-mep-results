@@ -284,22 +284,26 @@ function calculateStats(modules) {
                 _Student.gradesCount[parsedModule.grade]++;
                 _Student.totalGrades++;
             }
+
+            let credits;
             if (parsedModule.passed) {
-                let credits = Number(parsedModule.credits);
+                credits = Number(parsedModule.credits);
                 _Student.totalCredits += credits;
                 let moduleType = parsedModule.moduleType;
                 if (moduleType in _Student.creditsByModuleTypeCount) {
                     _Student.creditsByModuleTypeCount[moduleType].current += credits;
                 }
             }
+
             // if cell is empty, Number('') returns 0!
+            // if no credits available don't use in average calculation
             numericMark = Number(parsedModule.mark)
-            if (!isNaN(numericMark) && numericMark != 0) {
-                _Student.totalNumericMarkWithF += numericMark;
-                _Student.numberOfNumericMarksWithF++;
+            if (!isNaN(numericMark) && numericMark != 0 && credits > 0) {
+                _Student.totalNumericMarkWithF += numericMark * credits;
+                _Student.numberOfNumericMarksWithF += credits;
                 if (parsedModule.passed) {
-                    _Student.totalNumericMark += numericMark;
-                    _Student.numberOfNumericMarks++;
+                    _Student.totalNumericMark += numericMark * credits;
+                    _Student.numberOfNumericMarks += credits;
                 }
             }
         }
