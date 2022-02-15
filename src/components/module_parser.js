@@ -9,8 +9,6 @@ const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
     return Object.assign(oldModuleTypeList, patch);
 }
 
-
-
 const ModuleParser = {
 
     /**
