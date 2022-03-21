@@ -285,9 +285,8 @@ function calculateStats(modules) {
                 _Student.totalGrades++;
             }
 
-            let credits;
+            let credits = Number(parsedModule.credits);
             if (parsedModule.passed) {
-                credits = Number(parsedModule.credits);
                 _Student.totalCredits += credits;
                 let moduleType = parsedModule.moduleType;
                 if (moduleType in _Student.creditsByModuleTypeCount) {
