@@ -5,10 +5,10 @@ const _Student = {
     studyAcronym: '',
     totalCredits: 0,
     totalGrades: 0,
-    totalNumericMark: 0,
-    numberOfNumericMarks: 0,
-    totalNumericMarkWithF: 0,
-    numberOfNumericMarksWithF: 0,
+    weightedTotalNumericMark: 0,
+    weightedNumberOfNumericMarks: 0,
+    weightedTotalNumericMarkWithF: 0,
+    weightedNumberOfNumericMarksWithF: 0,
     gradesCount: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 },
     creditsByModuleTypeCount: {
         Kernmodul: { current: 0, min: 60 },
@@ -247,8 +247,8 @@ function createStudyTitle(div) {
  * A second average is displayed, where the modules with grade F are taken into account.
  */
 function createAverageMarkTitle(div) {
-    const average = Number(_Student.totalNumericMark / _Student.numberOfNumericMarks).toFixed(2);
-    const averageWithF = Number(_Student.totalNumericMarkWithF / _Student.numberOfNumericMarksWithF).toFixed(2);
+    const average = Number(_Student.weightedTotalNumericMark / _Student.weightedNumberOfNumericMarks).toFixed(2);
+    const averageWithF = Number(_Student.weightedTotalNumericMarkWithF / _Student.weightedNumberOfNumericMarksWithF).toFixed(2);
     let titleName = i18n.getMessage("Noten");
     Helpers.addTitleToDocument(div, titleName + ' Ø: ' + average + ' (Ø mit F: ' + averageWithF + ')')
 }
@@ -298,11 +298,11 @@ function calculateStats(modules) {
             // if no credits available don't use in average calculation
             numericMark = Number(parsedModule.mark)
             if (!isNaN(numericMark) && numericMark != 0 && credits > 0) {
-                _Student.totalNumericMarkWithF += numericMark * credits;
-                _Student.numberOfNumericMarksWithF += credits;
+                _Student.weightedTotalNumericMarkWithF += numericMark * credits;
+                _Student.weightedNumberOfNumericMarksWithF += credits;
                 if (parsedModule.passed) {
-                    _Student.totalNumericMark += numericMark * credits;
-                    _Student.numberOfNumericMarks += credits;
+                    _Student.weightedTotalNumericMark += numericMark * credits;
+                    _Student.weightedNumberOfNumericMarks += credits;
                 }
             }
         }
