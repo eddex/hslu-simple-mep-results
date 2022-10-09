@@ -129,10 +129,10 @@ def parseWebsite(autoDownload=True):
         mycampus_password = getpass('Please enter your mycampus password: ')
         session = login(username=mycampus_username, password=mycampus_password)
 
-        modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
-        modulbeschriebe_ics_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/'
-        modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
-        modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
+        modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
+        modulbeschriebe_ics_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/'
+        modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
+        modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
 
         modulbeschriebe_i = session.get(url=modulbeschriebe_i_url).text
         modulbeschriebe_ics = session.get(url=modulbeschriebe_ics_url).text
@@ -394,7 +394,7 @@ def prequisitesCheck():
     return checkFile
 
 if __name__ == "__main__":
-    answer = input("You you like to login to MyCampus with the script and get the module type automatically? (y/n) ")
+    answer = input("Do you like to login to MyCampus with the script and get the module type automatically? (y/n) ")
     # if prequisitesCheck():
     if answer == 'y':
         parseWebsite(autoDownload=True)
