@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "HSLU simple MEP results",
   "version": "2.1.1",
   "description": "Show the results of your exams in a nice way instead of the crappy default layout.",
@@ -8,7 +8,7 @@
     "96": "icons/icon-96.png",
     "128": "icons/icon-128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "icons/icon-48.png",
     "default_title": "HSLU simple MEP results",
     "default_popup": "popup/popup.html",
@@ -32,19 +32,25 @@
     }
   ],
   "permissions": [
-    "https://mycampus.hslu.ch/*",
     "webRequest",
     "storage"
   ],
+  "host_permissions": [
+    "https://mycampus.hslu.ch/*"
+  ],
   "web_accessible_resources": [
-    "templates/grades_table.html",
-    "templates/credits_by_module_type_table.html",
-    "templates/custom_styles.css",
-    "data/modules_i.json",
-    "data/modules_ics.json",
-    "data/modules_wi.json",
-    "data/modules_ai.json",
-    "_locales/*"
+    {
+      "resources": [
+        "templates/grades_table.html",
+        "templates/credits_by_module_type_table.html",
+        "templates/custom_styles.css",
+        "data/modules_i.json",
+        "data/modules_ics.json",
+        "data/modules_wi.json",
+        "data/modules_ai.json",
+        "_locales/*"
+      ]
+    }
   ],
   "default_locale": "de",
   "browser_specific_settings": {
