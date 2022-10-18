@@ -1,8 +1,8 @@
 /**
-* Update the base module type list for other studies than information science.
-*
-* Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
-*/
+ * Update the base module type list for other studies than information science.
+ *
+ * Sometimes the same module can have a different module type depending on the study (I, WI, ICS, DI etc).
+ */
 const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
     let patch = await fetch(Helpers.getExtensionInternalFileUrl(jsonFilePath))
         .then(response => response.json());
@@ -12,14 +12,27 @@ const updateModuleTypeList = async (oldModuleTypeList, jsonFilePath) => {
 const ModuleParser = {
 
     /**
+     * Check if a module is an info module
+     * Info modules contain INFO in their name
+     */
+    isNotInfoSemester: (hsluModuleName) => {
+        return !hsluModuleName.includes('INFO')
+    },
+
+    /**
      * Check if a module was done in Autumn.
      * Modules are marked with 'H' for 'Herbstsemester' (autumn)
-     * or 'F' for 'Frühlingssemester' (spring).
      */
     isAutumnSemester: (hsluModuleName) => {
-        const includesH = hsluModuleName.split('.')[2].includes('H');
-        const includesF = hsluModuleName.split('.')[2].includes('F');
-        return includesH || includesF ? includesH : undefined;
+        return hsluModuleName.split('.')[2].includes('H') && ModuleParser.isNotInfoSemester(hsluModuleName);
+    },
+
+    /**
+     * Check if a module was done in Spring.
+     * Modules are marked with 'F' for 'Frühlingssemester' (spring).
+     */
+    isSpringSemester: (hsluModuleName) => {
+        return hsluModuleName.split('.')[2].includes('F') && ModuleParser.isNotInfoSemester(hsluModuleName);
     },
 
     /**
@@ -27,6 +40,7 @@ const ModuleParser = {
      *
      * @param {string} hsluModuleName: is the 'anlassnumber',
      *  e.g. 'I.BA_BCHAIN.H1901'.
+     * @param firstModule
      */
     calculateSemester: (hsluModuleName, firstModule) => {
         let semester = undefined;
@@ -55,15 +69,13 @@ const ModuleParser = {
         if (isStartInAutumn) {
             if (isModuleInAutumn) {
                 semester = yearDifference * 2 + 1;
-            }
-            else {
+            } else {
                 semester = yearDifference * 2;
             }
         } else {
             if (isModuleInAutumn) {
                 semester = yearDifference * 2 + 2;
-            }
-            else {
+            } else {
                 semester = yearDifference * 2 + 1;
             }
         }
@@ -71,18 +83,18 @@ const ModuleParser = {
     },
 
     /**
-    * The module name includes the module id.
-    * But there are different formats for the module names.
-    *
-    * Modules that are parsed:
-    *   Usually a module name looks like this: I.BA_IPCV.F1901
-    *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
-    *
-    * Modules that are not parsed:
-    *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
-    *   Only the ANRECHINDIVID module is known to have this format.
-    *   Probably counted as 'Erweiterungsmodul'.
-    */
+     * The module name includes the module id.
+     * But there are different formats for the module names.
+     *
+     * Modules that are parsed:
+     *   Usually a module name looks like this: I.BA_IPCV.F1901
+     *   There are modules that have a suffix after a second underscore: I.BA_AISO_E.F1901
+     *
+     * Modules that are not parsed:
+     *   There are modules without underscores in the name: I.ANRECHINDIVID.F1901
+     *   Only the ANRECHINDIVID module is known to have this format.
+     *   Probably counted as 'Erweiterungsmodul'.
+     */
     getModuleIdFromModuleName: (moduleName) => {
 
         let name = String(moduleName);
@@ -97,13 +109,11 @@ const ModuleParser = {
                 name = name.split('.')[0];
             }
             return name;
-        }
-        else if (name.includes('.')) {
+        } else if (name.includes('.')) {
 
             // for module names like I.ANRECHINDIVID.F1901
             return name.split('.')[1];
-        }
-        else {
+        } else {
             console.log('module id not parseable: ' + moduleName);
             return null;
         }
@@ -124,14 +134,12 @@ const ModuleParser = {
          * Only if all of them are matching in the right order test() returns true
          * */
         const moduleNameRegex = /^(\w+)\.(.+)\.[FH]\d{4}/g;
-        if (moduleNameRegex.test(moduleName)) {
-            return true
-        }
-        return false
+        return moduleNameRegex.test(moduleName);
+
     },
     /**
-    * Generates an array of module objects using the API and the module type mapping json file.
-    */
+     * Generates an array of module objects using the API and the module type mapping json file.
+     */
     generateModuleObjects: async (studyAcronym) => {
 
         const API_URL = "https://mycampus.hslu.ch/de-ch/api/anlasslist/load/?page=1&per_page=69&total_entries=69&datasourceid=5158ceaf-061f-49aa-b270-fc309c1a5f69";
@@ -154,10 +162,21 @@ const ModuleParser = {
             return;
         }
 
-        firstModule = anlasslistApiResponse.items
+        let firstSpringModule = anlasslistApiResponse.items
             .slice()
             .reverse()
-            .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
+            .find(modul => ModuleParser.isSpringSemester(modul.anlassnumber));
+
+        let firstAutumnModule = anlasslistApiResponse.items
+            .slice()
+            .reverse()
+            .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber));
+
+        if (new Date(firstAutumnModule.from).getFullYear() < (new Date(firstSpringModule.from).getFullYear())) {
+            firstModule = firstAutumnModule
+        } else {
+            firstModule = firstSpringModule
+        }
 
         const passedMessage = await i18n.getMessage("Bestanden");
         const ignoreInStatsModules = (await Helpers.getItemFromLocalStorage("ignoreInStatsModules")).ignoreInStatsModules;
@@ -167,22 +186,19 @@ const ModuleParser = {
             let parsedModule = {};
             if (ModuleParser.validateModuleName(item.anlassnumber)) {
                 parsedModule.semester = ModuleParser.calculateSemester(item.anlassnumber, firstModule);
-            }
-            else {
+            } else {
                 console.log("Not valid modulename: ", item.anlassnumber);
                 parsedModule.semester = undefined
             }
 
-            let passed = item.prop1[0].text == 'Erfolgreich teilgenommen';
+            let passed = item.prop1[0].text === 'Erfolgreich teilgenommen';
             parsedModule.passed = passed;
 
             if (item.note != null) {
                 parsedModule.mark = item.note;
-            }
-            else if (passed) {
+            } else if (passed) {
                 parsedModule.mark = passedMessage;
-            }
-            else {
+            } else {
                 parsedModule.mark = 'n/a';
             }
             parsedModule.grade = item.grade === null ? 'n/a' : item.grade;
@@ -200,10 +216,8 @@ const ModuleParser = {
             }
 
             // sets the UseInStats to true by default
-            parsedModule.UseInStats = true;
-            if (ignoreInStatsModules != undefined && ignoreInStatsModules[parsedModule.name]) {
-                    parsedModule.UseInStats = false;
-            }
+
+            parsedModule.UseInStats = !(ignoreInStatsModules !== undefined && ignoreInStatsModules[parsedModule.name]);
             myCampusModulesList[parsedModule.name] = {
                 acronym: parsedModule.name,
             }
@@ -211,7 +225,7 @@ const ModuleParser = {
             modules.push(parsedModule);
         });
         // Save modules from MyCampus to local storage for the popup
-        await Helpers.saveObjectInLocalStorage({ hsluModules: myCampusModulesList })
+        await Helpers.saveObjectInLocalStorage({hsluModules: myCampusModulesList})
 
         //add custom modules from local storage
         let moduleList = (await Helpers.getItemFromLocalStorage("moduleList")).moduleList
@@ -220,7 +234,7 @@ const ModuleParser = {
                 const customModule = moduleList[customModuleName];
 
                 let parsedModule = {};
-                parsedModule.passed = customModule.grade == 'F' ? false : true;
+                parsedModule.passed = customModule.grade !== 'F';
                 parsedModule.mark = customModule.mark;
                 parsedModule.grade = customModule.grade;
                 parsedModule.type = customModule.type;
