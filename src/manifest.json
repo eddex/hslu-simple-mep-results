@@ -32,7 +32,6 @@
     }
   ],
   "permissions": [
-    "webRequest",
     "storage"
   ],
   "host_permissions": [
@@ -49,7 +48,9 @@
         "data/modules_wi.json",
         "data/modules_ai.json",
         "_locales/*"
-      ]
+      ],
+      "matches": [],
+      "extension_ids": []
     }
   ],
   "default_locale": "de",
