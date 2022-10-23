@@ -130,6 +130,22 @@ const ModuleParser = {
         return false
     },
     /**
+     *  list of modules that should be ignored to calculate the first semester
+     *  check if moduleName matches ignore pattern
+     */
+    shouldModuleBeIgnored: (hsluModuleName) => {
+        const ignoreModulePatterns = ['INFO_ABEND'];
+        let dontIgnore = true;
+        ignoreModulePatterns.forEach(ignorePattern => {
+            if(hsluModuleName.includes(ignorePattern)) {
+                console.log(`ignoring module ${hsluModuleName} for first semester calculation`)
+                dontIgnore = false;
+            }
+        })
+
+        return dontIgnore;
+    },
+    /**
     * Generates an array of module objects using the API and the module type mapping json file.
     */
     generateModuleObjects: async (studyAcronym) => {
@@ -157,6 +173,8 @@ const ModuleParser = {
         firstModule = anlasslistApiResponse.items
             .slice()
             .reverse()
+            //check if module is is in the ignore list
+            .filter(modul => ModuleParser.shouldModuleBeIgnored(modul.anlassnumber))
             .find(modul => ModuleParser.isAutumnSemester(modul.anlassnumber) != undefined);
 
         const passedMessage = await i18n.getMessage("Bestanden");
@@ -202,7 +220,7 @@ const ModuleParser = {
             // sets the UseInStats to true by default
             parsedModule.UseInStats = true;
             if (ignoreInStatsModules != undefined && ignoreInStatsModules[parsedModule.name]) {
-                    parsedModule.UseInStats = false;
+                parsedModule.UseInStats = false;
             }
             myCampusModulesList[parsedModule.name] = {
                 acronym: parsedModule.name,
