@@ -8,58 +8,9 @@ It is done in a seperate script to increase the performance of the extension.
 For further information please read: https://github.com/eddex/hslu-simple-mep-results/blob/master/CONTRIBUTING.md
 '''
 import json
-from os import error
 from pathlib import Path
 
-import requests
 from lxml import etree, html
-
-from getpass import getpass, getuser
-
-
-def login(username, password):
-    session = requests.Session()
-    loginpage_url = 'https://mycampus.hslu.ch/de-ch/service-sites/login/?item=%2fde-ch%2fstud-i%2f'
-
-    try:
-        loginpage = session.get(loginpage_url)
-    except Exception as error:
-        print("\nPlease check your internet connection or check the url")
-        print("url: " + loginpage_url + '\n')
-        print("Exception: " + repr(error))
-        return False
-
-    parsed_loginpage = html.fromstring(loginpage.text)
-
-    # xpaths for the login event validation
-    viewstategenerator_xpath = '//*[@id="__VIEWSTATEGENERATOR"]/@value'
-    eventvalidation_xpath = '//*[@id="__EVENTVALIDATION"]/@value'
-    viewstate_xpath = '//*[@id="__VIEWSTATE"]/@value'
-
-    viewstate = parsed_loginpage.xpath(viewstate_xpath)[0]
-    viewstategenerator = parsed_loginpage.xpath(viewstategenerator_xpath)[0]
-    eventvalidation = parsed_loginpage.xpath(eventvalidation_xpath)[0]
-
-    # create post data
-    login_post_data = {
-        "ph_campus_template_content_0$txtUserName": username,
-        "ph_campus_template_content_0$txtPassword": password,
-        "ph_campus_template_content_0$btnLogin": "Anmelden",
-        "__VIEWSTATE": viewstate,
-        "__VIEWSTATEGENERATOR": viewstategenerator,
-        "__EVENTVALIDATION": eventvalidation
-    }
-    try:
-        session.post(loginpage_url, data=login_post_data)
-        session.cookies.get_dict()['.ASPXAUTH']
-    except KeyError as error:
-        print('Something went wrong with the login, maybe you misstyped your password or username?')
-        exit(0)
-    except Exception as error:
-        print(repr(error))
-        exit(0)
-
-    return session
 
 
 def readFileAsJSON(fileName):
@@ -86,7 +37,7 @@ def writeModuleFiles(fileName, modules):
     writeFile(fileName, mergedModules)
 
 
-def parseWebsite(autoDownload=True):
+def parseWebsite():
 
     # wahlkernmodulec12 ignored, just duplicates / obsolete modules
     module_type_html_ids = [
@@ -362,42 +313,42 @@ def parseWebsite(autoDownload=True):
 
 
 def prequisitesCheck():
+    modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
+    modulbeschriebe_ics_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/'
+    modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
+    modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/dokumente-fuers-studium/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
+
     checkFile = True
     f = Path('./modulbeschriebe_i.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_i.html\' does not exist.')
-        print('To get started download the html file from', modulbeschriebe_i_url, \
-'and save it as \'tools/modulbeschriebe_i.html\'.')
+        print('To get started download the html file from', modulbeschriebe_i_url,
+              'and save it as \'tools/modulbeschriebe_i.html\'.')
         checkFile = False
 
     f = Path('./modulbeschriebe_wi.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_wi.html\' does not exist.')
-        print('To get started download the html file from', modulbeschriebe_wi_url, \
-'and save it as \'tools/modulbeschriebe_wi.html\'.')
-        checkFile =  False
+        print('To get started download the html file from', modulbeschriebe_wi_url,
+              'and save it as \'tools/modulbeschriebe_wi.html\'.')
+        checkFile = False
 
     f = Path('./modulbeschriebe_ai.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_ai.html\' does not exist.')
-        print('To get started download the html file from', modulbeschriebe_ai_url, \
-'and save it as \'tools/modulbeschriebe_ai.html\'.')
-        checkFile =  False
-    return checkFile
+        print('To get started download the html file from', modulbeschriebe_ai_url,
+              'and save it as \'tools/modulbeschriebe_ai.html\'.')
+        checkFile = False
 
     f = Path('./modulbeschriebe_ics.html')
     if not f.is_file():
         print('ERROR: file \'./modulbeschriebe_ics.html\' does not exist.')
-        print('To get started download the html file from', modulbeschriebe_ics_url, \
-'and save it as \'tools/modulbeschriebe_ai.html\'.')
-        checkFile =  False
+        print('To get started download the html file from', modulbeschriebe_ics_url,
+              'and save it as \'tools/modulbeschriebe_ai.html\'.')
+        checkFile = False
     return checkFile
 
+
 if __name__ == "__main__":
-    answer = input("Do you like to login to MyCampus with the script and get the module type automatically? (y/n) ")
-    # if prequisitesCheck():
-    if answer == 'y':
-        parseWebsite(autoDownload=True)
-    else:
-        if prequisitesCheck():
-            parseWebsite(autoDownload=False)
+    if prequisitesCheck():
+        parseWebsite()
