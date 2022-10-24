@@ -75,28 +75,17 @@ def parseWebsite():
         'erweiterungsmodule': erweiterungsmodul,
         'zusatzmodule': zusatzmodul
     }
-    if autoDownload:
-        mycampus_username = input('Please enter your mycampus username: ')
-        mycampus_password = getpass('Please enter your mycampus password: ')
-        session = login(username=mycampus_username, password=mycampus_password)
 
-        modulbeschriebe_i_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-studiengang-informatik/'
-        modulbeschriebe_ics_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/bachelor-in-information-and-cyber-security/'
-        modulbeschriebe_wi_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/modulbeschriebe-wirtschaftsinformatik-neues-curriculum/'
-        modulbeschriebe_ai_url = 'https://mycampus.hslu.ch/de-ch/info-i/infos-und-dokumente/bachelor/moduleinschreibung/modulbeschriebe/bachelor-artificial-intelligence-machine-learning/'
-
-        modulbeschriebe_i = session.get(url=modulbeschriebe_i_url).text
-        modulbeschriebe_ics = session.get(url=modulbeschriebe_ics_url).text
-        modulbeschriebe_wi = session.get(url=modulbeschriebe_wi_url).text
-        modulbeschriebe_ai = session.get(url=modulbeschriebe_ai_url).text
-
-    else:
-        modulbeschriebe_i = etree.tostring(html.parse('./modulbeschriebe_i.html'))
-        modulbeschriebe_ics = etree.tostring(html.parse('./modulbeschriebe_ics.html'))
-        modulbeschriebe_wi = etree.tostring(html.parse('./modulbeschriebe_wi.html'))
-        modulbeschriebe_ai = etree.tostring(html.parse('./modulbeschriebe_ai.html'))
+    modulbeschriebe_i = etree.tostring(html.parse('./modulbeschriebe_i.html'))
+    modulbeschriebe_ics = etree.tostring(
+        html.parse('./modulbeschriebe_ics.html'))
+    modulbeschriebe_wi = etree.tostring(
+        html.parse('./modulbeschriebe_wi.html'))
+    modulbeschriebe_ai = etree.tostring(
+        html.parse('./modulbeschriebe_ai.html'))
 
     doc = html.fromstring(modulbeschriebe_i)
+
     sections = doc.find_class(
         'download-content large-20 columns append-bottom')
 
@@ -109,16 +98,14 @@ def parseWebsite():
         for module_type_html_id in module_type_html_ids:
             module_type_title = section.get_element_by_id(
                 module_type_html_id, None)
+
             if module_type_title is not None:
                 modules = section.find_class(
                     'columns col-collapse small-12 print-12 download-text')
                 for module in modules:
-                    module_name = str(etree.tostring(module))
-                    if '(Angewandte)' in module_name:
-                        # this is needed due to the module "(Angewandte) Mathematik 2 (MAT2) C12/C16"
-                        module_name = module_name.split('(Angewandte)')[1]
-                    # print(module_name)
+                    module_name = module.text
                     module_id = module_name.split('(')[1].split(')')[0]
+                    print(module_name + ", ID: " + module_id)
                     modules_with_type[module_id] = id_to_type_mapping[module_type_html_id]
 
     # parse wi modules
